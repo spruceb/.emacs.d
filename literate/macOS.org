@@ -1,0 +1,66 @@
+#+TITLE: macOS Config
+#+AUTHOR: Spruce Bondera
+#+PROPERTY: header-args  :tangle yes
+
+* Meta and Command
+Currently, I use Option as Meta and Command as Hyper.
+#+BEGIN_SRC emacs-lisp
+(setq mac-option-modifier 'meta)
+(setq mac-command-modifier 'hyper)
+#+END_SRC
+
+This causes some thumb pain at times, as I use Meta much more often than Hyper.
+However using Command as Hyper causes various issues with my macOS keybindings
+(including those from third party tools). I can swap these at any time however.
+
+#+BEGIN_SRC emacs-lisp
+(defun mac-switch-meta nil
+  "Switch Meta between Option and Command"
+  (interactive)
+  (if (equal mac-option-modifier 'hyper)
+      (progn (setq mac-option-modifier 'meta)
+             (setq mac-command-modifier 'hyper))
+    (progn (setq mac-option-modifier 'hyper)
+           (setq mac-command-modifier 'meta))))
+#+END_SRC
+* Keybindings
+I prefer various bindings to work the same in Emacs as commonly in macOS apps. I
+no longer rely on these bindings, but they remain convenient on occasion.
+
+#+BEGIN_SRC emacs-lisp :noweb yes
+<<macOS-keybound-functions>>
+
+(bind-keys*
+ ("H-a" . mark-whole-buffer)
+ ("H-v" . yank)
+ ("H-c" . kill-ring-save)
+ ("H-s" . save-buffer)
+ ("H-l" . goto-line)
+ ("H-w" . delete-frame-or-window)
+ ("H-n" . make-frame-command)
+ ("H-=" . text-scale-increase)
+ ("H--" . text-scale-decrease)
+ ;; technically, Command-` and Command-Shift-` still work for Emacs. However
+ ;; they cycle macOS windows rather than Emacs windows, so using Meta versions
+ ;; for similar functionality is useful
+ ("M-`" . other-window) 
+ ("M-~" . back-window))
+#+END_SRC
+
+This contains utility functions that these keys may be bound to
+
+#+NAME: macOS-keybound-functions
+#+BEGIN_SRC emacs-lisp :tangle no
+;; delete current frame, or window if it's the last one
+(defun delete-frame-or-window ()
+  (interactive)
+  (if (one-window-p)
+      (delete-frame)
+    (delete-window)))
+;; go back a window in the same frame
+(defun back-window ()
+  (interactive)
+  (other-window -1))
+#+END_SRC
+* Package Configuration
+

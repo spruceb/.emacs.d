@@ -1,0 +1,8 @@
+elpa
+cache
+backup
+auto-save-list
+var
+.python-environments
+literate/*.el
+configuration.el

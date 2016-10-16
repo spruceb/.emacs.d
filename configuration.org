@@ -1,0 +1,910 @@
+#+TITLE: Spruce's Emacs
+#+AUTHOR: Spruce Bondera
+#+PROPERTY: header-args  :tangle yes 
+* About
+This file, and the others it references, contain my Emacs configuration. I've
+been using Emacs since around 2014, and using it heavily since mid-2015. Over
+the course of the next year and a half I accumulated a serious amount of config
+and packages of various forms. Emacs is software with a hilariously high
+potential ceiling (I haven't caught a glimpse of it yet), but in my view pretty
+terrible defaults. A large part of my switch to fully using it was due to
+accumulating the critical mass of configuration necessary to use it without
+significant annoyance.
+
+It's easy to just throw config in your =.emacs= or =init.el=, which is
+what I did for over a year and a half. However at a certain point it accumulates
+cruft, competing and contradictory code, becomes impossible to search through,
+and even worse to debug. It's pretty common in the Emacs community to deal with
+this through literate programming through =org-mode=. The code becomes somewhat
+secondary to documentation and organization, making it easier to keep track of
+and modify. This is my ongoing attempt to organize, clean up, and improve my
+config. Started October 15th, 2016.
+* Startup
+** Security
+There are several important security improvements to Emacs that should come as
+early a possible in config, to prevent inevitable network connection attempts
+from being hilariously insecure
+*** TLS
+Much of the following is credited to [[https://glyph.twistedmatrix.com/2015/11/editor-malware.html][Glyph]].
+
+~network-security-level~ sets how careful Emacs is with network security. The
+default is =medium=, but I prefer =high=, as it prevents a few more problematic
+practices. =paranoid= is a little far for me though.
+#+BEGIN_SRC emacs-lisp
+(setq network-security-level 'high)
+#+END_SRC
+
+However this only matters in Emacs 25 and higher. For older versions, network
+connections are not secure by default at all. This enables TLS checking.
+
+#+BEGIN_SRC emacs-lisp
+(setq tls-checktrust t)
+#+END_SRC
+
+All of the above only applies to Emacs not built with an external TLS checker.
+However if it is built with one like GnuTLS, some extra config is necessary.
+
+#+BEGIN_SRC emacs-lisp
+(let ((trustfile
+       (replace-regexp-in-string
+        "\\\\" "/"
+        (replace-regexp-in-string
+         "\n" ""
+         (shell-command-to-string "python -m certifi")))))
+  (setq tls-program
+        (list
+         (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+                 (if (eq window-system 'w32) ".exe" "") trustfile)))
+  (setq gnutls-verify-error t)
+  (setq gnutls-trustfiles (list trustfile)))
+#+END_SRC
+
+This ensures that TLS is configured correctly, and prevents further config
+evaluation otherwise. Currently disabled for speed.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(let ((bad-hosts
+       (loop for bad
+             in `("https://wrong.host.badssl.com/"
+                  "https://self-signed.badssl.com/")
+             if (condition-case e
+                    (url-retrieve
+                     bad (lambda (retrieved) t))
+                  (error nil))
+             collect bad)))
+  (if bad-hosts
+      (error (format "tls misconfigured; retrieved %s ok"
+                     bad-hosts))
+    (url-retrieve "https://badssl.com"
+                  (lambda (retrieved) t))))
+#+END_SRC
+** Management
+I use the =use-package= package [[https://github.com/jwiegley/use-package][(here)]] to configure both Emacs and the large
+number of other packages I use.
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+;; All packages in a use-package macro should be automatically installed
+(setq use-package-always-ensure t)
+#+END_SRC
+
+Additionally I have several external config files loaded by this one.
+These are given variable names and added to a global list in various
+sections in this file. To do this I use the following macro and list:
+
+#+BEGIN_SRC emacs-lisp
+(setq-default spruce/org-config-directory "literate")
+(setq-default spruce/org-config-dirpath
+              (expand-file-name (concat user-emacs-directory
+                                        spruce/org-config-directory)))
+(setq-default spruce/config-org-files nil)
+
+;; transforms the given name to "spruce/name-config-file" and sets it
+;; to the given org filename
+(defmacro spruce/new-config-file (name filename)
+  (let ((full-file (make-symbol "full-filename")))
+    `(let ((,full-file
+            (concat spruce/org-config-dirpath "/" ,filename ".org")))
+       (defvar ,(intern (concat "spruce/" (symbol-name name) "-config-file"))
+         ,full-file)
+       (add-to-list
+        (quote spruce/config-org-files) (quote (,name . ,filename)) t))))
+#+END_SRC
+** Personal Information
+My name and primary email for use in various other places.
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Spruce Bondera"
+      user-mail-address "sprucebondera@gmail.com")
+#+END_SRC
+* Config
+** Basic Usability
+** General Settings
+These involve configuration or enabling of Emacs default features.
+*** Modernization
+Emacs is very old, and has a number of defaults that reflect this age. Some of
+these I like, many I don't. 
+
+#+BEGIN_SRC emacs-lisp
+;; automatically replace selected text if a new character is typed
+(delete-selection-mode t)
+;; in fundamental mode use single spaces after sentence-ending periods.
+(setq sentence-end-double-space nil)
+;; Emacs is user-level software, not a shell, so some protection is nice. Using
+;; a Trash is one such protection I occasionally still appreciate.
+(setq delete-by-moving-to-trash t)
+#+END_SRC
+
+*** Miscellaneous
+Highlight corresponding parentheses if the cursor is over one of them. This is
+pretty important in most languages, especially with the S-expression
+manipulations I often perform.
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode t)
+#+END_SRC
+
+I prefer a blank scratch buffer. The default message is just going to be deleted
+anyway. In the future I may set some more complicated and useful programmatic
+message as the default, but for the moment an empty buffer is the most useful
+option.
+#+BEGIN_SRC emacs-lisp
+(setq initial-scratch-message "")
+#+END_SRC
+
+I have plenty of disk space, and currently no reason to delete backups.
+#+BEGIN_SRC emacs-lisp
+(setq delete-old-versions 'never)
+#+END_SRC
+
+Explicit commands to delete files in a shell should remove them without an
+intermediate step, but 
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+By default =C-k= or ~kill-line~ doesn't truly delete the line, but rather kill
+all the text on it while leaving the newline. There are situations where this is
+useful, but overall I prefer deletion of the entire line.
+#+BEGIN_SRC emacs-lisp
+(setq kill-whole-line t)
+#+END_SRC
+
+The default garbage collection of Emacs is quite aggressive. It collects garbage
+after around 800KB of allocation. This is tiny for modern systems. However even
+though I usually have >= 16GB of RAM, setting the garbage collection threshold
+too high leads to occasional but very noticeable pauses as large swaths of
+memory are reclaimed. I think 100MB is a pretty reasonable balance, but I may
+tweak this in the future.
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold 100000000)
+#+END_SRC
+*** Keybindings
+Miscellaneous keybindings I find useful.
+
+Quickly getting to my config file is important for fluid customization. Just as
+programming and discovery is faster with a REPL. Emacs is really just one large
+REPL, so I make it easier to use as such.
+#+BEGIN_SRC emacs-lisp
+(defun spruce/open-config-file ()
+  (interactive)
+  (find-file (or spruce/bootstrap-org-path
+                 user-init-file "")))
+
+(bind-key "C-c e" 'spruce/open-config-file)
+#+END_SRC
+
+Quick fullscreen mode
+#+BEGIN_SRC emacs-lisp
+(bind-key "H-<return>" 'toggle-frame-fullscreen)
+#+END_SRC 
+
+Occasionally I like to shift whole lines up and down through a buffer. These
+make it easier and more natural than killing and yanking.
+#+BEGIN_SRC emacs-lisp
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(bind-keys ("M-S-<up>" . move-line-up)
+           ("M-S-<down>" . move-line-down))
+#+END_SRC
+*** Appearance
+**** Basic
+These are simple changes to the default settings.
+
+The tool bar is both useless and ugly. Same for the scroll bar. Disable both.
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+#+END_SRC
+
+I dislike the startup message. The logo is ancient, and after seeing it a few
+times the message is irrelevant. I use =desktop-mode=, but in the situations
+where I do start from scratch, I prefer to start in =*scratch*=.
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-message t)
+#+END_SRC
+
+Also somewhat similar to modern editors, I prefer a 1-pixel wide bar
+cursor. However having a distinctive shape in non-active buffers
+(rather than simply not blinking as in many other programs) is also quite useful.
+#+BEGIN_SRC emacs-lisp
+(setq-default cursor-type '(bar . 1))
+(setq-default cursor-in-non-selected-windows 'hollow)
+#+END_SRC
+
+Window titles include a lot of unnecessary information by default. I generally
+find 3 things important: the buffer name, its mode, and whether it's been saved.
+#+BEGIN_SRC emacs-lisp
+(setq frame-title-format '("" "%b %* [%m]"))
+#+END_SRC
+
+The default fringe overage symbols are extremely ugly arrows. Unfortunately,
+there is no way to use high resolution images for these. They literally must be
+8x8 bitmaps, which explains why they're so ugly in the first place. However this
+sequence of pseudo-dots looks a good bit better in my eyes.
+#+BEGIN_SRC emacs-lisp
+(define-fringe-bitmap 'right-curly-arrow
+  [#b00000000
+   #b00000000
+   #b00000000
+   #b00000000
+   #b01010100
+   #b01010100
+   #b01010100
+   #b00000000])
+(define-fringe-bitmap 'left-curly-arrow
+  [#b00000000
+   #b00000000
+   #b00000000
+   #b00000000
+   #b01010100
+   #b01010100
+   #b01010100
+   #b00000000])
+#+END_SRC
+**** Appearance Heap
+#+BEGIN_SRC emacs-lisp
+(global-prettify-symbols-mode)
+(setq prettify-symbols-unprettify-at-point 'right-edge)
+(set-face-attribute 'default nil :font "Source Code Pro-12")
+(set-face-attribute 'mode-line nil :family 'unspecified)
+(when (and (string-match "Carbon" (emacs-version)) (window-system))
+  (load-theme 'spacegray-spruce t))
+(setq font-lock-maximum-decoration t)
+(global-font-lock-mode t)
+(defun astyle-this-buffer (pmin pmax)
+  (interactive "r")
+  (shell-command-on-region pmin pmax
+                           "astyle" ;; add options here...
+                           (current-buffer) t
+                           (get-buffer-create "*Astyle Errors*") t))
+
+#+END_SRC
+*** macOS
+I run Mitsuharu Yamamoto's =emacs-macport= on the latest
+version of macOS. There are several configuration options specific to
+this platform that I use.
+
+These settings are kept in a separate file for clean tangling
+conditional on the operating system.
+
+#+BEGIN_SRC emacs-lisp
+(spruce/new-config-file macOS "macOS")
+(when (eq system-type 'darwin)
+  (org-babel-load-file spruce/macOS-config-file))
+#+END_SRC
+
+* Helm
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :init (require 'helm-config)
+  :config
+  (setq helm-M-x-fuzzy-match t)
+  (setq helm-mode-fuzzy-match t)
+  (setq helm-split-window-in-side-p t)
+  (helm-mode t)
+  (with-eval-after-load 'company
+    (bind-key "C-:" 'helm-company company-mode-map)
+    (bind-key "C-:" 'helm-company company-active-map))
+  (with-eval-after-load 'projectile
+    (setq projectile-completion-system 'helm))
+
+  :bind (("M-x" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-mini)
+         ("C-x C-b" . helm-buffers-list)
+         ("C-c h o" . helm-occur)
+         :map helm-map
+         ;; rebind tab to run persistent action
+         ("<tab>" . helm-execute-persistent-action)
+         ("C-i" . helm-execute-persistent-action) ; for use in terminal
+         ("C-z" . helm-select-action)))
+
+(use-package helm-flx
+  :config (helm-flx-mode 1))
+
+(use-package helm-projectile
+  :config
+  (with-eval-after-load 'projectile
+    (helm-projectile-on)))
+
+(use-package helm-swoop
+  :config
+  ;; do the usual split inside current buffer
+  (setq helm-swoop-split-with-multiple-windows t)
+  (setq helm-swoop-split-direction 'split-window-vertically)
+  ;; keep text color
+  (setq helm-swoop-speed-or-color t)
+  :bind (("C-s" . helm-swoop-without-pre-input)
+         ("C-M-s" . helm-swoop)
+         :map helm-swoop-map
+         ;; switch to multi-swoop from swoop
+         ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
+#+END_SRC
+* Org
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :config
+    (setq org-agenda-files (list "~/Documents/Classes/school-schedule.org"))
+    (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○"))
+    (setq org-export-backends '(ascii html icalendar latex md))
+    (setq org-fontify-whole-heading-line t)
+    (setq org-pretty-entities t)
+    (setq org-list-allow-alphabetical t)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((R . t)
+       (emacs-lisp . t)
+       (python . t)
+       (sh . t)))
+    (setq org-startup-indented t)
+    (setq org-src-preserve-indentation nil
+          org-edit-src-content-indentation 0)
+    (setq org-confirm-babel-evaluate nil
+          org-src-fontify-natively t
+          org-src-tab-acts-natively t)
+    (setq org-startup-folded "showeverything")
+    ;; in org mode C-a/e moves to beginning of text in line, after header asterisks
+    ;; however you can press it again to go all the way
+    (setq org-special-ctrl-a/e t)
+    ;; don't display slashes/asterisks etc for italics/bold etc
+    (setq org-hide-emphasis-markers t)
+    (add-hook 'org-mode-hook (lambda () (setq line-spacing '0.25)))
+    (setq org-use-sub-superscripts "{}")
+    (add-to-list 'org-structure-template-alist
+                 '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" ""))
+    :bind (("C-c a a" . org-agenda-list)
+           ("C-c L" . org-insert-link-global)
+           ("C-c o" . org-open-at-point-global)))
+
+  (use-package org-bullets
+    :config (add-hook 'org-mode-hook
+                      (lambda () (org-bullets-mode 1))))
+
+  (use-package org-pandoc)
+#+END_SRC
+* LaTeX
+#+BEGIN_SRC emacs-lisp
+(use-package auctex
+  :config
+  ;; TODO: fucks up prettify for some reason?
+  ;; (company-auctex-init)
+  ;; save buffer style info
+  (setq TeX-auto-save t)
+  ;; automatically parse style info
+  (setq TeX-parse-self t)
+  ;; no tabs
+  (setq TeX-auto-untabify t)
+  ;; TODO: unsure what this does
+  ;; (setq-default TeX-master 'dwim)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (setq TeX-PDF-mode t)
+  ;; better name for local variable
+  (setq TeX-auto-local ".auctex-auto")
+  ;; auto revert pdf buffer
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer)
+  ;; show errors if there were any
+  (setq TeX-error-overview-open-after-TeX-run t)
+  ;; don't confirm before cleaning files
+  (setq TeX-clean-confirm nil)
+  (setq TeX-save-query nil)
+  (defun TeX-insert-pair (arg open-str close-str)
+    "Like TeX-insert-brackes but for any pair"
+    (interactive "P")
+    (if (TeX-active-mark)
+        (progn
+          (if (< (point) (mark)) (exchange-point-and-mark))
+          (insert close-str)
+          (save-excursion (goto-char (mark)) (insert open-str)))
+      (insert open-str)
+      (save-excursion
+        (if arg (forward-sexp (prefix-numeric-value arg)))
+        (insert close-str))))
+  (defun LaTeX-insert-inline-math (arg)
+    (interactive "P")
+    (TeX-insert-pair arg "\\( " " \\)"))
+  (defun LaTeX-insert-display-math (arg)
+    (interactive "P")
+    (TeX-insert-pair arg "\\[ " " \\]"))
+
+  (add-hook 'TeX-mode-hook #'TeX-mode-keybindings)
+
+  (setq TeX-electric-sub-and-superscript t)
+  (setq LaTeX-math-menu-unicode t)
+  (add-hook 'LaTeX-mode-hook (lambda () (latex-electric-env-pair-mode t)))
+  (add-hook 'LaTeX-mode-hook
+            (lambda () (set-fill-column 90)))
+  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+  (add-hook 'LaTeX-mode-hook (lambda () (prettify-symbols-mode)))
+
+  (put 'TeX-command-extra-options 'safe-local-variable
+       (lambda (x) (string-equal x "-shell-escape")))
+
+  :bind (:map
+         TeX-mode-map
+         ("C-c b" . tex-runall-clean)
+         :map LaTeX-mode-map
+         ("H-C-j" . LaTeX-insert-inline-math)
+         ("H-C-k" . LaTeX-insert-display-math)))
+
+(use-package reftex
+  :config
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t))
+
+(setq latex-templates-directory "~/.emacs.d/templates/latex-templates/")
+(defun latex-template ()
+  (interactive)
+  (let* ((files (file-expand-wildcards (concat latex-templates-directory "*.tex")))
+         (selection (completing-read "LaTeX Template: "
+                                     (mapcar #'file-name-base files))))
+    (insert-file-contents (concat latex-templates-directory selection ".tex"))))
+#+END_SRC
+* Packages
+** Tramp
+#+BEGIN_SRC emacs-lisp
+(use-package tramp
+  :config
+  (setq tramp-ssh-controlmaster-options
+        "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=yes")
+  (setq tramp-default-method "ssh"))
+#+END_SRC
+** recentf
+#+BEGIN_SRC emacs-lisp
+(use-package recentf
+  :config
+  (setq recentf-max-menu-items 100)
+  (recentf-mode t)
+  :bind ("C-x C-r" . helm-recentf))
+#+END_SRC
+** undo-tree
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :config
+  (setq undo-tree-auto-save-history t)
+  (add-to-list 'undo-tree-history-directory-alist
+               '("." . "~/.emacs.d/cache/undo"))
+  (global-undo-tree-mode))
+#+END_SRC
+** flyspell
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell
+  :config
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  (defun spruce/enable-text-flyspell ()
+    (flyspell-mode t))
+  (add-hook 'text-mode-hook #'spruce/enable-text-flyspell))
+#+END_SRC
+** xscheme
+#+BEGIN_SRC emacs-lisp
+(use-package xscheme)
+#+END_SRC
+** magit
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :config
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (setq magit-auto-revert-mode t)
+  :bind ("C-c g" . magit-status))
+#+END_SRC
+* Custom (deal with)
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(LaTeX-command-style
+   (quote
+    (("" "%(PDF)%(latex) %(file-line-error) %(extraopts) %S%(PDFout)"))))
+ '(custom-safe-themes
+   (quote
+    ("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "926cf2e79abc7465cbe92759d0124c68e9c06d4147cc29217b229fe52f0411bd" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "d8f76414f8f2dcb045a37eb155bfaa2e1d17b6573ed43fb1d18b936febc7bbc2" "26614652a4b3515b4bbbb9828d71e206cc249b67c9142c06239ed3418eff95e2" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "53e29ea3d0251198924328fd943d6ead860e9f47af8d22f0b764d11168455a8e" default)))
+ '(debug-on-error nil)
+ '(global-font-lock-mode t)
+ '(package-selected-packages
+   (quote
+    (paradox company-auctex auctex markdown-mode yasnippet w3m visible-mark use-package undo-tree transpose-frame spaceline spacegray-theme smartparens smart-mode-line-powerline-theme slime reveal-in-finder rainbow-mode pyvenv python-info pylint py-autopep8 persistent-scratch org-pandoc org-bullets multiple-cursors magit llvm-mode lispy julia-mode indent-guide highlight-indentation highlight-indent-guides helm-swoop helm-pydoc helm-projectile helm-flx helm-company helm-ag flycheck find-file-in-project fill-column-indicator emms dtrt-indent debbugs company-jedi column-marker color-theme buffer-move auto-complete aggressive-indent)))
+ '(paradox-github-token t)
+ '(safe-local-variable-values
+   (quote
+    ((eval setq byte-compile-not-obsolete-vars
+           (quote
+            (display-buffer-function))))))
+ '(sml/line-number-format "  %3l ")
+ '(tls-checktrust nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(bold ((t (:weight bold :family "Source Code Pro"))))
+ '(column-marker-1 ((t (:background "red"))))
+ '(org-code ((t (:foreground "OrangeRed2" :weight ultra-light))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.1))))
+ '(org-level-2 ((t (:inherit outline-2))))
+ '(vertical-border ((((type mac tty) (class color)) (:inherit mode-line-inactive))))
+ '(window-divider ((t (:foreground "dark gray")))))
+#+END_SRC
+* The Heap
+#+BEGIN_SRC emacs-lisp
+(when (string-equal system-name "Spruces-MacBook-Pro.local")
+  (add-to-list 'load-path "/usr/local/Cellar/emacs/24.5/share/emacs/24.5/lisp/")
+  (add-to-list 'load-path "/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig")
+  (add-to-list 'load-path "/usr/local/lib/pkgconfig")
+  (add-to-list 'load-path "/opt/X11/lib/pkgconfig"))
+
+(set-frame-font "Source Code Pro-12")
+
+(setq exec-path (append exec-path '(":/usr/local/bin")))
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setq exec-path (append exec-path '(":/usr/texbin")))
+(setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
+
+(add-hook 'markdown-mode-hook 'visual-line-mode)
+
+(setq doc-view-ghostscript-program "/usr/local/bin/gs")
+
+(setq vc-follow-symlinks t)
+
+(setq auto-save-file-name-transforms
+      `((".*" "/Users/spruce/.emacs.d/autosaves" t)))
+
+(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+
+;; Original idea from
+;; http://www.opensubscriber.com/message/emacs-devel@gnu.org/10971693.html
+(defun comment-dwim-line (&optional arg)
+  "Replacement for the comment-dwim command.
+   If no region is selected and current line is not blank and we are
+   not at the end of the line, then comment current line.
+   Replaces default behaviour of comment-dwim, when it inserts
+   comment at the end of the line."
+  (interactive "*P")
+  (comment-normalize-vars)
+  (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
+      (comment-or-uncomment-region (line-beginning-position) (line-end-position))
+    (comment-dwim arg)))
+(global-set-key "\M-;" 'comment-dwim-line)
+
+(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+      backup-by-copying t    ; Don't delink hardlinks
+      version-control t      ; Use version numbers on backups
+      )
+(persistent-scratch-setup-default)
+
+;; Credit: http://compgroups.net/comp.emacs/tweaking-slime/95455
+(defvar slime-repl-font-lock-keywords lisp-font-lock-keywords-2)
+(defun slime-repl-font-lock-setup ()
+  (setq font-lock-defaults
+        '(slime-repl-font-lock-keywords
+          ;; From lisp-mode.el
+          nil nil (("+-*/.<>=!?$%_&~^:@" . "w")) nil
+          (font-lock-syntactic-face-function
+           . lisp-font-lock-syntactic-face-function))))
+
+(add-hook 'slime-repl-mode-hook 'slime-repl-font-lock-setup)
+
+(defadvice slime-repl-insert-prompt (after font-lock-face activate)
+  (let ((inhibit-read-only t))
+    (add-text-properties
+     slime-repl-prompt-start-mark (point)
+     '(font-lock-face
+       slime-repl-prompt-face
+       rear-nonsticky
+       (slime-repl-prompt read-only font-lock-face intangible)))))
+
+(require 'smartparens-config)
+(put 'downcase-region 'disabled nil)
+
+(require 'smart-mode-line)
+(setq sml/theme 'dark)
+(setq sml/shorten-directory t)
+(setq sml/shorten-modes t)
+(setf rm-blacklist '(" company" " Projectile[-]" " Undo-Tree" " Helm" " SP" " Fly"))
+(setq sml/no-confirm-load-theme t)
+(sml/setup)
+(column-number-mode t)
+(setq coffee-tab-width 2)
+
+;; (require 'spaceline-config)
+;; (spaceline-emacs-theme)
+;; (spaceline-toggle-buffer-encoding-abbrev-off)
+;; (spaceline-toggle-buffer-size-off)
+;; (spaceline-helm-mode)
+;; (spaceline-toggle-remote-host-off)
+;; (setq powerline-default-separator 'utf8)
+;; (setq spaceline-highlight-face-func 'spaceline-highlight-face-default)
+;; (setq spaceline-highlight-face-func (lambda () ('CadetBlue1)))
+
+;; (powerline-default-theme)
+;; (setq powerline-default-separator 'utf-8)
+
+(add-hook 'prog-mode-hook #'smartparens-mode)
+(add-hook 'TeX-mode-hook #'smartparens-mode)
+(add-hook 'prog-mode-hook 'global-company-mode)
+(global-set-key (kbd "C-<tab>") 'company-complete)
+
+;; changes kill behavior to kill the newline as well
+
+(setq frame-resize-pixelwise t)
+
+(global-set-key (kbd "M-[") 'kmacro-start-macro)
+(global-set-key (kbd "M-]") 'kmacro-end-macro)
+
+(defun backward-kill-line (arg)
+  "Kill ARG lines backward."
+  (interactive "p")
+  (kill-line (- 1 arg)))
+(global-set-key (kbd "H-<backspace>") 'backward-kill-line)
+
+(setq dekstop-auto-save-timeout 300)
+(put 'upcase-region 'disabled nil)
+(require 'transpose-frame)
+(require 'buffer-move)
+
+(fset 'scheme-linebr
+      "\273\267\260-")
+
+(eval-after-load "cc-mode" '(define-key c-mode-map (kbd "C-c b") 'compile))
+(eval-after-load "cc-mode" '(define-key c++-mode-map (kbd "C-c b") 'compile))
+(eval-after-load "cc-mode" '(define-key c-mode-map (kbd "C-c C-b") 'compile))
+(eval-after-load "cc-mode" '(define-key c++-mode-map (kbd "C-c C-b") 'compile))
+(require 'fill-column-indicator)
+
+
+(eval-after-load "python-mode"
+  '(define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
+;; (set-mouse-color "green")
+(setq doc-view-continuous t)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (require 'dtrt-indent)
+            (dtrt-indent-mode nil)))
+(setq-default tab-width 4)
+(setq global-linum-mode nil)
+
+(load "~/.emacs.d/fireplace/fireplace")
+
+(defun jedi-python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi)
+  (define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
+
+(add-hook 'python-mode-hook 'jedi-python-mode-hook)
+
+
+
+(add-hook 'prog-mod (lambda () (abbrev-mode nil)))
+(setq jedi:complete-on-dot t)
+(setq fi:find-tag-lock nil)
+
+;; Use Source Code Sans (pretty variable width font) for org mode
+;;; function that sets current buffer to Source Code Sans
+;; (defun my-buffer-face-mode-variable ()
+;;   "Set font to a variable width (proportional) fonts in current buffer"
+;;   (interactive)
+;;   (setq buffer-face-mode-face '(:family "Source Code Sans" :height 100 :width semi-condensed))
+;;   (buffer-face-mode))
+
+(add-hook 'prog-mode-hook (lambda () (setq line-spacing nil)))
+
+(global-set-key (kbd "C-c s") 'isearch-forward)
+
+(projectile-global-mode)
+
+(if (eq system-type 'darwin)
+    (setq helm-locate-fuzzy-match nil))
+
+(setq helm-locate-command
+      (case system-type
+        ('gnu/linux "locate -i -r %s")
+        ('berkeley-unix "locate -i %s")
+        ('windows-nt "es %s")
+        ('darwin "mdfind -name %s %s | grep -v .*.emlx")
+        (t "locate %s")))
+
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+
+(global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
+(setq sp-navigate-consider-stringlike-sexp
+      (append sp-navigate-consider-stringlike-sexp (list 'python-mode
+                                                         'org-mode
+                                                         'coffeescript-mode)))
+(if (display-graphic-p)
+    (desktop-save-mode nil))
+(setq desktop-dirname "~/.emacs.d/desktops/"
+      desktop-path (quote ("~/.emacs.d/desktops/"))
+      desktop-auto-save-timeout 30
+      desktop-save nil)
+
+
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-hook 'coffeescript-mode-hook 'whitespace-mode)
+(add-hook 'python-mode-hook 'whitespace-mode)
+(setq whitespace-style
+      '(face trailing space-before-tab tab
+             indentation empty space-after-tab lines))
+;; don't do anything whitespace, use whitespace-fn instead
+(setq whitespace-action nil)
+
+(require 'column-marker)
+(add-hook 'prog-mode-hook (lambda () (interactive) (column-marker-1 79)))
+
+(defun init-projectile ()
+  (interactive)
+  (let ((projectile ".projectile"))
+    (unless (file-exists-p projectile)
+      (write-region "" nil projectile))))
+
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i")
+
+(setq-default indent-tabs-mode nil)
+
+(global-aggressive-indent-mode 1)
+
+(require 'highlight-indent-guides)
+;; (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+(setq highlight-indent-guides-method 'character)
+
+(defun delete-trailing-whitespace-except-current-line ()
+  (interactive)
+  (let ((begin (line-beginning-position))
+        (end (line-end-position)))
+    (save-excursion
+      (when (< (point-min) begin)
+        (save-restriction
+          (narrow-to-region (point-min) (1- begin))
+          (delete-trailing-whitespace)))
+      (when (> (point-max) end)
+        (save-restriction
+          (narrow-to-region (1+ end) (point-max))
+          (delete-trailing-whitespace))))))
+
+(defun whitespace-save-fn ()
+  (add-hook 'before-save-hook
+            'delete-trailing-whitespace-except-current-line
+            nil 'local))
+
+(add-hook 'c-mode-common-hook #'whitespace-save-fn)
+(add-hook 'python-mode-hook #'whitespace-save-fn)
+(add-hook 'lisp-mode-hook #'whitespace-save-fn)
+(add-hook 'prog-mode-hook #'whitespace-mode)
+
+(setq global-mark-ring-max 200)
+(setq mark-ring-max 100)
+(setq set-mark-command-repeat-pop t)
+
+(defun revert-buffer-no-prompt ()
+  "Revert buffer without confirm prompt"
+  (interactive)
+  (revert-buffer t t))
+(global-set-key (kbd "H-r") 'revert-buffer-no-prompt)
+
+
+(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+
+
+(setq auto-revert-use-notify nil)
+
+;; see http://ergoemacs.org/emacs/modernization_elisp_lib_problem.html
+(defun s-trim-left (s)
+  "Remove whitespace at the beginning of S."
+  (if (string-match "\\`[ \t\n\r]+" s)
+      (replace-match "" t t s)
+    s))
+
+(defun s-trim-right (s)
+  "Remove whitespace at the end of S."
+  (if (string-match "[ \t\n\r]+\\'" s)
+      (replace-match "" t t s)
+    s))
+
+(defun s-trim (s)
+  "Remove whitespace at the beginning and end of S."
+  (s-trim-left (s-trim-right s)))
+
+(defun toggle-pdb ()
+  (interactive)
+  (let ((line (s-trim (thing-at-point 'line t)))
+        (debug "import ipdb; ipdb.set_trace()"))
+    (cond ((equal line debug)
+           (kill-whole-line)
+           (previous-line)
+           (move-end-of-line 1))
+          (t (python-nav-end-of-statement)
+             (cond ((equal line "")
+                    (insert debug))
+                   ((not (equal (length line) 0))
+                    (move-end-of-line 1)
+                    (newline-and-indent)
+                    (insert debug)))))))
+
+(add-hook 'python-mode-hook
+          (lambda () (local-set-key (kbd "C-c C-d") #'toggle-pdb)))
+
+;; from http://stackoverflow.com/questions/15580913/
+(defun toggle-quotes ()
+  (interactive)
+  (save-excursion
+    (let ((start (nth 8 (syntax-ppss)))
+          (quote-length 0) sub kind replacement)
+      (goto-char start)
+      (setq sub (buffer-substring start (progn (forward-sexp) (point)))
+            kind (aref sub 0))
+      (while (char-equal kind (aref sub 0))
+        (setq sub (substring sub 1)
+              quote-length (1+ quote-length)))
+      (setq sub (substring sub 0 (- (length sub) quote-length)))
+      (goto-char start)
+      (delete-region start (+ start (* 2 quote-length) (length sub)))
+      (setq kind (if (char-equal kind ?\") ?\' ?\"))
+      (loop for i from 0
+            for c across sub
+            for slash = (char-equal c ?\\)
+            then (if (and (not slash) (char-equal c ?\\)) t nil) do
+            (unless slash
+              (when (member c '(?\" ?\'))
+                (aset sub i
+                      (if (char-equal kind ?\") ?\' ?\")))))
+      (setq replacement (make-string quote-length kind))
+      (insert replacement sub replacement))))
+
+
+(add-hook 'c++-mode-hook (lambda () (setq c-basic-offset 4)))
+
+(setq whitespace-line-column 86)
+
+;; λ
+
+
+(setq hl-line-sticky-flag nil)
+
+;; latex
+(defun tex-runall-clean ()
+  (interactive)
+  (TeX-command-run-all nil)
+  (TeX-clean))
+
+(defun elisp-keybindings ()
+  (local-set-key (kbd "H-e") #'eval-buffer))
+(add-hook 'emacs-lisp-mode-hook 'elisp-keybindings)
+#+END_SRC
