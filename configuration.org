@@ -1,6 +1,7 @@
 #+TITLE: Spruce's Emacs
 #+AUTHOR: Spruce Bondera
 #+PROPERTY: header-args  :tangle yes 
+#+OPTIONS: toc:2
 * About
 This file, and the others it references, contain my Emacs configuration. I've
 been using Emacs since around 2014, and using it heavily since mid-2015. Over
@@ -128,13 +129,14 @@ feature-set. Many of them were defined exclusively to be accessible through a
 keybinding, however if I deem them sufficiently general they get put in the
 Utility Functions section, and included up here. These functions are in fact
 defined at the bottom of this file, but are accessible to all config below this point.
-#+BEGIN_SRC emacs-lisp :noweb yes
+#+BEGIN_SRC emacs-lisp :noweb tangle :exports none
 <<utility-functions>>
 #+END_SRC
 
 ** Basic Usability
 These involve configuration or enabling of Emacs default features.
-*** Modernization
+*** Settings
+**** Modernization
 Emacs is very old, and has a number of defaults that reflect this age. Some of
 these I like, many I don't. 
 
@@ -148,7 +150,7 @@ these I like, many I don't.
 (setq delete-by-moving-to-trash t)
 #+END_SRC
 
-*** Parentheses Highlighting
+**** Parentheses Highlighting
 Highlight corresponding parentheses if the cursor is over one of them. This is
 pretty important in most languages, especially with the S-expression
 manipulations I often perform.
@@ -157,7 +159,7 @@ manipulations I often perform.
 (show-paren-mode t)
 #+END_SRC
 
-*** Scratch buffer
+**** Scratch buffer
 I prefer a blank scratch buffer. The default message is just going to be deleted
 anyway. In the future I may set some more complicated and useful programmatic
 message as the default, but for the moment an empty buffer is the most useful
@@ -166,7 +168,7 @@ option.
 (setq initial-scratch-message "")
 #+END_SRC
 
-*** Backups
+**** Backups
 I have plenty of disk space, so as many backups as possible is great. However I
 definitely don't want them cluttering up random directories.
 #+BEGIN_SRC emacs-lisp
@@ -184,7 +186,7 @@ Additionally I want to autosave early and often, but not cause clutter.
 (setq auto-save-timeout 10)   ; or 10 seconds
 #+END_SRC
 
-*** ~kill-line~
+**** ~kill-line~
 By default =C-k= or ~kill-line~ doesn't truly delete the line, but rather kill
 all the text on it while leaving the newline. There are situations where this is
 useful, but overall I prefer deletion of the entire line.
@@ -196,7 +198,7 @@ I also appreciate having the ability to kill backwards easily.
 (bind-key "H-<backspace>" 'backward-kill-line)
 #+END_SRC
 
-*** Garbage Collection Performance
+**** Garbage Collection Performance
 The default garbage collection of Emacs is quite aggressive. It collects garbage
 after around 800KB of allocation. This is tiny for modern systems. However even
 though I usually have >= 16GB of RAM, setting the garbage collection threshold
@@ -207,7 +209,7 @@ tweak this in the future.
 (setq gc-cons-threshold 100000000)
 #+END_SRC
 
-*** =fill-column=
+**** =fill-column=
 I generally like to fill (i.e. redistribute line breaks to not go past a certain
 point) my text and code, to make it easier to browse in various situations and
 edit in multiple frames. I tend towards 80 characters in free text, and a loose
@@ -216,24 +218,38 @@ edit in multiple frames. I tend towards 80 characters in free text, and a loose
 (setq-default fill-column 80)
 #+END_SRC
 
-*** Scrolling Context Jumps
+**** Scrolling Context Jumps
 When paging down I tend to lose track of what I was reading unless some of the
 previous page remains. A full half-screen is a little much, but around 4 lines
 is usually enough for me to keep my bearings.
 #+BEGIN_SRC emacs-lisp
 (setq next-screen-context-lines 5)
 #+END_SRC
-*** heap
+
+**** Mark Ring
+The mark ring contains information about where marks (selection points) were
+set. Since I have a modern computer I see no reason for this to be small.
 #+BEGIN_SRC emacs-lisp
 (setq global-mark-ring-max 200)
 (setq mark-ring-max 100)
+#+END_SRC
+Also, I like to be able to pop repeatedly more easily.
+#+BEGIN_SRC emacs-lisp
 (setq set-mark-command-repeat-pop t)
-(setq-default indent-tabs-mode nil)
+#+END_SRC
+
+**** Unicode
+UTF-8 is pretty much the standard everywhere now.
+#+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (setq default-buffer-file-coding-system 'utf-8)
+#+END_SRC
+**** heap
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq global-linum-mode nil)
 (setq frame-resize-pixelwise t)
@@ -242,9 +258,7 @@ is usually enough for me to keep my bearings.
 (setq vc-follow-symlinks t)
 #+END_SRC
 *** Keybindings
-Keybindings are largely concentrated below, although I try to order them more by
-semantic category.
-**** Config file access
+**** Config File Access
 Quickly getting to my config file is important for fluid customization. Just as
 programming and discovery is faster with a REPL. Emacs is really just one large
 REPL, so I make it easier to use as such.
@@ -257,12 +271,12 @@ REPL, so I make it easier to use as such.
 (bind-key "C-c e" 'spruce/open-config-file)
 #+END_SRC
 
-**** Quick fullscreen mode
+**** Quick Fullscreen Mode
 #+BEGIN_SRC emacs-lisp
 (bind-key "H-<return>" 'toggle-frame-fullscreen)
 #+END_SRC 
 
-**** Line shifting
+**** Line Shifting
 Occasionally I like to shift whole lines up and down through a buffer. These
 make it easier and more natural than killing and yanking.
 #+BEGIN_SRC emacs-lisp
@@ -957,8 +971,7 @@ specific setting. Documentation is generally provided in the docstring rather
 than through =org=. This code block is not tangled, rather it is included through
 =noweb= near the top of this file.
 
-#+NAME utility-functions
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :noweb-ref utility-functions :tangle no
 ;; see http://ergoemacs.org/emacs/modernization_elisp_lib_problem.html
 (defun s-trim-left (s)
   "Remove whitespace at the beginning of S."
@@ -1037,7 +1050,7 @@ than through =org=. This code block is not tangled, rather it is included throug
   (interactive)
   (revert-buffer t t))
 
-(defun backward-kill-line (arg)
+(defun backward-kill-line (arg)5
   "Kill ARG lines backward."
   (interactive "p")
   (kill-line (- 1 arg)))
