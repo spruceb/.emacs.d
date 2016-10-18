@@ -216,6 +216,13 @@ edit in multiple frames. I tend towards 80 characters in free text, and a loose
 (setq-default fill-column 80)
 #+END_SRC
 
+*** Scrolling Context Jumps
+When paging down I tend to lose track of what I was reading unless some of the
+previous page remains. A full half-screen is a little much, but around 4 lines
+is usually enough for me to keep my bearings.
+#+BEGIN_SRC emacs-lisp
+(setq next-screen-context-lines 5)
+#+END_SRC
 *** heap
 #+BEGIN_SRC emacs-lisp
 (setq global-mark-ring-max 200)
@@ -370,6 +377,7 @@ conditional on the operating system.
 (when (eq system-type 'darwin)
   (org-babel-load-file spruce/macOS-config-file))
 #+END_SRC
+
 * General
 ** Packages
 *** Helm
@@ -421,6 +429,52 @@ conditional on the operating system.
          ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
 #+END_SRC
 ** Navigation
+** Appearance
+*** Mode Line
+The column number is often useful for me, enough to be in the mode line.
+#+BEGIN_SRC emacs-lisp
+(column-number-mode t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'smart-mode-line)
+(setq sml/theme 'respectful)
+(setq sml/shorten-directory t)
+(setq sml/shorten-modes t)
+(setf rm-blacklist '(" company" "ARev" "doom" " Projectile[-]"
+                     " Undo-Tree" " Helm" " SP" " Fly"))
+(setq sml/no-confirm-load-theme t)
+(setq sml/line-number-format "  %3l ")
+(sml/setup)
+#+END_SRC
+*** Appearance Heap
+#+BEGIN_SRC emacs-lisp
+
+(set-face-attribute 'default nil :font "Source Code Pro-12")
+(set-face-attribute 'mode-line nil :family 'unspecified)
+;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
+;;   (load-theme 'spacegray-spruce t))
+
+(set-frame-font "Source Code Pro-12")
+(use-package all-the-icons)
+(use-package neotree)
+(use-package doom-themes
+  :diminish doom
+  :after neotree
+  :config
+  (setq doom-neotree-file-icons t)
+  (add-hook 'find-file-hook 'doom-buffer-mode)
+  ;; brighter minibuffer when active
+  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  (load-theme 'doom-one t)
+  (require 'doom-neotree))
+(when (boundp 'window-divider-mode)
+  (setq window-divider-default-places t
+        window-divider-default-bottom-width 1
+        window-divider-default-right-width 1)
+  (window-divider-mode +1))
+#+END_SRC
+
 ** More in depth changes than startup (i.e. not 1 liners)
 * Programming
 ** General
@@ -444,7 +498,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
-(global-set-key "\M-;" 'comment-dwim-line)
+(bind-key "M-;" 'comment-dwim-line prog-mode-map)
 #+END_SRC
 
 ** CC
@@ -453,6 +507,12 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
     :bind (:map
            c-mode-base-map
            ("C-c b" . compile)))
+(defun astyle-this-buffer (pmin pmax)
+  (interactive "r")
+  (shell-command-on-region pmin pmax
+                           "astyle" ;; add options here...
+                           (current-buffer) t
+                           (get-buffer-create "*Astyle Errors*") t))
 #+END_SRC
 *** C++
 #+BEGIN_SRC emacs-lisp
@@ -525,9 +585,13 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (add-hook 'org-mode-hook (lambda () (setq line-spacing '0.25)))
   (setq org-use-sub-superscripts "{}")
   (setq org-export-headline-levels 5)
-  
+  (setq org-src-ask-before-returning-to-edit-buffer nil)
+  (setq org-src-window-setup 'other-window)
   (add-to-list 'org-structure-template-alist
                '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" ""))
+  (setq org-html-head-extra 
+        (concat "<link rel=\"stylesheet\" type=\"text/css\" href=\""
+                spruce/org-config-dirpath "/css/org-export.css\"></link>"))
   :bind (("C-c a a" . org-agenda-list)
          ("C-c L" . org-insert-link-global)
          ("C-c o" . org-open-at-point-global)
@@ -541,6 +605,9 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 
 (use-package org-pandoc)
 #+END_SRC
+
+#+RESULTS:
+
 * LaTeX
 #+BEGIN_SRC emacs-lisp
 (use-package auctex
@@ -623,39 +690,6 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 Sometimes I want to test out a tweak or fix an annoyance fast, without putting
 in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
-** Appearance
-#+BEGIN_SRC emacs-lisp
-
-(set-face-attribute 'default nil :font "Source Code Pro-12")
-(set-face-attribute 'mode-line nil :family 'unspecified)
-;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
-;;   (load-theme 'spacegray-spruce t))
-
-(defun astyle-this-buffer (pmin pmax)
-  (interactive "r")
-  (shell-command-on-region pmin pmax
-                           "astyle" ;; add options here...
-                           (current-buffer) t
-                           (get-buffer-create "*Astyle Errors*") t))
-(set-frame-font "Source Code Pro-12")
-(use-package all-the-icons)
-(use-package neotree)
-(use-package doom-themes
-  :diminish doom
-  :after neotree
-  :config
-  (setq doom-neotree-file-icons t)
-  (add-hook 'find-file-hook 'doom-buffer-mode)
-  ;; brighter minibuffer when active
-  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
-  (load-theme 'doom-one t)
-  (require 'doom-neotree))
-(when (boundp 'window-divider-mode)
-  (setq window-divider-default-places t
-        window-divider-default-bottom-width 1
-        window-divider-default-right-width 1)
-  (window-divider-mode +1))
-#+END_SRC
 ** Package Heap
 *** Tramp
 #+BEGIN_SRC emacs-lisp
@@ -703,10 +737,26 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
   (setq magit-auto-revert-mode t)
   :bind ("C-c g" . magit-status))
 #+END_SRC
+*** markdown-mode
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :mode "\\.md\\'"
+  :config
+  (add-hook 'markdown-mode-hook 'visual-line-mode))
+#+END_SRC
 *** smartparens
 #+BEGIN_SRC emacs-lisp
-; (use-package 
+(use-package smartparens
+  :config
+  (require 'smartparens-config)
+  (global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
+  (setq sp-navigate-consider-stringlike-sexp
+        (append sp-navigate-consider-stringlike-sexp (list 'python-mode
+                                                           'org-mode
+                                                           'coffeescript-mode)))
+  (setq sp-highlight-pair-overlay nil))
 #+END_SRC
+*** 
 ** Custom Heap
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
@@ -750,12 +800,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (setq exec-path (append exec-path '(":/usr/texbin")))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
 
-(add-hook 'markdown-mode-hook 'visual-line-mode)
-
-
-
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
-
 
 (persistent-scratch-setup-default)
 
@@ -780,16 +825,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
        rear-nonsticky
        (slime-repl-prompt read-only font-lock-face intangible)))))
 
-(require 'smartparens-config)
-(require 'smart-mode-line)
-(setq sml/theme 'respectful)
-(setq sml/shorten-directory t)
-(setq sml/shorten-modes t)
-(setf rm-blacklist '(" company" " Projectile[-]" " Undo-Tree" " Helm" " SP" " Fly"))
-(setq sml/no-confirm-load-theme t)
-(setq sml/line-number-format "  %3l ")
-(sml/setup)
-(column-number-mode t)
 (setq coffee-tab-width 2)
 
 ;; (require 'spaceline-config)
@@ -864,12 +899,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
         ('darwin "mdfind -name %s %s | grep -v .*.emlx")
         (t "locate %s")))
 
-(global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
-(setq sp-navigate-consider-stringlike-sexp
-      (append sp-navigate-consider-stringlike-sexp (list 'python-mode
-                                                         'org-mode
-                                                         'coffeescript-mode)))
-(setq sp-highlight-pair-overlay nil)
 (if (display-graphic-p)
     (desktop-save-mode nil))
 (setq desktop-dirname "~/.emacs.d/desktops/"
@@ -877,7 +906,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
       desktop-auto-save-timeout 30
       desktop-save nil)
 
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-hook 'coffeescript-mode-hook 'whitespace-mode)
 (add-hook 'python-mode-hook 'whitespace-mode)
@@ -886,7 +914,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
              indentation empty space-after-tab lines))
 ;; don't do anything whitespace, use whitespace-fn instead
 (setq whitespace-action nil)
-
 
 (defun init-projectile ()
   (interactive)
