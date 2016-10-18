@@ -624,7 +624,8 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 
 * LaTeX
 #+BEGIN_SRC emacs-lisp
-(use-package auctex
+(use-package tex
+  :ensure auctex
   :config
   ;; TODO: fucks up prettify for some reason?
   ;; (company-auctex-init)
