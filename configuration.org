@@ -397,6 +397,7 @@ conditional on the operating system.
 *** Helm
 #+BEGIN_SRC emacs-lisp
 (use-package helm
+  :diminish helm-mode
   :init (require 'helm-config)
   :config
   (setq helm-M-x-fuzzy-match t)
@@ -455,8 +456,9 @@ The column number is often useful for me, enough to be in the mode line.
 (setq sml/theme 'respectful)
 (setq sml/shorten-directory t)
 (setq sml/shorten-modes t)
-(setf rm-blacklist '(" company" "ARev" "doom" " Projectile[-]"
-                     " Undo-Tree" " Helm" " SP" " Fly"))
+(use-package autorevert
+  :diminish auto-revert-mode)
+(setq sml/replacer-regexp-list nil)
 (setq sml/no-confirm-load-theme t)
 (setq sml/line-number-format "  %3l ")
 (sml/setup)
@@ -473,7 +475,7 @@ The column number is often useful for me, enough to be in the mode line.
 (use-package all-the-icons)
 (use-package neotree)
 (use-package doom-themes
-  :diminish doom
+  :diminish doom-buffer-mode
   :after neotree
   :config
   (setq doom-neotree-file-icons t)
@@ -489,7 +491,6 @@ The column number is often useful for me, enough to be in the mode line.
   (window-divider-mode +1))
 #+END_SRC
 
-** More in depth changes than startup (i.e. not 1 liners)
 * Programming
 ** General
 *** Spacing and Indentation
@@ -689,6 +690,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
          ("H-C-k" . LaTeX-insert-display-math)))
 
 (use-package reftex
+  :diminish reftex-mode
   :config
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t))
@@ -725,6 +727,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 *** undo-tree
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
+  :diminish undo-tree-mode
   :config
   (setq undo-tree-auto-save-history t)
   (add-to-list 'undo-tree-history-directory-alist
@@ -762,6 +765,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 *** smartparens
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
+  :diminish smartparens-mode
   :config
   (require 'smartparens-config)
   (global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
