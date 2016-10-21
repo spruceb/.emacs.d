@@ -603,24 +603,31 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (setq org-use-sub-superscripts "{}")
   (setq org-export-headline-levels 5)
   (setq org-src-ask-before-returning-to-edit-buffer nil)
-  (setq org-src-window-setup 'other-window)
+  (setq org-src-window-setup 'current-window)
   (add-to-list 'org-structure-template-alist
                '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" ""))
   (setq org-html-head-extra 
         (concat "<link rel=\"stylesheet\" type=\"text/css\" href=\""
                 spruce/org-config-dirpath "/css/org-export.css\"></link>"))
+  (defun spruce/org-cycle-current-subtree ()
+    (interactive)
+    (let ((old-tab-style org-cycle-emulate-tab))
+      (setq org-cycle-emulate-tab nil)
+      (org-cycle)
+      (setq org-cycle-emulate-tab old-tab-style)))
+  
   :bind (("C-c a a" . org-agenda-list)
          ("C-c L" . org-insert-link-global)
          ("C-c o" . org-open-at-point-global)
-         ("H-M-<return>" . org-insert-subheading)))
+         ("H-M-<return>" . org-insert-subheading)
+         :map org-mode-map
+         ("C-<tab>" . spruce/org-cycle-current-subtree)))
 
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook
             (lambda () (org-bullets-mode 1)))
   (setcdr org-bullets-bullet-map nil))
-
-(use-package org-pandoc)
 #+END_SRC
 
 #+RESULTS:
