@@ -646,9 +646,17 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   ;; no tabs
   (setq TeX-auto-untabify t)
   ;; TODO: unsure what this does
-  ;; (setq-default TeX-master 'dwim)
-  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  ;; (setq-default TeX-master 'dwim)  
   (setq TeX-PDF-mode t)
+  (defun spruce/TeX-open-output-buffer ()
+    (interactive)
+    (let ((output-file (with-current-buffer TeX-command-buffer
+                         (expand-file-name
+                          (TeX-active-master (TeX-output-extension))))))
+      (find-file output-file)))
+  (add-to-list 'TeX-view-program-list
+               (list "Emacs" #'spruce/TeX-open-output-buffer))
+  (setq TeX-view-program-selection '((output-pdf "Emacs")))
   ;; better name for local variable
   (setq TeX-auto-local ".auctex-auto")
   ;; auto revert pdf buffer
@@ -670,33 +678,38 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
       (insert open-str)
       (save-excursion
         (if arg (forward-sexp (prefix-numeric-value arg)))
-        (insert close-str))))
-  (defun LaTeX-insert-inline-math (arg)
-    (interactive "P")
-    (TeX-insert-pair arg "\\( " " \\)"))
-  (defun LaTeX-insert-display-math (arg)
-    (interactive "P")
-    (TeX-insert-pair arg "\\[ " " \\]"))
-
-  (add-hook 'TeX-mode-hook #'TeX-mode-keybindings)
+        (insert close-str)))) 
 
   (setq TeX-electric-sub-and-superscript t)
-  (setq LaTeX-math-menu-unicode t)
-  (add-hook 'LaTeX-mode-hook (lambda () (latex-electric-env-pair-mode t)))
-  (add-hook 'LaTeX-mode-hook
-            (lambda () (set-fill-column 90)))
-  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
-  (add-hook 'LaTeX-mode-hook (lambda () (prettify-symbols-mode)))
 
+  (use-package latex
+    :ensure nil
+    :config
+    (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+    (setq LaTeX-math-menu-unicode t)
+    (add-hook 'LaTeX-mode-hook (lambda () (latex-electric-env-pair-mode t)))
+    (add-hook 'LaTeX-mode-hook
+              (lambda () (set-fill-column 90)))
+    (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
+    (add-hook 'LaTeX-mode-hook (lambda () (prettify-symbols-mode)))
+    (defun LaTeX-insert-inline-math (arg)
+      (interactive "P")
+      (TeX-insert-pair arg "\\( " " \\)"))
+    (defun LaTeX-insert-display-math (arg)
+      (interactive "P")
+      (TeX-insert-pair arg "\\[ " " \\]"))
+    (defun spruce/LaTeX-mode-keybindings ()
+      (bind-key "H-C-j" #'LaTeX-insert-inline-math
+                (current-local-map))
+      (bind-key "H-C-k" #'LaTeX-insert-display-math
+                (current-local-map)))
+    (add-hook 'LaTeX-mode-hook #'spruce/LaTeX-mode-keybindings)
+    (set-face-attribute 'font-latex-sedate-face nil
+                        :inherit 'font-lock-constant-face
+                        :foreground 'unspecified))
+  
   (put 'TeX-command-extra-options 'safe-local-variable
-       (lambda (x) (string-equal x "-shell-escape")))
-
-  :bind (:map
-         TeX-mode-map
-         ("C-c b" . tex-runall-clean)
-         :map LaTeX-mode-map
-         ("H-C-j" . LaTeX-insert-inline-math)
-         ("H-C-k" . LaTeX-insert-display-math)))
+       (lambda (x) (string-equal x "-shell-escape"))))
 
 (use-package reftex
   :diminish reftex-mode
