@@ -23,6 +23,7 @@
   (unless (package-installed-p 'org)
     (package-refresh-contents)
     (package-install 'org)))
+(require 'org)
 
 ;; Tangle code and load from an initial file
 (setq spruce/bootstrap-org-file "configuration.org")

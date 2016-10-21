@@ -87,7 +87,9 @@ number of other packages I use.
 
 #+BEGIN_SRC emacs-lisp
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
+(require 'use-package)
 ;; All packages in a use-package macro should be automatically installed
 (setq use-package-always-ensure t)
 #+END_SRC
