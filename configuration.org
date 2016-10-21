@@ -469,7 +469,6 @@ The column number is often useful for me, enough to be in the mode line.
 #+BEGIN_SRC emacs-lisp
 
 (set-face-attribute 'default nil :font "Source Code Pro-12")
-(set-face-attribute 'mode-line nil :family 'unspecified)
 ;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
 ;;   (load-theme 'spacegray-spruce t))
 
@@ -597,8 +596,8 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (setq org-hide-emphasis-markers t)
   (setq org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t)
-  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
-  (set-face-attribute 'org-level-2 nil :inherit 'outline-2)
+  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.25)
+  (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.15)
   (add-hook 'org-mode-hook (lambda () (setq line-spacing '0.25)))
   (setq org-use-sub-superscripts "{}")
   (setq org-export-headline-levels 5)
@@ -831,7 +830,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (when (string-equal system-name "Spruces-MacBook-Pro.local")
-  (add-to-list 'load-path "/usr/local/Cellar/emacs/24.5/share/emacs/24.5/lisp/")
   (add-to-list 'load-path "/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig")
   (add-to-list 'load-path "/usr/local/lib/pkgconfig")
   (add-to-list 'load-path "/opt/X11/lib/pkgconfig"))
