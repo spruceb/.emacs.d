@@ -6,3 +6,5 @@ var
 .python-environments
 literate/*.el
 configuration.el
+/configuration.html
+/configuration.tex
