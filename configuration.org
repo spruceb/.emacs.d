@@ -20,6 +20,34 @@ this through literate programming through =org-mode=. The code becomes somewhat
 secondary to documentation and organization, making it easier to keep track of
 and modify. This is my ongoing attempt to organize, clean up, and improve my
 config. Started October 15Thu, 2016.
+* Contents                                                              :TOC:
+ - [[#about][About]]
+ - [[#bootstrap][Bootstrap]]
+   - [[#security][Security]]
+   - [[#configuration-management][Configuration Management]]
+   - [[#personal-information][Personal Information]]
+   - [[#utility-functions][Utility Functions]]
+   - [[#default-settings][Default Settings]]
+   - [[#keybindings][Keybindings]]
+   - [[#basic-appearance][Basic Appearance]]
+   - [[#macos][macOS]]
+ - [[#general][General]]
+   - [[#helm][Helm]]
+   - [[#navigation][Navigation]]
+   - [[#appearance][Appearance]]
+ - [[#programming][Programming]]
+   - [[#general-1][General]]
+   - [[#cc][CC]]
+   - [[#python][Python]]
+   - [[#emacs-lisp][Emacs Lisp]]
+   - [[#coffeescript][Coffeescript]]
+ - [[#org][Org]]
+ - [[#latex][LaTeX]]
+ - [[#the-heap][The Heap]]
+   - [[#package-heap][Package Heap]]
+   - [[#old-heap][Old Heap]]
+ - [[#utility-functions-1][Utility Functions]]
+
 * Bootstrap
 ** Security
 There are several important security improvements to Emacs that should come as
@@ -116,6 +144,16 @@ do this I use the following macro and list:
          ,full-file)
        (add-to-list
         (quote spruce/config-org-files) (quote (,name . ,filename)) t))))
+#+END_SRC
+
+*** Table of Contents
+While =org= exports nice tables of contents by default, they don't appear directly
+in org files, and GitHub doesn't render them. So I use a package that (somewhat
+worryingly) automatically inserts a table of contents into the actual org file.
+#+BEGIN_SRC emacs-lisp
+(use-package toc-org
+  :config
+  (add-hook 'org-mode-hook 'toc-org-enable))
 #+END_SRC
 
 ** Personal Information
