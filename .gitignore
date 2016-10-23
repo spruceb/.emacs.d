@@ -5,6 +5,7 @@ auto-save-list
 var
 .python-environments
 literate/*.el
+!literate/temp-custom.el
 configuration.el
 /configuration.html
 /configuration.tex
