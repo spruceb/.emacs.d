@@ -19,7 +19,7 @@ and even worse to debug. It's pretty common in the Emacs community to deal with
 this through literate programming through =org-mode=. The code becomes somewhat
 secondary to documentation and organization, making it easier to keep track of
 and modify. This is my ongoing attempt to organize, clean up, and improve my
-config. Started October 15th, 2016.
+config. Started October 15Thu, 2016.
 * Bootstrap
 ** Security
 There are several important security improvements to Emacs that should come as
@@ -135,24 +135,36 @@ defined at the bottom of this file, but are accessible to all config below this 
 <<utility-functions>>
 #+END_SRC
 
-** Basic Usability
-These involve configuration or enabling of Emacs default features.
-*** Settings
-**** Modernization
+** Default Settings
+*** Modernization
 Emacs is very old, and has a number of defaults that reflect this age. Some of
 these I like, many I don't. 
 
+It's normal text editing behavior to automatically replace selected text if a new
+character is typed.
 #+BEGIN_SRC emacs-lisp
-;; automatically replace selected text if a new character is typed
 (delete-selection-mode t)
-;; in fundamental mode use single spaces after sentence-ending periods.
-(setq sentence-end-double-space nil)
-;; Emacs is user-level software, not a shell, so some protection is nice. Using
-;; a Trash is one such protection I occasionally still appreciate.
-(setq delete-by-moving-to-trash t)
 #+END_SRC
 
-**** Parentheses Highlighting
+In Fundamental mode, use a single spaces after sentence-ending periods. Double
+spaces are from the typewriter period and should not be used in modern documents.
+#+BEGIN_SRC emacs-lisp
+(setq sentence-end-double-space nil)
+#+END_SRC
+Emacs is user-level software, not a shell, so some protection is nice. Using
+a Trash is one such protection I occasionally still appreciate.
+#+BEGIN_SRC emacs-lisp
+(setq delete-by-moving-to-trash t)
+#+END_SRC
+Like some terminal emulators, graphical Emacs clients resize "line/column"-wise
+by default (i.e. snapping to the nearest line or column). In theory this could
+be useful, but it's wildly unexpected and odd looking in modern systems. This
+setting tries to make "frames" (Emacs' term for windows) resize normally.
+#+BEGIN_SRC emacs-lisp
+(setq frame-resize-pixelwise t)
+#+END_SRC
+
+*** Parentheses Highlighting
 Highlight corresponding parentheses if the cursor is over one of them. This is
 pretty important in most languages, especially with the S-expression
 manipulations I often perform.
@@ -161,7 +173,7 @@ manipulations I often perform.
 (show-paren-mode t)
 #+END_SRC
 
-**** Scratch buffer
+*** Scratch buffer
 I prefer a blank scratch buffer. The default message is just going to be deleted
 anyway. In the future I may set some more complicated and useful programmatic
 message as the default, but for the moment an empty buffer is the most useful
@@ -170,7 +182,7 @@ option.
 (setq initial-scratch-message "")
 #+END_SRC
 
-**** Backups
+*** Backups
 I have plenty of disk space, so as many backups as possible is great. However I
 definitely don't want them cluttering up random directories.
 #+BEGIN_SRC emacs-lisp
@@ -188,7 +200,7 @@ Additionally I want to autosave early and often, but not cause clutter.
 (setq auto-save-timeout 10)   ; or 10 seconds
 #+END_SRC
 
-**** ~kill-line~
+*** ~kill-line~
 By default =C-k= or ~kill-line~ doesn't truly delete the line, but rather kill
 all the text on it while leaving the newline. There are situations where this is
 useful, but overall I prefer deletion of the entire line.
@@ -200,7 +212,7 @@ I also appreciate having the ability to kill backwards easily.
 (bind-key "H-<backspace>" 'backward-kill-line)
 #+END_SRC
 
-**** Garbage Collection Performance
+*** Garbage Collection Performance
 The default garbage collection of Emacs is quite aggressive. It collects garbage
 after around 800KB of allocation. This is tiny for modern systems. However even
 though I usually have >= 16GB of RAM, setting the garbage collection threshold
@@ -211,7 +223,7 @@ tweak this in the future.
 (setq gc-cons-threshold 100000000)
 #+END_SRC
 
-**** =fill-column=
+*** =fill-column=
 I generally like to fill (i.e. redistribute line breaks to not go past a certain
 point) my text and code, to make it easier to browse in various situations and
 edit in multiple frames. I tend towards 80 characters in free text, and a loose
@@ -219,8 +231,7 @@ edit in multiple frames. I tend towards 80 characters in free text, and a loose
 #+BEGIN_SRC emacs-lisp
 (setq-default fill-column 80)
 #+END_SRC
-
-**** Scrolling Context Jumps
+*** Scrolling Context Jumps
 When paging down I tend to lose track of what I was reading unless some of the
 previous page remains. A full half-screen is a little much, but around 4 lines
 is usually enough for me to keep my bearings.
@@ -228,7 +239,7 @@ is usually enough for me to keep my bearings.
 (setq next-screen-context-lines 5)
 #+END_SRC
 
-**** Mark Ring
+*** Mark Ring
 The mark ring contains information about where marks (selection points) were
 set. Since I have a modern computer I see no reason for this to be small.
 #+BEGIN_SRC emacs-lisp
@@ -240,27 +251,40 @@ Also, I like to be able to pop repeatedly more easily.
 (setq set-mark-command-repeat-pop t)
 #+END_SRC
 
-**** Unicode
-UTF-8 is pretty much the standard everywhere now.
+*** Unicode
+UTF-8 is pretty much the standard everywhere now. Better yet, unless I
+specifically add "special" (non-ASCII) characters to a buffer, UTF-8 is
+identical to ASCII, which is nice for compatibility with older programs.
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8) 
 (set-keyboard-coding-system 'utf-8)
 (setq default-buffer-file-coding-system 'utf-8)
 #+END_SRC
-**** heap
+**** TODO Double check the ~set-terminal-coding-system~ portability
+
+*** Enabling "dangerous" commands
+There's a number of commands that Emacs considers potentially destructive or
+dangerous for new users. I honestly think that in general this is a good
+feature, but it can be annoying at times. Here I enable several of these
+dangerous functions that I both understand and use.
 #+BEGIN_SRC emacs-lisp
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(setq global-linum-mode nil)
-(setq frame-resize-pixelwise t)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+#+END_SRC
+
+In the same vein, when editing a symlinked and version controlled file (i.e.
+opening a symlink to a file in version control) by default Emacs double checks
+that this is in fact what you want to do, since various issues can arise if you
+don't follow the link. I don't have any situations where I don't want to follow
+said links, and it's less nagging.
+#+BEGIN_SRC emacs-lisp
 (setq vc-follow-symlinks t)
 #+END_SRC
-*** Keybindings
-**** Config File Access
+
+** Keybindings
+*** Config File Access
 Quickly getting to my config file is important for fluid customization. Just as
 programming and discovery is faster with a REPL. Emacs is really just one large
 REPL, so I make it easier to use as such.
@@ -269,16 +293,15 @@ REPL, so I make it easier to use as such.
   (interactive)
   (find-file (or spruce/bootstrap-org-path
                  user-init-file "")))
-
 (bind-key "C-c e" 'spruce/open-config-file)
 #+END_SRC
 
-**** Quick Fullscreen Mode
+*** Quick Fullscreen Mode
 #+BEGIN_SRC emacs-lisp
 (bind-key "H-<return>" 'toggle-frame-fullscreen)
 #+END_SRC 
 
-**** Line Shifting
+*** Line Shifting
 Occasionally I like to shift whole lines up and down through a buffer. These
 make it easier and more natural than killing and yanking.
 #+BEGIN_SRC emacs-lisp
@@ -286,14 +309,14 @@ make it easier and more natural than killing and yanking.
            ("M-S-<down>" . move-line-down))
 #+END_SRC
 
-**** Buffer Reversion
+*** Buffer Reversion
 I find myself needing to revert buffers weirdly often. I now try to solve this
 with ~auto-revert-mode~ as much as possible, but this is still helpful.
 #+BEGIN_SRC emacs-lisp
 (bind-key "H-r" 'revert-buffer-no-prompt)
 #+END_SRC
 
-**** Macro Recording
+*** Macro Recording
 It took me a while to understand and get used to the idea of keyboard macros.
 Especially since they interact oddly with packages such as Helm. However once I
 did start using them I found defining a slightly more memorable syntax helpful.
@@ -302,10 +325,10 @@ did start using them I found defining a slightly more memorable syntax helpful.
            ("M-]" . kmacro-end-macro))
 #+END_SRC
 
-*** Basic Appearance
+** Basic Appearance
 These are simple changes to the default settings.
 
-**** Useless Information
+*** Useless Information
 The tool bar is both useless and ugly. Same for the scroll bar. Disable both.
 #+BEGIN_SRC emacs-lisp
 (tool-bar-mode -1)
@@ -319,7 +342,7 @@ situations where I do start from scratch, I prefer to start in =*scratch*=.
 (setq inhibit-startup-message t)
 #+END_SRC
 
-**** Cursor
+*** Cursor
 Somewhat similar to modern editors, I prefer a 1-pixel wide bar
 cursor. However having a distinctive shape in non-active buffers
 (rather than simply not blinking as in many other programs) is also quite useful.
@@ -328,14 +351,14 @@ cursor. However having a distinctive shape in non-active buffers
 (setq-default cursor-in-non-selected-windows 'hollow)
 #+END_SRC
 
-**** Frame Titles
+*** Frame Titles
 Window titles include a lot of unnecessary information by default. I generally
 find 3 things important: the buffer name, its mode, and whether it's been saved.
 #+BEGIN_SRC emacs-lisp
 (setq frame-title-format '("" "%b %* [%m]"))
 #+END_SRC
 
-**** Fringe Wrap Indicators
+*** Fringe Wrap Indicators
 The default fringe overage symbols are extremely ugly arrows. Unfortunately,
 there is no way to use high resolution images for these. They literally must be
 8x8 bitmaps, which explains why they're so ugly in the first place. However this
@@ -362,14 +385,14 @@ sequence of pseudo-dots looks a good bit better in my eyes.
    #b00000000])
 #+END_SRC
 
-**** Font Lock
+*** Font Lock
 I want syntax highlighting everywhere, and as much as possible.
 #+BEGIN_SRC emacs-lisp
 (setq font-lock-maximum-decoration t)
 (global-font-lock-mode t)
 #+END_SRC
 
-**** Prettify Symbols
+*** Prettify Symbols
 Similarly, I like to have nice many text representations of symbols replaced
 with those symbols. i.e. in =emacs-lisp= mode I see "lambda" as λ. This is
 especially useful for LaTeX editing. However I also like to edit the real
@@ -380,8 +403,8 @@ touching.
 (setq prettify-symbols-unprettify-at-point 'right-edge)
 #+END_SRC
 
-*** macOS
-I run Mitsuharu Yamamoto's =emacs-macport= on the latest
+** macOS
+I run [[https://bitbucket.org/mituharu/emacs-mac/overview][Mitsuharu Yamamoto's]] =emacs-macport= on the latest
 version of macOS. There are several configuration options specific to
 this platform that I use.
 
@@ -395,8 +418,7 @@ conditional on the operating system.
 #+END_SRC
 
 * General
-** Packages
-*** Helm
+** Helm
 #+BEGIN_SRC emacs-lisp
 (use-package helm
   :diminish helm-mode
@@ -516,7 +538,17 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
     (comment-dwim arg)))
 (bind-key "M-;" 'comment-dwim-line prog-mode-map)
 #+END_SRC
-
+*** Heap
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq global-linum-mode nil)
+(setq-default tab-width 4)
+(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+(with-eval-after-load 'smartparens
+  (add-hook 'prog-mode-hook #'smartparens-mode))
+(add-hook 'prog-mode-hook 'global-company-mode)
+(add-hook 'prog-mod (lambda () (abbrev-mode nil)))
+#+END_SRC
 ** CC
 #+BEGIN_SRC emacs-lisp
   (use-package cc-mode
@@ -529,6 +561,10 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
                            "astyle" ;; add options here...
                            (current-buffer) t
                            (get-buffer-create "*Astyle Errors*") t))
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (require 'dtrt-indent)
+            (dtrt-indent-mode nil)))
 #+END_SRC
 *** C++
 #+BEGIN_SRC emacs-lisp
@@ -557,6 +593,17 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "-i")
+
+(use-package jedi
+  :bind (("C-c /" . jedi:show-doc))) 
+(eval-after-load "python-mode"
+  '(define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
+(defun jedi-python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi)
+  (define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
+
+(add-hook 'python-mode-hook 'jedi-python-mode-hook)
+(setq jedi:complete-on-dot t)
 #+END_SRC
 ** Elisp
 #+BEGIN_SRC emacs-lisp
@@ -564,10 +611,14 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (local-set-key (kbd "H-e") #'eval-buffer))
 (add-hook 'emacs-lisp-mode-hook 'elisp-keybindings)
 #+END_SRC
+** Coffeescript
+#+BEGIN_SRC emacs-lisp
+(setq coffee-tab-width 2)
+#+END_SRC
 * Org
 #+BEGIN_SRC emacs-lisp
 (use-package org
-  :diminish 'org-indent-mode
+  :diminish s org-indent-mode
   :config
   (setq org-agenda-files (list "~/Documents/Classes/school-schedule.org"))
   (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○"))
@@ -628,9 +679,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
             (lambda () (org-bullets-mode 1)))
   (setcdr org-bullets-bullet-map nil))
 #+END_SRC
-
-#+RESULTS:
-
+  
 * LaTeX
 #+BEGIN_SRC emacs-lisp
 (use-package tex
@@ -645,7 +694,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   ;; no tabs
   (setq TeX-auto-untabify t)
   ;; TODO: unsure what this does
-  ;; (setq-default TeX-master 'dwim)  
+  ;; (setq-default TeX-master 'dwim)
   (setq TeX-PDF-mode t)
   (defun spruce/TeX-open-output-buffer ()
     (interactive)
@@ -677,7 +726,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
       (insert open-str)
       (save-excursion
         (if arg (forward-sexp (prefix-numeric-value arg)))
-        (insert close-str)))) 
+        (insert close-str))))
 
   (setq TeX-electric-sub-and-superscript t)
 
@@ -703,10 +752,15 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
       (bind-key "H-C-k" #'LaTeX-insert-display-math
                 (current-local-map)))
     (add-hook 'LaTeX-mode-hook #'spruce/LaTeX-mode-keybindings)
-    (set-face-attribute 'font-latex-sedate-face nil
-                        :inherit 'font-lock-constant-face
-                        :foreground 'unspecified))
-  
+    (with-eval-after-load 'smartparens
+      (add-hook 'TeX-mode-hook #'smartparens-mode))
+    (use-package font-latex
+      :ensure nil
+      :config
+      (set-face-attribute 'font-latex-sedate-face nil
+                          :inherit 'font-lock-constant-face
+                          :foreground 'unspecified)))
+
   (put 'TeX-command-extra-options 'safe-local-variable
        (lambda (x) (string-equal x "-shell-escape"))))
 
@@ -796,7 +850,11 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
                                                            'coffeescript-mode)))
   (setq sp-highlight-pair-overlay nil))
 #+END_SRC
-*** 
+*** persistent-scratch
+#+BEGIN_SRC emacs-lisp
+(use-package persistent-scratch
+  :config (persistent-scratch-setup-default))
+#+END_SRC
 ** Custom Heap
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
@@ -839,32 +897,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (setq exec-path (append exec-path '(":/usr/texbin")))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
 
-(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
-
-(persistent-scratch-setup-default)
-
-;; Credit: http://compgroups.net/comp.emacs/tweaking-slime/95455
-(defvar slime-repl-font-lock-keywords lisp-font-lock-keywords-2)
-(defun slime-repl-font-lock-setup ()
-  (setq font-lock-defaults
-        '(slime-repl-font-lock-keywords
-          ;; From lisp-mode.el
-          nil nil (("+-*/.<>=!?$%_&~^:@" . "w")) nil
-          (font-lock-syntactic-face-function
-           . lisp-font-lock-syntactic-face-function))))
-
-(add-hook 'slime-repl-mode-hook 'slime-repl-font-lock-setup)
-
-(defadvice slime-repl-insert-prompt (after font-lock-face activate)
-  (let ((inhibit-read-only t))
-    (add-text-properties
-     slime-repl-prompt-start-mark (point)
-     '(font-lock-face
-       slime-repl-prompt-face
-       rear-nonsticky
-       (slime-repl-prompt read-only font-lock-face intangible)))))
-
-(setq coffee-tab-width 2)
 
 ;; (require 'spaceline-config)
 ;; (spaceline-emacs-theme)
@@ -879,9 +911,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 ;; (powerline-default-theme)
 ;; (setq powerline-default-separator 'utf-8)
 
-(add-hook 'prog-mode-hook #'smartparens-mode)
-(add-hook 'TeX-mode-hook #'smartparens-mode)
-(add-hook 'prog-mode-hook 'global-company-mode)
 (global-set-key (kbd "C-<tab>") 'company-complete)
 
 (setq dekstop-auto-save-timeout 300)
@@ -893,28 +922,13 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
       "\273\267\260-")
 (require 'fill-column-indicator)
 
-
-(eval-after-load "python-mode"
-  '(define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
 ;; (set-mouse-color "green")
 
 (setq doc-view-continuous t)
 (setq doc-view-ghostscript-program "/usr/local/bin/gs")
 
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (require 'dtrt-indent)
-            (dtrt-indent-mode nil)))
 (load "~/.emacs.d/fireplace/fireplace")
 
-(defun jedi-python-mode-hook ()
-  (add-to-list 'company-backends 'company-jedi)
-  (define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
-
-(add-hook 'python-mode-hook 'jedi-python-mode-hook)
-
-(add-hook 'prog-mod (lambda () (abbrev-mode nil)))
-(setq jedi:complete-on-dot t)
 (setq fi:find-tag-lock nil)
 
 ;; Use Source Code Sans (pretty variable width font) for org mode
