@@ -19,7 +19,7 @@ and even worse to debug. It's pretty common in the Emacs community to deal with
 this through literate programming through =org-mode=. The code becomes somewhat
 secondary to documentation and organization, making it easier to keep track of
 and modify. This is my ongoing attempt to organize, clean up, and improve my
-config. Started October 15Thu, 2016.
+config. Started October 15th, 2016.
 * Contents                                                              :TOC:
  - [[#about][About]]
  - [[#bootstrap][Bootstrap]]
@@ -269,6 +269,7 @@ edit in multiple frames. I tend towards 80 characters in free text, and a loose
 #+BEGIN_SRC emacs-lisp
 (setq-default fill-column 80)
 #+END_SRC
+
 *** Scrolling Context Jumps
 When paging down I tend to lose track of what I was reading unless some of the
 previous page remains. A full half-screen is a little much, but around 4 lines
@@ -505,6 +506,7 @@ conditional on the operating system.
          ;; switch to multi-swoop from swoop
          ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
 #+END_SRC
+
 ** Navigation
 ** Appearance
 *** Mode Line
@@ -525,6 +527,7 @@ The column number is often useful for me, enough to be in the mode line.
 (setq sml/line-number-format "  %3l ")
 (sml/setup)
 #+END_SRC
+
 *** Appearance Heap
 #+BEGIN_SRC emacs-lisp
 
@@ -558,6 +561,7 @@ The column number is often useful for me, enough to be in the mode line.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook (lambda () (setq line-spacing nil)))
 #+END_SRC
+
 *** TODO Commenting
 This function and keybinding basically do exactly what I want for commenting.
 Apparently there's some shiny new options in Emacs 25 that I should probably
@@ -576,6 +580,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
     (comment-dwim arg)))
 (bind-key "M-;" 'comment-dwim-line prog-mode-map)
 #+END_SRC
+
 *** Heap
 #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
@@ -587,6 +592,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (add-hook 'prog-mode-hook 'global-company-mode)
 (add-hook 'prog-mod (lambda () (abbrev-mode nil)))
 #+END_SRC
+
 ** CC
 #+BEGIN_SRC emacs-lisp
   (use-package cc-mode
@@ -604,10 +610,12 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
             (require 'dtrt-indent)
             (dtrt-indent-mode nil)))
 #+END_SRC
+
 *** C++
 #+BEGIN_SRC emacs-lisp
 (add-hook 'c++-mode-hook (lambda () (setq c-basic-offset 4)))
 #+END_SRC
+
 ** Python
 #+BEGIN_SRC emacs-lisp
 (defun toggle-pdb ()
@@ -643,16 +651,19 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (add-hook 'python-mode-hook 'jedi-python-mode-hook)
 (setq jedi:complete-on-dot t)
 #+END_SRC
-** Elisp
+
+** Emacs Lisp
 #+BEGIN_SRC emacs-lisp
 (defun elisp-keybindings ()
   (local-set-key (kbd "H-e") #'eval-buffer))
 (add-hook 'emacs-lisp-mode-hook 'elisp-keybindings)
 #+END_SRC
+
 ** Coffeescript
 #+BEGIN_SRC emacs-lisp
 (setq coffee-tab-width 2)
 #+END_SRC
+
 * Org
 #+BEGIN_SRC emacs-lisp
 (use-package org
@@ -816,6 +827,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
                                      (mapcar #'file-name-base files))))
     (insert-file-contents (concat latex-templates-directory selection ".tex"))))
 #+END_SRC
+
 * The Heap
 Sometimes I want to test out a tweak or fix an annoyance fast, without putting
 in the time to document how or why. This is a bad habit, but sometimes
@@ -952,14 +964,8 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (global-set-key (kbd "C-<tab>") 'company-complete)
 
 (setq dekstop-auto-save-timeout 300)
-
-(require 'transpose-frame)
-(require 'buffer-move)
-
 (fset 'scheme-linebr
       "\273\267\260-")
-(require 'fill-column-indicator)
-
 ;; (set-mouse-color "green")
 
 (setq doc-view-continuous t)
