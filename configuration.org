@@ -121,6 +121,19 @@ number of other packages I use.
 ;; All packages in a use-package macro should be automatically installed
 (setq use-package-always-ensure t)
 #+END_SRC
+Additionally, I use the ~:diminish~ feature of =use-package= to hide various minor
+modes from my mode line.
+*** TODO =validate=
+=validate= is a package that tries to minimize invalid variable values. Emacs and
+many packages have user-configurable variables that should only hold certain
+values, perhaps only integers or only one of a list of symbols. It's possible to
+subtly mis-configure these, potentially letting Emacs to continue to run until
+some feature is called and behaves wildly unexpectedly. So I use =validate= and
+~validate-setq~ whenever possible.
+#+BEGIN_SRC emacs-lisp
+(use-package validate)
+#+END_SRC
+
 *** External Files
 I have several external config files loaded by this one. These are given
 variable names and added to a global list in various sections in this file. To
