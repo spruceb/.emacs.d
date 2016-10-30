@@ -347,6 +347,35 @@ said links, and it's less nagging.
 (setq vc-follow-symlinks t)
 #+END_SRC
 
+*** Debug on error
+There are a lot of things that can go wrong in Emacs, especially with as much
+config as I've got here. Fixing them is of course important, but the default
+behavior is to immediately throw you into a debugger. I prefer to
+just get a message and handle it on my own terms.
+#+BEGIN_SRC emacs-lisp
+(setq debug-on-error nil)
+#+END_SRC
+
+*** Visual Bell
+Emacs sends "bells" relatively often (i.e. every time ~keyboard-quit~ is called).
+Playing an actual sound for these gets really annoying really fast. However
+using the "normal" setting of ~visable-bell~ true has caused odd problems on macOS
+in the past. So for the time being I simply override the function that's meant
+to play the bell sound with flashing the mode line for a tenth of a second.
+#+BEGIN_SRC emacs-lisp
+(setq visible-bell nil)
+(setq ring-bell-function
+      (lambda () (invert-face 'mode-line)
+        (run-with-timer 0.1 nil 'invert-face 'mode-line)))
+#+END_SRC
+
+*** Yes or no
+There's a lot of yes or no prompts in Emacs, some of which I specifically enable
+to keep myself from making mistakes. However I feel confident enough in my own
+competence to press =y= or =n= rather than a full =yes= or =no=.
+#+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
 ** Keybindings
 *** Config File Access
 Quickly getting to my config file is important for fluid customization. Just as
@@ -590,6 +619,7 @@ buffer and saving them back.
 The column number is often useful for me, enough to be in the mode line.
 #+BEGIN_SRC emacs-lisp
 (column-number-mode t)
+(line-number-mode t)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -665,7 +695,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (setq-default tab-width 4)
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 (with-eval-after-load 'smartparens
-  (add-hook 'prog-mode-hook #'smartparens-mode))
+  (smartparens-global-mode))
 (add-hook 'prog-mode-hook 'global-company-mode)
 (add-hook 'prog-mod (lambda () (abbrev-mode nil)))
 #+END_SRC
@@ -982,7 +1012,23 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (use-package persistent-scratch
   :config (persistent-scratch-setup-default))
 #+END_SRC
+*** transpose-frame
+#+BEGIN_SRC emacs-lisp
+(use-package transpose-frame)
 #+END_SRC
+*** buffer-move
+#+BEGIN_SRC emacs-lisp
+(use-package buffer-move)
+#+END_SRC
+*** fill-column-indicator
+#+BEGIN_SRC emacs-lisp
+(use-package fill-column-indicator)
+#+END_SRC
+*** ESS
+#+BEGIN_SRC emacs-lisp
+(use-package ess
+  :init (require 'ess-site))
+#+END_SRC 
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (when (string-equal system-name "Spruces-MacBook-Pro.local")
@@ -1056,7 +1102,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (add-hook 'python-mode-hook 'whitespace-mode)
 (setq whitespace-style
       '(face trailing space-before-tab tab
-             indentation empty space-after-tab lines))
+             indentation empty space-after-tab))
 ;; don't do anything whitespace, use whitespace-fn instead
 (setq whitespace-action nil)
 
@@ -1091,8 +1137,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
   (interactive)
   (TeX-command-run-all nil)
   (TeX-clean))
-
-(setq debug-on-error nil)
 #+END_SRC
 * Utility Functions
 These functions are bound to keys and used in various places in my config.
