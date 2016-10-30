@@ -518,59 +518,82 @@ Emacs, selecting a file, using M-x to select a command, selecting a buffer to
 switch to, etc. Helm provides a consistent, sane, and incredibly convenient
 framework for selection, including the best search method I have ever seen. My
 only complaint about it is going back to other applications where selecting
-commands or finding files takes actual mental effort. 
+commands or finding files takes actual mental effort.
 
 Helm can plug into and replace a large number of Emacs features, as well as many
 other packages. I generally put such configs in the other packages, as I now
 view Helm as more part of my default Emacs rather than a separate package. For
 default Emacs features, a large part of this "plugging in" is just rebinding
-default keybindings to Helm versions of Emacs commands.    
-#+BEGIN_SRC emacs-lisp
+default keybindings to Helm versions of Emacs commands.
+*** Helm Proper
+This is my Helm =use-package=. I use noweb to tangle source blocks below inside
+the use-package.
+#+BEGIN_SRC emacs-lisp :noweb tangle
 (use-package helm
   :diminish helm-mode
   :init (require 'helm-config)
   :config
-  ;; Fuzzy matching makes my typos less important and also doesn't get in my way
-  ;; when I know exactly what I want
-  (setq helm-M-x-fuzzy-match t)
-  (setq helm-mode-fuzzy-match t)
-
-  ;; Default Helm can open buffers in weird and disorienting positions. I prefer
-  ;; it always attempting to pop up as if from the mode line.
-  (setq helm-split-window-in-side-p t)
-
   ;; Enable Helm globally
   (helm-mode t)
+  <<helm-fuzzy-matching>>
+  <<helm-window-split>>
+  <<helm-company-projectile>>
+  :bind (
+         <<helm-replace-defaults>>
+         <<helm-persistent-action>>))
+#+END_SRC
+Note: the below is still included inside the Helm =use-package=.
+**** Fuzzy Matching
+Fuzzy matching makes my typos less important and also doesn't get in my way when
+I know exactly what I want.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-fuzzy-matching :tangle no
+(setq helm-M-x-fuzzy-match t)
+(setq helm-mode-fuzzy-match t)
 #+END_SRC
 
-Move to company/projectile configs
-#+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'company
-    (bind-key "C-:" 'helm-company company-mode-map)
-    (bind-key "C-:" 'helm-company company-active-map))
-  (with-eval-after-load 'projectile
-    (setq projectile-completion-system 'helm))
+**** Window Split
+Default Helm can open buffers in weird and disorienting positions. I prefer it
+always attempting to pop up as if from the mode line.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-window-split :tangle no
+(setq helm-split-window-in-side-p t)
 #+END_SRC
+
+**** Company/Projectile
+Move to company/projectile configs
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-company-projectile :tangle no
+(with-eval-after-load 'company
+  (bind-key "C-:" 'helm-company company-mode-map)
+  (bind-key "C-:" 'helm-company company-active-map))
+(with-eval-after-load 'projectile
+  (setq projectile-completion-system 'helm))
+#+END_SRC
+
+**** Defaults Replacement
 While Helm replaces several default Emacs functions to make many commands behave
 better, it also has specialized versions with extra features. I replace as many
 default options as possible.
-#+BEGIN_SRC emacs-lisp
-:bind (("M-x" . helm-M-x)
-       ("C-x C-f" . helm-find-files)
-       ("C-x b" . helm-mini)
-       ("C-x C-b" . helm-buffers-list)
-       ("C-c h o" . helm-occur)
-       ("M-s o" . helm-occur)
-       :map helm-map
-       ;; In Helm a persistent action is something that can be done in a Helm
-       ;; buffer without ending the session. By default it's bound to C-z, and
-       ;; tab is bound to selection of a non-persistent action. I prefer swapping
-       ;; C-z and tab functionality.
-       ("<tab>" . helm-execute-persistent-action)
-       ("C-i" . helm-execute-persistent-action) ; for use in terminal
-       ("C-z" . helm-select-action)))
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-replace-defaults :tangle no
+("M-x" . helm-M-x)
+("C-x C-f" . helm-find-files)
+("C-x b" . helm-mini)
+("C-x C-b" . helm-buffers-list)
+("C-c h o" . helm-occur)
+("M-s o" . helm-occur)
 #+END_SRC
 
+**** Persistent Action
+In Helm a persistent action is something that can be done in a Helm buffer
+without ending the session. By default it's bound to C-z, and tab is bound to
+selection of a non-persistent action. I prefer swapping C-z and tab
+functionality.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-persistent-action :tangle no
+:map helm-map
+("<tab>" . helm-execute-persistent-action)
+("C-i" . helm-execute-persistent-action) ; for use in terminal
+("C-z" . helm-select-action)
+#+END_SRC
+
+*** Helm Flx
 =flx= is a package that allows for Sublime-like great fuzzy matching. =helm-flx=
 plugs in this functionality to Helm's fuzzy matching.
 #+BEGIN_SRC emacs-lisp
@@ -578,6 +601,7 @@ plugs in this functionality to Helm's fuzzy matching.
   :config (helm-flx-mode t))
 #+END_SRC
 
+*** Helm Projectile
 Projectile is another incredibly important package for me, and of course I'd
 like to use Helm for all of its various features.
 #+BEGIN_SRC emacs-lisp
@@ -587,33 +611,82 @@ like to use Helm for all of its various features.
     (helm-projectile-on)))
 #+END_SRC
 
+*** =helm-swoop
 =helm-swoop= is a replacement for ~isearch~ and ~occur~ that searches buffers with a
 Helm-based interface and automatically moves through the searched buffer and
 highlights the matches. It also allows for editing the searches in a separate
 buffer and saving them back.
-#+BEGIN_SRC emacs-lisp
+**** Swoop Proper
+#+BEGIN_SRC emacs-lisp :noweb tangle
 (use-package helm-swoop
   :config
-  ;; Do the same window split as with the rest of Helm, i.e. inside the current
-  ;; buffer and vertically if possible
-  (setq helm-swoop-split-with-multiple-windows t)
-  (setq helm-swoop-split-direction 'split-window-vertically)
-  ;; Keep the font lock (color/highlighting etc) from the searched buffer in the
-  ;; results. This slows down the search, but not very perceptibly.
-  (setq helm-swoop-speed-or-color t)
-  :bind (("C-c s" . isearch-forward)
-         ;; I replace the default isearch binding with swoop. I also tend to
-         ;; type new searches more often than I use the symbol at the point, so
-         ;; I use the no-pre-input version.
-         ("C-s" . helm-swoop-without-pre-input)
-         ;; But I can take input as by default, if necessary.
-         ("C-M-s" . helm-swoop)
-         :map helm-swoop-map
-         ;; Switch to multi-swoop from swoop
-         ("M-i" . helm-multi-swoop-all-from-helm-swoop)))
+  <<helm-swoop-window-splitting>>
+  <<helm-swoop-output-color>>
+  <<helm-swoop-reactivate-mark>>
+  <<helm-swoop-ci-translation>>
+  :bind (
+         <<helm-swoop-search-rebinds>>
+         <<helm-swoop-switch-to-multi>>))
+#+END_SRC
+**** Swoop Window Splitting
+Do the same window split as with the rest of Helm, i.e. inside the current
+buffer and vertically if possible.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-window-splitting :tangle no
+(setq helm-swoop-split-with-multiple-windows t)
+(setq helm-swoop-split-direction 'split-window-vertically)
+#+END_SRC
+**** Font Lock in Searches
+Keep the font lock (color/highlighting etc) from the searched buffer in the
+results. This slows down the search, but not very perceptibly.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-output-color :tangle no
+(setq helm-swoop-speed-or-color t)
+#+END_SRC
+**** Mark Reactivation
+For some reason helm-swoop deactivates the mark on search selection. This
+wrapper fixes that, by wrapping helm-swoop in a function that will reactivate
+the mark if it was set before search started.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-reactivate-mark :tangle no
+(defun spruce/helm-swoop-mark-wrapper (original &rest search)
+  "Check the state of the mark before calling helm-swoop and
+re-activate it after swooping if it was active before-hand"
+  (let ((marked mark-active))
+    (apply original search)
+    (when marked (activate-mark))))
+(advice-add 'helm-swoop :around #'spruce/helm-swoop-mark-wrapper)
+#+END_SRC
+**** Search Keybindings
+I replace the default isearch binding with swoop. I also tend to type new
+searches more often than I use the symbol at the point, so I use the
+no-pre-input version. However, isearch is an important tool for navigation, so I
+rebind it to an easy-to-reach key, C-i. Unfortunately this is viewed by Emacs as
+the same character as <tab> due to deficiencies of old keyboards. So I have to
+instead have it translate a literal C-i (but not <tab>) to H-i first, and then
+bind H-i to isearch.
+
+So this block must go in :config and does the translation:
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-ci-translation :tangle no
+(keyboard-translate ?\C-i ?\H-i)
+#+END_SRC
+and this one does the actual keybinding.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-search-rebinds :tangle no
+:map global-map
+("C-c s" . isearch-forward)
+("H-i" . isearch-forward)
+("C-s" . helm-swoop-without-pre-input)
+("C-M-s" . helm-swoop) ; with input of thing-at-point
+:map isearch-mode-map
+("C-i" . isearch-repeat-forward)
 #+END_SRC
 
-** Navigation
+**** Multi-Swoop
+Multiswoop, swooping across multiple buffers, is pretty useful. Reasonably often
+I realize a search I started in one buffer needs to expand across multiple, so I
+use this binding to switch to multiswoop from inside a normal swoop.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-switch-to-multi :tangle no
+:map helm-swoop-map
+("M-i" . helm-multi-swoop-all-from-helm-swoop)
+#+END_SRC
+
 ** Appearance
 *** Mode Line
 The column number is often useful for me, enough to be in the mode line.
