@@ -164,7 +164,7 @@ Emacs has a built-in customization interface which auto-inserts code into your
 init file. This is useful for many people and makes it pretty easy to discover
 and configure settings, but I generally don't use it anymore and dislike the
 undocumented format. However sometimes these settings still crop up, so I dump
-them in a file and eventually configure them correctly. 
+them in a file and eventually configure them correctly.
 #+BEGIN_SRC emacs-lisp
 (setq custom-file (concat spruce/org-config-dirpath "/temp-custom.el"))
 (load-file custom-file)
@@ -200,7 +200,7 @@ defined at the bottom of this file, but are accessible to all config below this 
 ** Default Settings
 *** Modernization
 Emacs is very old, and has a number of defaults that reflect this age. Some of
-these I like, many I don't. 
+these I like, many I don't.
 
 It's normal text editing behavior to automatically replace selected text if a new
 character is typed.
@@ -321,7 +321,7 @@ identical to ASCII, which is nice for compatibility with older programs.
 #+BEGIN_SRC emacs-lisp
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8) 
+(set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (setq default-buffer-file-coding-system 'utf-8)
 #+END_SRC
@@ -346,7 +346,6 @@ said links, and it's less nagging.
 #+BEGIN_SRC emacs-lisp
 (setq vc-follow-symlinks t)
 #+END_SRC
-
 *** Debug on error
 There are a lot of things that can go wrong in Emacs, especially with as much
 config as I've got here. Fixing them is of course important, but the default
@@ -392,7 +391,7 @@ REPL, so I make it easier to use as such.
 *** Quick Fullscreen Mode
 #+BEGIN_SRC emacs-lisp
 (bind-key "H-<return>" 'toggle-frame-fullscreen)
-#+END_SRC 
+#+END_SRC
 
 *** Line Shifting
 Occasionally I like to shift whole lines up and down through a buffer. These
@@ -626,7 +625,7 @@ like to use Helm for all of its various features.
     (helm-projectile-on)))
 #+END_SRC
 
-*** =helm-swoop= 
+*** =helm-swoop=
 =helm-swoop= is a replacement for ~isearch~ and ~occur~ that searches buffers with a
 Helm-based interface and automatically moves through the searched buffer and
 highlights the matches. It also allows for editing the searches in a separate
@@ -749,9 +748,8 @@ The column number is often useful for me, enough to be in the mode line.
         window-divider-default-right-width 1)
   (window-divider-mode +1))
 #+END_SRC
-
 * Programming
-** General
+** =prog=
 *** Spacing and Indentation
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook (lambda () (setq line-spacing nil)))
@@ -836,7 +834,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
       python-shell-interpreter-args "-i")
 
 (use-package jedi
-  :bind (("C-c /" . jedi:show-doc))) 
+  :bind (("C-c /" . jedi:show-doc)))
 (eval-after-load "python-mode"
   '(define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
 (defun jedi-python-mode-hook ()
@@ -923,7 +921,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
             (lambda () (org-bullets-mode 1)))
   (setcdr org-bullets-bullet-map nil))
 #+END_SRC
-  
+
 * LaTeX
 #+BEGIN_SRC emacs-lisp
 (use-package tex
