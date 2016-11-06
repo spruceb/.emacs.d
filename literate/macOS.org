@@ -63,4 +63,17 @@ This contains utility functions that these keys may be bound to
   (other-window -1))
 #+END_SRC
 * Package Configuration
+** Helm
+*** Helm Locate
+On macOS, the best option for file location is currently =mdfind=. The way helm
+does fuzzy matching doesn't work so well with it however.
+#+BEGIN_SRC emacs-lisp
+(with-eval-after-load 'helm
+  (setq helm-locate-command
+        (concat "mdfind -name %s %s | grep -v .*.emlx"))
+  (setq helm-locate-fuzzy-match nil))
+#+END_SRC
+
+
+
 

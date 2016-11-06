@@ -538,6 +538,7 @@ the use-package.
   <<helm-fuzzy-matching>>
   <<helm-window-split>>
   <<helm-company-projectile>>
+  <<helm-set-locate-command>>
   :bind (
          <<helm-replace-defaults>>
          <<helm-persistent-action>>))
@@ -593,6 +594,20 @@ functionality.
 ("C-z" . helm-select-action)
 #+END_SRC
 
+**** Locate Command
+~helm-locate~ is an extremely useful command to find arbitrary files on the
+file-system. It's best to do this using an external tool. I pick which one based
+on the current operating system. However if this is macOS, then this was already
+set in my macOS.org config file.
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-set-locate-command :tangle no
+  (unless (eq system-type 'darwin)
+    (setq helm-locate-command
+          (case system-type
+            ('gnu/linux "locate -i -r %s")
+            ('berkeley-unix "locate -i %s")
+            ('windows-nt "es %s")
+            (t "locate %s"))))
+#+END_SRC
 *** Helm Flx
 =flx= is a package that allows for Sublime-like great fuzzy matching. =helm-flx=
 plugs in this functionality to Helm's fuzzy matching.
@@ -611,7 +626,7 @@ like to use Helm for all of its various features.
     (helm-projectile-on)))
 #+END_SRC
 
-*** =helm-swoop
+*** =helm-swoop= 
 =helm-swoop= is a replacement for ~isearch~ and ~occur~ that searches buffers with a
 Helm-based interface and automatically moves through the searched buffer and
 highlights the matches. It also allows for editing the searches in a separate
@@ -1152,16 +1167,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 
 (projectile-global-mode)
 
-(if (eq system-type 'darwin)
-    (setq helm-locate-fuzzy-match nil))
-
-(setq helm-locate-command
-      (case system-type
-        ('gnu/linux "locate -i -r %s")
-        ('berkeley-unix "locate -i %s")
-        ('windows-nt "es %s")
-        ('darwin "mdfind -name %s %s | grep -v .*.emlx")
-        (t "locate %s")))
 
 (if (display-graphic-p)
     (desktop-save-mode nil))
