@@ -388,6 +388,15 @@ REPL, so I make it easier to use as such.
 (bind-key "C-c e" 'spruce/open-config-file)
 #+END_SRC
 
+Similarly I like to be able to quickly re-eval my entire config. This involves
+evaling my init file, rather than this file.
+#+BEGIN_SRC emacs-lisp
+(defun spruce/eval-config ()
+  (interactive)
+  (load-file user-init-file))
+(bind-key "H-C-e" 'spruce/eval-config)
+#+END_SRC
+
 *** Quick Fullscreen Mode
 #+BEGIN_SRC emacs-lisp
 (bind-key "H-<return>" 'toggle-frame-fullscreen)
