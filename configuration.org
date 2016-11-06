@@ -710,25 +710,40 @@ use this binding to switch to multiswoop from inside a normal swoop.
 ("M-i" . helm-multi-swoop-all-from-helm-swoop)
 #+END_SRC
 
+** Projectile
+#+BEGIN_SRC emacs-lisp
+(projectile-global-mode)
+(defun init-projectile ()
+  (interactive)
+  (let ((projectile ".projectile"))
+    (unless (file-exists-p projectile)
+      (write-region "" nil projectile))))
+#+END_SRC
+** Company
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-<tab>") 'company-complete)
+#+END_SRC
 ** Appearance
 *** Mode Line
 The column number is often useful for me, enough to be in the mode line.
 #+BEGIN_SRC emacs-lisp
-(column-number-mode t)
-(line-number-mode t)
+(column-number-mode)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(require 'smart-mode-line)
-(setq sml/theme 'respectful)
-(setq sml/shorten-directory t)
-(setq sml/shorten-modes t)
+(setq projectile-mode-line " Projectile")
+(use-package smart-mode-line
+  :config
+  (setq sml/theme 'respectful)
+  (setq sml/shorten-directory t)
+  (setq sml/shorten-modes t)
+  (setq sml/replacer-regexp-list nil)
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/line-number-format "  %3l ")
+  (sml/setup))
+
 (use-package autorevert
   :diminish auto-revert-mode)
-(setq sml/replacer-regexp-list nil)
-(setq sml/no-confirm-load-theme t)
-(setq sml/line-number-format "  %3l ")
-(sml/setup)
 #+END_SRC
 
 *** Appearance Heap
@@ -756,6 +771,23 @@ The column number is often useful for me, enough to be in the mode line.
         window-divider-default-bottom-width 1
         window-divider-default-right-width 1)
   (window-divider-mode +1))
+#+END_SRC
+** Modes
+** Packages
+** IRC
+#+BEGIN_SRC emacs-lisp
+(use-package circe)
+#+END_SRC
+** Misc
+*** Desktop mode
+#+BEGIN_SRC emacs-lisp
+(setq dekstop-auto-save-timeout 300)
+(if (display-graphic-p)
+    (desktop-save-mode nil))
+(setq desktop-dirname "~/.emacs.d/desktops/"
+      desktop-path (quote ("~/.emacs.d/desktops/"))
+      desktop-auto-save-timeout 30
+      desktop-save nil)
 #+END_SRC
 * Programming
 ** =prog=
@@ -1136,33 +1168,8 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (setq exec-path (append exec-path '(":/usr/texbin")))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
 
-
-;; (require 'spaceline-config)
-;; (spaceline-emacs-theme)
-;; (spaceline-toggle-buffer-encoding-abbrev-off)
-;; (spaceline-toggle-buffer-size-off)
-;; (spaceline-helm-mode)
-;; (spaceline-toggle-remote-host-off)
-;; (setq powerline-default-separator 'utf8)
-;; (setq spaceline-highlight-face-func 'spaceline-highlight-face-default)
-;; (setq spaceline-highlight-face-func (lambda () ('CadetBlue1)))
-
-;; (powerline-default-theme)
-;; (setq powerline-default-separator 'utf-8)
-
-(global-set-key (kbd "C-<tab>") 'company-complete)
-
-(setq dekstop-auto-save-timeout 300)
-(fset 'scheme-linebr
-      "\273\267\260-")
-;; (set-mouse-color "green")
-
 (setq doc-view-continuous t)
 (setq doc-view-ghostscript-program "/usr/local/bin/gs")
-
-(load "~/.emacs.d/fireplace/fireplace")
-
-(setq fi:find-tag-lock nil)
 
 ;; Use Source Code Sans (pretty variable width font) for org mode
 ;;; function that sets current buffer to Source Code Sans
@@ -1172,15 +1179,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 ;;   (setq buffer-face-mode-face '(:family "Source Code Sans" :height 100 :width semi-condensed))
 ;;   (buffer-face-mode))
 
-(projectile-global-mode)
 
-
-(if (display-graphic-p)
-    (desktop-save-mode nil))
-(setq desktop-dirname "~/.emacs.d/desktops/"
-      desktop-path (quote ("~/.emacs.d/desktops/"))
-      desktop-auto-save-timeout 30
-      desktop-save nil)
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-hook 'coffeescript-mode-hook 'whitespace-mode)
@@ -1190,17 +1189,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
              indentation empty space-after-tab))
 ;; don't do anything whitespace, use whitespace-fn instead
 (setq whitespace-action nil)
-
-(defun init-projectile ()
-  (interactive)
-  (let ((projectile ".projectile"))
-    (unless (file-exists-p projectile)
-      (write-region "" nil projectile))))
-(global-aggressive-indent-mode 1)
-
-(require 'highlight-indent-guides)
-;; (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-(setq highlight-indent-guides-method 'character)
 
 (defun whitespace-save-fn ()
   (add-hook 'before-save-hook
@@ -1216,12 +1204,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 
 (setq whitespace-line-column 86)
 (setq hl-line-sticky-flag nil)
-
-;; latex
-(defun tex-runall-clean ()
-  (interactive)
-  (TeX-command-run-all nil)
-  (TeX-clean))
 #+END_SRC
 * Utility Functions
 These functions are bound to keys and used in various places in my config.
