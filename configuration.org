@@ -1182,8 +1182,20 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 *** ESS
 #+BEGIN_SRC emacs-lisp
 (use-package ess
-  :init (require 'ess-site))
-#+END_SRC 
+  :init (require 'ess-site)
+  :config
+  (with-eval-after-load 'aggressive-indent
+    (add-hook 'inferior-ess-mode-hook #'spruce/disable-agressive-indent)))
+#+END_SRC
+*** aggressive indent
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :config
+  (defun spruce/enable-aggressive-indent ()
+    (aggressive-indent-mode t))
+  (defun spruce/disable-agressive-indent ()
+    (aggressive-indent-mode nil))
+  (add-hook 'cc-mode-hook #'spruce/enable-aggressive-indent))
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (when (string-equal system-name "Spruces-MacBook-Pro.local")
