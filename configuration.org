@@ -1,7 +1,7 @@
 #+TITLE: Spruce's Emacs
 #+AUTHOR: Spruce Bondera
-#+PROPERTY: header-args  :tangle yes 
-#+OPTIONS: toc:2
+#+PROPERTY: header-args  :tangle yes
+#+OPTIONS: toc:nil
 * About
 This file, and the others it references, contain my Emacs configuration. I've
 been using Emacs since around 2014, and using it heavily since mid-2015. Over
@@ -20,33 +20,38 @@ this through literate programming through =org-mode=. The code becomes somewhat
 secondary to documentation and organization, making it easier to keep track of
 and modify. This is my ongoing attempt to organize, clean up, and improve my
 config. Started October 15th, 2016.
-* Contents                                                              :TOC:
- - [[#about][About]]
- - [[#bootstrap][Bootstrap]]
-   - [[#security][Security]]
-   - [[#configuration-management][Configuration Management]]
-   - [[#personal-information][Personal Information]]
-   - [[#utility-functions][Utility Functions]]
-   - [[#default-settings][Default Settings]]
-   - [[#keybindings][Keybindings]]
-   - [[#basic-appearance][Basic Appearance]]
-   - [[#macos][macOS]]
- - [[#general][General]]
-   - [[#helm][Helm]]
-   - [[#navigation][Navigation]]
-   - [[#appearance][Appearance]]
- - [[#programming][Programming]]
-   - [[#general-1][General]]
-   - [[#cc][CC]]
-   - [[#python][Python]]
-   - [[#emacs-lisp][Emacs Lisp]]
-   - [[#coffeescript][Coffeescript]]
- - [[#org][Org]]
- - [[#latex][LaTeX]]
- - [[#the-heap][The Heap]]
-   - [[#package-heap][Package Heap]]
-   - [[#old-heap][Old Heap]]
- - [[#utility-functions-1][Utility Functions]]
+* Contents                                                        :TOC_2_org:
+ - [[About][About]]
+ - [[Bootstrap][Bootstrap]]
+   - [[Security][Security]]
+   - [[Configuration Management][Configuration Management]]
+   - [[Personal Information][Personal Information]]
+   - [[Utility Functions][Utility Functions]]
+   - [[Default Settings][Default Settings]]
+   - [[Keybindings][Keybindings]]
+   - [[Basic Appearance][Basic Appearance]]
+   - [[macOS][macOS]]
+ - [[General][General]]
+   - [[Helm][Helm]]
+   - [[Projectile][Projectile]]
+   - [[Company][Company]]
+   - [[Appearance][Appearance]]
+   - [[Modes][Modes]]
+   - [[Packages][Packages]]
+   - [[IRC][IRC]]
+   - [[Misc][Misc]]
+ - [[Programming][Programming]]
+   - [[=prog=][=prog=]]
+   - [[CC][CC]]
+   - [[Python][Python]]
+   - [[Emacs Lisp][Emacs Lisp]]
+   - [[Coffeescript][Coffeescript]]
+ - [[Org][Org]]
+ - [[LaTeX][LaTeX]]
+ - [[The Heap][The Heap]]
+   - [[Package Heap][Package Heap]]
+   - [[Old Heap][Old Heap]]
+ - [[Utility Functions][Utility Functions]]
 
 * Bootstrap
 ** Security
@@ -850,6 +855,11 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (add-hook 'c++-mode-hook (lambda () (setq c-basic-offset 4)))
 #+END_SRC
 
+*** TODO Temporary Upgrade Heap
+setup rtags
+#+BEGIN_SRC emacs-lisp
+(use-package rtags)
+#+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp
 (defun toggle-pdb ()
@@ -901,7 +911,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 * Org
 #+BEGIN_SRC emacs-lisp
 (use-package org
-  :diminish s org-indent-mode
+  :diminish org-indent-mode
   :config
   (setq org-agenda-files (list "~/Documents/Classes/school-schedule.org"
                                (concat user-emacs-directory "emacs-todo.org")))
@@ -1113,6 +1123,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 *** flyspell
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
+  :diminish
   :config
   (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   (defun spruce/enable-text-flyspell ()
