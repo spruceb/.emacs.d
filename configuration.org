@@ -920,12 +920,14 @@ setup rtags
   (setq org-fontify-whole-heading-line t)
   (setq org-pretty-entities t)
   (setq org-list-allow-alphabetical t)
+  (setq org-highlight-latex-and-related '(latex script entities))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((R . t)
      (emacs-lisp . t)
      (python . t)
-     (sh . t)))
+     (sh . t)
+     (latex . t)))
   (setq org-startup-indented t)
   (setq org-hide-leading-stars t)
   (setq org-src-preserve-indentation nil
@@ -951,9 +953,15 @@ setup rtags
   (setq org-src-window-setup 'current-window)
   (add-to-list 'org-structure-template-alist
                '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" ""))
-  (setq org-html-head-extra 
-        (concat "<link rel=\"stylesheet\" type=\"text/css\" href=\""
-                spruce/org-config-dirpath "/css/org-export.css\"></link>"))
+  (add-to-list 'org-structure-template-alist
+               '("la" "#+BEGIN_SRC LaTeX\n?\n#+END_SRC" ""))
+
+  (setq org-html-head-extra
+        (concat "<style type=\"text/css\">"
+                (with-temp-buffer
+                  (insert-file-contents "~/.emacs.d/literate/css/org-export.css")
+                  (buffer-string))
+                "</style>"))
   (defun spruce/org-cycle-current-subtree ()
     (interactive)
     (let ((old-tab-style org-cycle-emulate-tab))
@@ -1014,8 +1022,14 @@ setup rtags
       (find-file output-file)))
   (add-to-list 'TeX-view-program-list
                (list "Emacs" #'spruce/TeX-open-output-buffer))
+
   (setq TeX-view-program-selection '((output-pdf "Emacs")))
   ;; better name for local variable
+  (defun latex-compile ()
+    (interactive)
+    (save-buffer)
+    (TeX-command "LaTeX" 'TeX-master-file))
+
   (setq TeX-auto-local ".auctex-auto")
   ;; auto revert pdf buffer
   (add-hook 'TeX-after-compilation-finished-functions
@@ -1037,9 +1051,10 @@ setup rtags
       (save-excursion
         (if arg (forward-sexp (prefix-numeric-value arg)))
         (insert close-str))))
-
   (setq TeX-electric-sub-and-superscript t)
-
+  (put 'TeX-command-extra-options 'safe-local-variable
+       (lambda (x) (string-equal x "-shell-escape")))
+  (setq-default TeX-command-extra-options "-shell-escape")
   (use-package latex
     :ensure nil
     :config
@@ -1056,11 +1071,32 @@ setup rtags
     (defun LaTeX-insert-display-math (arg)
       (interactive "P")
       (TeX-insert-pair arg "\\[ " " \\]"))
+
+    (defun spruce/LaTeX-insert-problem (problem-number &optional is-last)
+      (beginning-of-line)
+      (let ((problem (concat "\\problem{" problem-number "}"))
+            (unfinished "\\unfinished{}"))
+        (insert problem "\n\n" unfinished "\n"
+                (if is-last "" "\n"))))
+
+    (defun spruce/LaTeX-make-problem-list ()
+      (interactive)
+      (let ((data (split-string (thing-at-point 'line t))))
+        (when data
+          (delete-region (line-beginning-position)
+                         (line-end-position))
+          (mapc #'spruce/LaTeX-insert-problem (butlast data))
+          (spruce/LaTeX-insert-problem (car (last data)) t))))
+
     (defun spruce/LaTeX-mode-keybindings ()
       (bind-key "H-C-j" #'LaTeX-insert-inline-math
                 (current-local-map))
       (bind-key "H-C-k" #'LaTeX-insert-display-math
-                (current-local-map)))
+                (current-local-map))
+      (bind-key "C-c x p" #'spruce/LaTeX-make-problem-list
+                (current-local-map))
+      (local-unset-key "\""))
+
     (add-hook 'LaTeX-mode-hook #'spruce/LaTeX-mode-keybindings)
     (with-eval-after-load 'smartparens
       (add-hook 'TeX-mode-hook #'smartparens-mode))
@@ -1069,10 +1105,10 @@ setup rtags
       :config
       (set-face-attribute 'font-latex-sedate-face nil
                           :inherit 'font-lock-constant-face
-                          :foreground 'unspecified)))
-
-  (put 'TeX-command-extra-options 'safe-local-variable
-       (lambda (x) (string-equal x "-shell-escape"))))
+                          :foreground 'unspecified))
+    :bind (:map
+           LaTeX-mode-map
+           ("C-c c" . latex-compile))))
 
 (use-package reftex
   :diminish reftex-mode
