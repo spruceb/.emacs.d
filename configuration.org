@@ -903,7 +903,8 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (use-package org
   :diminish s org-indent-mode
   :config
-  (setq org-agenda-files (list "~/Documents/Classes/school-schedule.org"))
+  (setq org-agenda-files (list "~/Documents/Classes/school-schedule.org"
+                               (concat user-emacs-directory "emacs-todo.org")))
   (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○"))
   (setq org-export-backends '(ascii html icalendar latex md))
   (setq org-fontify-whole-heading-line t)
@@ -922,6 +923,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (setq org-confirm-babel-evaluate nil
         org-src-fontify-natively t
         org-src-tab-acts-natively t)
+  (setq org-archive-location "~/.emacs.d/org/archive/%s-archive::")
   (setq org-startup-folded 'content)
   ;; in org mode C-a/e moves to beginning of text in line, after header asterisks
   ;; however you can press it again to go all the way
@@ -948,10 +950,25 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
       (setq org-cycle-emulate-tab nil)
       (org-cycle)
       (setq org-cycle-emulate-tab old-tab-style)))
-  
-  :bind (("C-c a a" . org-agenda-list)
+
+  (defun spruce/org-clock-select ()
+    (interactive)
+    (org-clock-in '(4)))
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (with-eval-after-load 'latex
+    (bind-key "H-C-j" #'LaTeX-insert-inline-math
+                org-mode-map)
+    (bind-key "H-C-k" #'LaTeX-insert-display-math
+              org-mode-map))
+  :bind (("C-c a" . org-agenda)
+         ("C-c l" . org-store-link)
+         ("C-c o c" . org-capture)
+         ("C-c o i" . spruce/org-clock-select)
+         ("C-c o o" . org-clock-out)
+         ("C-c b" . org-iswitchb)
          ("C-c L" . org-insert-link-global)
-         ("C-c o" . org-open-at-point-global)
+         ("C-c o C-o" . org-open-at-point-global)
          ("H-M-<return>" . org-insert-subheading)
          :map org-mode-map
          ("C-<tab>" . spruce/org-cycle-current-subtree)))
