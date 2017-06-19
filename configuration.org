@@ -820,30 +820,34 @@ The column number is often useful for me, enough to be in the mode line.
 
 *** Appearance Heap
 #+BEGIN_SRC emacs-lisp
+(add-to-list 'custom-theme-load-path "/Users/spruce/.emacs.d/literate/blue-spruce/")
+(load-theme 'blue-spruce t)
 
-  (set-face-attribute 'default nil :font "Source Code Pro-12")
-  ;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
-  ;;   (load-theme 'spacegray-spruce t))
+(set-face-attribute 'default nil :font "Source Code Pro-12")
+;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
+;;   (load-theme 'spacegray-spruce t))
 
-  (set-frame-font "Source Code Pro-12")
-  (use-package all-the-icons)
-  (use-package neotree)
-  (use-package doom-themes
-    :diminish doom-buffer-mode
-    :after neotree
-    :config
-    (setq doom-neotree-file-icons t)
-    (setq doom-enable-brighter-comments t)
-    (add-hook 'find-file-hook 'doom-buffer-mode)
-    ;; brighter minibuffer when active
-    (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
-    (load-theme 'doom-one t)
-    (require 'doom-neotree))
-  (when (boundp 'window-divider-mode)
-    (setq window-divider-default-places t
-          window-divider-default-bottom-width 1
-          window-divider-default-right-width 1)
-    (window-divider-mode +1))
+(set-frame-font "Source Code Pro-12")
+(use-package all-the-icons)
+(use-package neotree)
+(use-package doom-themes
+  :disabled
+  :diminish doom-buffer-mode
+  :after neotree
+  :config
+  ;; (setq doom-neotree-file-icons t)
+  (setq doom-enable-brighter-comments t)
+  (add-hook 'find-file-hook 'doom-buffer-mode)
+  ;; brighter minibuffer when active
+  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  (load-theme 'doom-one t)
+  ;; (require 'doom-neotree)
+  )
+(when (boundp 'window-divider-mode)
+  (setq window-divider-default-places t
+        window-divider-default-bottom-width 1
+        window-divider-default-right-width 1)
+  (window-divider-mode +1))
 #+END_SRC
 ** Modes
 ** Packages
