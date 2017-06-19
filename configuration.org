@@ -1002,7 +1002,7 @@ setup rtags
   :config
   (setq org-agenda-files (list "~/Documents/Classes/school-schedule.org"
                                (concat user-emacs-directory "emacs-todo.org")))
-  (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○"))
+  (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○"))
   (setq org-export-backends '(ascii html icalendar latex md))
   (setq org-fontify-whole-heading-line t)
   (setq org-pretty-entities t)
@@ -1031,8 +1031,7 @@ setup rtags
   (setq org-hide-emphasis-markers t)
   (setq org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t)
-  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.25)
-  (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.15)
+
   (add-hook 'org-mode-hook (lambda () (setq line-spacing '0.25)))
   (setq org-use-sub-superscripts "{}")
   (setq org-export-headline-levels 5)
