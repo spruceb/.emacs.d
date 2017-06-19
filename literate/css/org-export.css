@@ -1,3 +1,9 @@
+body {
+    color: #444;
+    background-color: #FFF8E8;
+    font-family: "Helvetica";
+}
+
 #content {
     width: 60%;
     min-width: 600px;
