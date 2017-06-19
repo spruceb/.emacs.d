@@ -1,0 +1,106 @@
+#+TITLE: Modeline Config
+#+AUTHOR: Spruce Bondera
+#+PROPERTY: header-args :tangle yes
+* Modeline
+#+BEGIN_SRC emacs-lisp
+;; https://emacs.stackexchange.com/a/16660
+(defun mode-line-align (left center right &optional lpad rpad)
+  "Return a string the width of the current window with
+LEFT, CENTER, and RIGHT spaced out accordingly, LPAD and RPAD,
+can be used to add a number of spaces to the front and back of the string."
+  (condition-case err
+      (let* ((left (if lpad (concat (make-string lpad ?\s) left) left))
+             (right (if rpad (concat right (make-string rpad ?\s)) right))
+             (width (apply '+ (window-width)
+                           (let ((m (window-margins)))
+                             (list (or (car m) 0) (or (cdr m) 0)))))
+             (total-length (+ (length left) (length center) (length right) 2)))
+        (when (> total-length width) (setq left "" right ""))
+        (let ((left-space (/ (- width (length center)) 2))
+              (make-result #'(lambda (lspaces rspaces)
+                               (concat left (make-string lspaces ?\s)
+                                       center
+                                       (make-string rspaces ?\s)
+                                       right))))
+          (if (> (length left) left-space)
+              (let* ((center-space (+ (- width total-length) 2))
+                     (lspaces (max (/ center-space 2) 1))
+                     (rspaces (max (- center-space lspaces) 1)))
+                (funcall make-result lspaces rspaces))
+            (let* ((right-space (- width left-space (length center)))
+                   (lspaces (max (- left-space (length left)) 1))
+                   (rspaces (max (- right-space (length right)) 1 0)))
+              (funcall make-result lspaces rspaces)))))
+    (error (format "[%s]: (%s) (%s) (%s)" err left center right))))
+
+(defvar ml-selected-window nil)
+(defun ml-record-selected-window ()
+  (setq ml-selected-window (selected-window)))
+(defun ml-update-all ()
+  (force-mode-line-update t))
+(add-hook 'post-command-hook 'ml-record-selected-window)
+(add-hook 'buffer-list-update-hook 'ml-update-all)
+(defun ml-in-selected-window-p ()
+  (eq ml-selected-window (selected-window)))
+
+(defun buffer-has-file-p ()
+  (buffer-file-name))
+
+(defun buffer-is-org-src-edit-p ()
+  (and org-edit-src-from-org-mode
+       (buffer-file-name (marker-buffer org-edit-src-beg-marker))))
+
+(defun buffer-associated-with-file-p ()
+  "Checks if the buffer has an associated file, i.e. that saving
+  does something. For example, Org Src editing buffers"
+  (or (buffer-is-org-src-edit-p) (buffer-has-file-p)))
+
+(defun spruce/get-mode-line-modified ()
+  (if (buffer-associated-with-file-p)
+      (cond ((and (buffer-modified-p) (not buffer-read-only))
+             (propertize "◉" 'face '(:foreground "orange red")))
+            ((and (buffer-modified-p) buffer-read-only)
+             (propertize "M" 'face '(:foreground "orange")))
+            ((and (not (buffer-modified-p)) (not buffer-read-only))
+             (propertize "○" 'face '(:foreground "green")))
+            ((and (not (buffer-modified-p)) buffer-read-only)
+             (propertize "R" 'face '(:foreground "yellow"))))
+    (propertize "" 'face '(:foreground "light grey"))))
+
+(defvar spruce/mode-line-modified '(:eval (spruce/get-mode-line-modified)))
+
+;; (list "%e" mode-line-front-space mode-line-mule-info
+;;          mode-line-client mode-line-modified mode-line-remote
+;;          mode-line-frame-identification
+;;          mode-line-buffer-identification " " mode-line-position
+;;          (vc-mode vc-mode) "" mode-line-modes mode-line-misc-info
+;;          mode-line-end-spaces)
+
+(defvar spruce/colored-front-space
+  '(:eval (if (ml-in-selected-window-p)
+              (format-mode-line
+               '(:propertize "  " face
+                             (:background "#4DB5BD" :foreground "#4DB5BD"
+                                          :box (:line-width 3 :background "#4DB5BD"
+                                                            :foreground "#4DB5BD"))))
+            " ")))
+(defvar spruce-modeline-format
+  `(;; left
+    ("%e" ,spruce/colored-front-space mode-line-front-space
+     mode-line-client "%l:%c " ,spruce/mode-line-modified " "
+     mode-line-buffer-identification)
+    ;; center
+    "λ"
+    ;; (:eval (propertize "Test Text" 'face '(:foreground "black" :background "orange" :box (:line-width 3 :color "orange"))))
+    ;; right
+    ((vc-mode vc-mode) " " mode-name mode-line-misc-info mode-line-end-spaces)))
+
+(defun spruce-convert-modeline (spruce-formatted-modeline)
+  (apply 'mode-line-align
+         (append (mapcar 'format-mode-line spruce-formatted-modeline)
+                 '(0 1))))
+
+(setq-default
+ mode-line-format
+ '(:eval (spruce-convert-modeline spruce-modeline-format)))
+#+END_SRC

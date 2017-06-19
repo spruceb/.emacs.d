@@ -804,7 +804,12 @@ The column number is often useful for me, enough to be in the mode line.
 
 #+BEGIN_SRC emacs-lisp
 (setq projectile-mode-line " Projectile")
+(spruce/new-config-file blue-spruce-modeline 
+                        "blue-spruce/blue-spruce-modeline")
+(org-babel-load-file spruce/blue-spruce-modeline-config-file)
+
 (use-package smart-mode-line
+  :disabled
   :config
   (setq sml/theme 'respectful)
   (setq sml/shorten-directory t)
