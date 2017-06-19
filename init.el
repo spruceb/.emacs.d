@@ -5,6 +5,14 @@
 ;; This file ensures the bare minimum is set up to load the
 ;; configuration system from various org files
 
+(setq gc-cons-threshold 100000000)
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold 1000000)
+   (message "gc-cons-threshold restored to %S"
+            gc-cons-threshold)))
+
 ;; Fail when running on sufficiently outdated Emacs
 ;; TODO: separate out config into portions that will work on older
 ;; versions
