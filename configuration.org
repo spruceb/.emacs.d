@@ -939,7 +939,8 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 *** TODO Temporary Upgrade Heap
 setup rtags
 #+BEGIN_SRC emacs-lisp
-(use-package rtags)
+(use-package rtags
+  :defer 3)
 #+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp
@@ -1085,6 +1086,7 @@ setup rtags
 #+BEGIN_SRC emacs-lisp
 (use-package tex
   :ensure auctex
+  :defer 5
   :config
   ;; TODO: fucks up prettify for some reason?
   ;; (company-auctex-init)
@@ -1310,6 +1312,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 *** ESS
 #+BEGIN_SRC emacs-lisp
 (use-package ess
+  :defer 3
   :init (require 'ess-site)
   :config
   (with-eval-after-load 'aggressive-indent
@@ -1474,6 +1477,7 @@ than through =org=. This code block is not tangled, rather it is included throug
   (kill-line (- 1 arg)))
 
 (use-package achievements
+    :defer 4
     :diminish achievements-mode
     :config (achievements-mode t))
 #+END_SRC
