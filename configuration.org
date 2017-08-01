@@ -1263,6 +1263,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
   (add-hook 'prog-mode-hook #'flyspell-prog-mode)
   (defun spruce/enable-text-flyspell ()
     (flyspell-mode t))
+  (setq ispell-program-name "/usr/local/bin/ispell")
   (add-hook 'text-mode-hook #'spruce/enable-text-flyspell))
 #+END_SRC
 *** xscheme
