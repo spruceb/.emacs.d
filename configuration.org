@@ -318,7 +318,7 @@ option.
 I have plenty of disk space, so as many backups as possible is great. However I
 definitely don't want them cluttering up random directories.
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+(setq backup-directory-alist '((".*" . "~/.emacs.d/backups/"))
       backup-by-copying t    ; Don't delink hardlinks
       version-control t      ; Use version numbers on backups
       delete-old-versions 'never)
@@ -326,8 +326,9 @@ definitely don't want them cluttering up random directories.
 
 Additionally I want to autosave early and often, but not cause clutter.
 #+BEGIN_SRC emacs-lisp
-(setq auto-save-file-name-transforms
-      `((".*" "/Users/spruce/.emacs.d/autosaves" t)))
+;; (setq auto-save-file-name-transforms
+;;       `((".*" "/Users/spruce/.emacs.d/autosaves/" t)))
+(setq auto-save-list-file-prefix "~/.emacs.d/autosaves/.saves-")
 (setq auto-save-interval 100) ; 100 characters
 (setq auto-save-timeout 10)   ; or 10 seconds
 #+END_SRC
