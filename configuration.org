@@ -1507,4 +1507,5 @@ than through =org=. This code block is not tangled, rather it is included throug
 
 (bind-key "C-x C-3" #'spruce/split-right-select-new)
 (bind-key "C-x C-2" #'spruce/split-below-select-new)
+(bind-key "C-H-q" #'ace-window)
 #+END_SRC
