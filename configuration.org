@@ -1508,4 +1508,11 @@ than through =org=. This code block is not tangled, rather it is included throug
 (bind-key "C-x C-3" #'spruce/split-right-select-new)
 (bind-key "C-x C-2" #'spruce/split-below-select-new)
 (bind-key "C-H-q" #'ace-window)
+
+
+(defun spruce/make-note ()
+  (interactive)
+  (let ((buffer (generate-new-buffer "notes")))
+    (switch-to-buffer buffer)
+    (org-mode)))
 #+END_SRC
