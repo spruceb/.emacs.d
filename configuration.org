@@ -207,7 +207,12 @@ do this I use the following macro and list:
 (setq-default spruce/org-config-dirpath
               (expand-file-name (concat user-emacs-directory
                                         spruce/org-config-directory)))
+(setq-default spruce/config-package-directory "packages")
+(setq-default spruce/config-package-dirpath
+              (expand-file-name (concat spruce/org-config-dirpath
+                                        spruce/config-package-directory)))
 (add-to-list 'load-path spruce/org-config-dirpath)
+(add-to-list 'load-path spruce/config-package-dirpath)
 (setq-default spruce/config-org-files nil)
 
 ;; transforms the given name to "spruce/name-config-file" and sets it
@@ -856,6 +861,9 @@ The column number is often useful for me, enough to be in the mode line.
 #+END_SRC
 ** Modes
 ** Packages
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'package-directory-list "/Users/spruce/.emacs.d/literate/packages/")
+#+END_SRC
 ** IRC
 #+BEGIN_SRC emacs-lisp
 (use-package circe)
