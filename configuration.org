@@ -12,104 +12,109 @@ terrible defaults. A large part of my switch to fully using it was due to
 accumulating the critical mass of configuration necessary to use it without
 significant annoyance.
 
-It's easy to just throw config in your =.emacs= or =init.el=, which is
-what I did for over a year and a half. However at a certain point it accumulates
-cruft, competing and contradictory code, becomes impossible to search through,
-and even worse to debug. It's somewhat common in the Emacs community to deal with
-this through literate programming through =org-mode=. The code becomes somewhat
+It's easy to just throw config in your =.emacs= or =init.el=, which is what I did
+for over a year and a half. However at a certain point it accumulates cruft,
+competing and contradictory code, becomes impossible to search through, and even
+worse to debug. It's somewhat common in the Emacs community to deal with this
+through literate programming through =org-mode=. The code becomes somewhat
 secondary to documentation and organization, making it easier to keep track of
 and modify. This is my ongoing attempt to organize, clean up, and improve my
 config. Started October 15th, 2016.
 ** Why Emacs
-Emacs is one of only two text editors that have seen consistent, somewhat widespread,
-use and development for the last 35+ years. The other of course being vi/vim.
-Throughout that period, Emacs has consistently been the less popular of the two. I
-think this is largely because of its /philosophy/ as opposed to usability differences.
-In fact, especially compared to modern editors, Emacs is much easier to get started
-with. But the combination of terrible initial presentation and difficulty of fully
-embracing the philosophy means adoption rates are low.
+Emacs is one of only two text editors that have seen consistent, somewhat
+widespread, use and development for the last 35+ years. The other of course
+being vi/vim. Throughout that period, Emacs has consistently been the less
+popular of the two. I think this is largely because of its /philosophy/ as opposed
+to usability differences. In fact, especially compared to modern editors, Emacs
+is much easier to get started with. But the combination of terrible initial
+presentation and difficulty of fully embracing the philosophy means adoption
+rates are low.
 
-Nowadays, the majority of new programmers use IDEs and newer editors, such as Sublime
-Text and Atom. My opinion on IDEs is relatively simple: I dislike unspecific
-over-specific tools. For example, I've used several IntelliJ IDEs (PyCharm and
-CLion), and while both have many useful features, the fact that they aren't the same
-program supporting multiple languages, the fact that the interface is slightly
-different, the fact that configuration is somewhat difficult to export, and the fact
-that if I needed to write some other language they don't have an IDE for I would need
-to learn a whole new editing interface and configuration system, beyond just the IDE
-specific tools, combine to annoy me. There's also a more minor aesthetic point of the
-incredible amount of clutter and graphical menus involved in these kinds of tools. Of
-course in some situations the benefits are simply to great to pass up (or actually
-required). For example I don't know of any reliable way to develop an iOS app outside
-of Xcode, and realistically while Xcode is not my favorite program to use, it has a
-massive amount of support for writing iOS applications, and an international company
-pouring money into further improvements.
+Nowadays, the majority of new programmers use IDEs and newer editors, such as
+Sublime Text and Atom. My opinion on IDEs is relatively simple: I dislike
+unspecific over-specific tools. For example, I've used several IntelliJ IDEs
+(PyCharm and CLion), and while both have many useful features, the fact that
+they aren't the same program supporting multiple languages, the fact that the
+interface is slightly different, the fact that configuration is somewhat
+difficult to export, and the fact that if I needed to write some other language
+they don't have an IDE for I would need to learn a whole new editing interface
+and configuration system, beyond just the IDE specific tools, combine to annoy
+me. There's also a more minor aesthetic point of the incredible amount of
+clutter and graphical menus involved in these kinds of tools. Of course in some
+situations the benefits are simply to great to pass up (or actually required).
+For example I don't know of any reliable way to develop an iOS app outside of
+Xcode, and realistically while Xcode is not my favorite program to use, it has a
+massive amount of support for writing iOS applications, and an international
+company pouring money into further improvements.
 
-But outside of those situations, many people come to the same conclusion as me. This
-is generally the reasoning that leads people towards text editors rather than IDEs.
-Text editors can almost always be customized sufficiently to provide the productivity
-benefits of an IDE, but while keeping a consistent interface and much lower initial
-complexity. There may also be a factor of barrier to entry. IDEs are largely
-impenetrable to new developers, so they may start out with a text editor and feel
-uncomfortable switching by the time they could make use of an IDE. I'm unsure as to
-any statistics on this front (as an anecdatum, I started out using an IDE and later
-switched to a text editor, but that was largely because I felt I wasn't making use of
-the IDEs features rather than because of my current philosophical objections).
-Currently, especially among students and somewhat recent graduates, Sublime Text
-seems to be the most common choice. Indeed, I used it myself for about two and a half
-years, and amassed a reasonably extensive configuration.
+But outside of those situations, many people come to the same conclusion as me.
+This is generally the reasoning that leads people towards text editors rather
+than IDEs. Text editors can almost always be customized sufficiently to provide
+the productivity benefits of an IDE, but while keeping a consistent interface
+and much lower initial complexity. There may also be a factor of barrier to
+entry. IDEs are largely impenetrable to new developers, so they may start out
+with a text editor and feel uncomfortable switching by the time they could make
+use of an IDE. I'm unsure as to any statistics on this front (as an anecdatum, I
+started out using an IDE and later switched to a text editor, but that was
+largely because I felt I wasn't making use of the IDEs features rather than
+because of my current philosophical objections). Currently, especially among
+students and somewhat recent graduates, Sublime Text seems to be the most common
+choice. Indeed, I used it myself for about two and a half years, and amassed a
+reasonably extensive configuration.
 
 And really, for me, what this all comes down to is configuration. It seems like
-there's a mindset that some people acquire, and some haven't (or haven't yet). That
-mindset being: mold your tools to yourself, not yourself to your tools. At very least
-software (if not the rest of your life) should be changed to iron out every minor
-annoyance, to maximize efficiency and collapse repeated actions, to be ergonomic and
-enjoyable. While making the physical world conform to this goal is daunting, doing it
-with software is much more achievable
+there's a mindset that some people acquire, and some haven't (or haven't yet).
+That mindset being: mold your tools to yourself, not yourself to your tools. At
+very least software (if not the rest of your life) should be changed to iron out
+every minor annoyance, to maximize efficiency and collapse repeated actions, to
+be ergonomic and enjoyable. While making the physical world conform to this goal
+is daunting, doing it with software is much more achievable.
+
 Which is why, eventually, slowly, I switched to Emacs. Sublime Text is a
-full-featured and highly customizable application, but it cannot compare to Emacs.
-Simply put, the old joke is correct. Emacs is not really a text editor and hasn't
-been for decades. It's a Lisp Machine, a text-based Lisp operating system whose code
-is readable, modifiable, and extensible. Most importantly, it has consistent
-interfaces for doing so.
+full-featured and highly customizable application, but it cannot compare to
+Emacs. Simply put, the old joke is correct. Emacs is not really a text editor
+and hasn't been for decades. It's a Lisp Machine, a text-based Lisp operating
+system whose code is readable, modifiable, and extensible. Most importantly, it
+has consistent interfaces for doing so.
 
 
 ** Literate Configuration
 
 * Contents                                                        :TOC_2_org:
- - [[About][About]]
-   - [[Why Emacs][Why Emacs]]
-   - [[Literate Configuration][Literate Configuration]]
- - [[Bootstrap][Bootstrap]]
-   - [[Security][Security]]
-   - [[Configuration Management][Configuration Management]]
-   - [[Personal Information][Personal Information]]
-   - [[Utility Functions][Utility Functions]]
-   - [[Default Settings][Default Settings]]
-   - [[Keybindings][Keybindings]]
-   - [[Basic Appearance][Basic Appearance]]
-   - [[macOS][macOS]]
- - [[General][General]]
-   - [[Helm][Helm]]
-   - [[Projectile][Projectile]]
-   - [[Company][Company]]
-   - [[Appearance][Appearance]]
-   - [[Modes][Modes]]
-   - [[Packages][Packages]]
-   - [[IRC][IRC]]
-   - [[Misc][Misc]]
- - [[Programming][Programming]]
-   - [[=prog=][=prog=]]
-   - [[CC][CC]]
-   - [[Python][Python]]
-   - [[Emacs Lisp][Emacs Lisp]]
-   - [[Coffeescript][Coffeescript]]
- - [[Org][Org]]
- - [[LaTeX][LaTeX]]
- - [[The Heap][The Heap]]
-   - [[Package Heap][Package Heap]]
-   - [[Old Heap][Old Heap]]
- - [[Utility Functions][Utility Functions]]
+- [[About][About]]
+  - [[Why Emacs][Why Emacs]]
+  - [[Literate Configuration][Literate Configuration]]
+- [[Bootstrap][Bootstrap]]
+  - [[Security][Security]]
+  - [[Configuration Management][Configuration Management]]
+  - [[Personal Information][Personal Information]]
+  - [[Utility Functions][Utility Functions]]
+  - [[Default Settings][Default Settings]]
+  - [[Keybindings][Keybindings]]
+  - [[Basic Appearance][Basic Appearance]]
+  - [[macOS][macOS]]
+- [[General][General]]
+  - [[Helm][Helm]]
+  - [[Projectile][Projectile]]
+  - [[Company][Company]]
+  - [[Appearance][Appearance]]
+  - [[Modes][Modes]]
+  - [[Packages][Packages]]
+  - [[IRC][IRC]]
+  - [[Misc][Misc]]
+- [[Programming][Programming]]
+  - [[=prog=][=prog=]]
+  - [[CC][CC]]
+  - [[Python][Python]]
+  - [[Emacs Lisp][Emacs Lisp]]
+  - [[Coffeescript][Coffeescript]]
+  - [[Haskell][Haskell]]
+- [[Org][Org]]
+- [[LaTeX][LaTeX]]
+- [[The Heap][The Heap]]
+  - [[Package Heap][Package Heap]]
+  - [[Old Heap][Old Heap]]
+- [[Utility Functions][Utility Functions]]
 
 * Bootstrap
 ** Security
@@ -260,7 +265,8 @@ I have a number of functions not particularly tied to a specific mode or
 feature-set. Many of them were defined exclusively to be accessible through a
 keybinding, however if I deem them sufficiently general they get put in the
 Utility Functions section, and included up here. These functions are in fact
-defined at the bottom of this file, but are accessible to all config below this point.
+defined at the bottom of this file, but are accessible to all config below this
+point.
 #+BEGIN_SRC emacs-lisp :noweb tangle :exports none
 <<utility-functions>>
 #+END_SRC
@@ -270,20 +276,21 @@ defined at the bottom of this file, but are accessible to all config below this 
 Emacs is very old, and has a number of defaults that reflect this age. Some of
 these I like, many I don't.
 
-It's normal text editing behavior to automatically replace selected text if a new
-character is typed.
+It's normal text editing behavior to automatically replace selected text if a
+new character is typed.
 #+BEGIN_SRC emacs-lisp
 (delete-selection-mode t)
 #+END_SRC
 
 In Fundamental mode, use a single spaces after sentence-ending periods. Double
-spaces are from the typewriter period and should not be used in modern documents.
+spaces are from the typewriter period and should not be used in modern
+documents.
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
 #+END_SRC
 
-Emacs is user-level software, not a shell, so some protection is nice. Using
-a Trash is one such protection I occasionally still appreciate.
+Emacs is user-level software, not a shell, so some protection is nice. Using a
+Trash is one such protection I occasionally still appreciate.
 #+BEGIN_SRC emacs-lisp
 (setq delete-by-moving-to-trash t)
 #+END_SRC
@@ -334,8 +341,8 @@ Additionally I want to autosave early and often, but not cause clutter.
 #+END_SRC
 
 *** ~kill-line~
-By default =C-k= or ~kill-line~ doesn't truly delete the line, but rather kills
-all the text on it while leaving the newline. There are situations where this is
+By default =C-k= or ~kill-line~ doesn't truly delete the line, but rather kills all
+the text on it while leaving the newline. There are situations where this is
 useful, but overall I prefer deletion of the entire line.
 #+BEGIN_SRC emacs-lisp
 (setq kill-whole-line t)
