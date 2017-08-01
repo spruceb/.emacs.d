@@ -79,18 +79,22 @@ can be used to add a number of spaces to the front and back of the string."
 (defvar spruce/colored-front-space
   '(:eval (if (ml-in-selected-window-p)
               (format-mode-line
-               '(:propertize "  " face
+               '(:propertize " " face
                              (:background "#4DB5BD" :foreground "#4DB5BD"
                                           :box (:line-width 3 :background "#4DB5BD"
                                                             :foreground "#4DB5BD"))))
             " ")))
+(defvar spruce/modeline-center-symbol
+  '(:eval (if (ml-in-selected-window-p)
+              (propertize "λ" 'face '(:foreground "#46D9FF"))
+            "")))
 (defvar spruce-modeline-format
   `(;; left
     ("%e" ,spruce/colored-front-space mode-line-front-space
      mode-line-client "%l:%c " ,spruce/mode-line-modified " "
      mode-line-buffer-identification)
     ;; center
-    "λ"
+    (,spruce/modeline-center-symbol)
     ;; (:eval (propertize "Test Text" 'face '(:foreground "black" :background "orange" :box (:line-width 3 :color "orange"))))
     ;; right
     ((vc-mode vc-mode) " " mode-name mode-line-misc-info mode-line-end-spaces)))
