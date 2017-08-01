@@ -24,7 +24,7 @@ config. Started October 15th, 2016.
 Emacs is one of only two text editors that have seen consistent, somewhat widespread,
 use and development for the last 35+ years. The other of course being vi/vim.
 Throughout that period, Emacs has consistently been the less popular of the two. I
-think this is largely because of it's /philosophy/ as opposed to usability differences.
+think this is largely because of its /philosophy/ as opposed to usability differences.
 In fact, especially compared to modern editors, Emacs is much easier to get started
 with. But the combination of terrible initial presentation and difficulty of fully
 embracing the philosophy means adoption rates are low.
@@ -65,7 +65,7 @@ mindset being: mold your tools to yourself, not yourself to your tools. At very 
 software (if not the rest of your life) should be changed to iron out every minor
 annoyance, to maximize efficiency and collapse repeated actions, to be ergonomic and
 enjoyable. While making the physical world conform to this goal is daunting, doing it
-with software is much more achievable 
+with software is much more achievable
 Which is why, eventually, slowly, I switched to Emacs. Sublime Text is a
 full-featured and highly customizable application, but it cannot compare to Emacs.
 Simply put, the old joke is correct. Emacs is not really a text editor and hasn't
@@ -190,7 +190,7 @@ modes from my mode line.
 =validate= is a package that tries to minimize invalid variable values. Emacs and
 many packages have user-configurable variables that should only hold certain
 values, perhaps only integers or only one of a list of symbols. It's possible to
-subtly mis-configure these, potentially letting Emacs to continue to run until
+subtly misconfigure these, potentially letting Emacs to continue to run until
 some feature is called and behaves wildly unexpectedly. So I use =validate= and
 ~validate-setq~ whenever possible.
 #+BEGIN_SRC emacs-lisp
@@ -333,7 +333,7 @@ Additionally I want to autosave early and often, but not cause clutter.
 #+END_SRC
 
 *** ~kill-line~
-By default =C-k= or ~kill-line~ doesn't truly delete the line, but rather kill
+By default =C-k= or ~kill-line~ doesn't truly delete the line, but rather kills
 all the text on it while leaving the newline. There are situations where this is
 useful, but overall I prefer deletion of the entire line.
 #+BEGIN_SRC emacs-lisp
@@ -492,7 +492,7 @@ with ~auto-revert-mode~ as much as possible, but this is still helpful.
 *** Macro Recording
 It took me a while to understand and get used to the idea of keyboard macros.
 Especially since they interact oddly with packages such as Helm. However once I
-did start using them I found defining a slightly more memorable syntax helpful.
+did start using them I found defining slightly more memorable shortcuts to be helpful.
 #+BEGIN_SRC emacs-lisp
 (bind-keys ("M-[" . kmacro-start-macro)
            ("M-]" . kmacro-end-macro))
@@ -638,7 +638,6 @@ always attempting to pop up as if from the mode line.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-window-split :tangle no
 (setq helm-split-window-in-side-p t)
 #+END_SRC
-
 **** Company/Projectile
 Move to company/projectile configs
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-company-projectile :tangle no
@@ -647,6 +646,8 @@ Move to company/projectile configs
   (bind-key "C-:" 'helm-company company-active-map))
 (with-eval-after-load 'projectile
   (setq projectile-completion-system 'helm))
+
+
 #+END_SRC
 
 **** Defaults Replacement
