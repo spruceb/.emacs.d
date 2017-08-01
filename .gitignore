@@ -9,3 +9,8 @@ literate/*.el
 configuration.el
 /configuration.html
 /configuration.tex
+/autosaves/
+/backups/
+/literate/blue-spruce/blue-spruce-modeline.el
+/.achievements
+
