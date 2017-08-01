@@ -1077,6 +1077,9 @@ setup rtags
                 org-mode-map)
     (bind-key "H-C-k" #'LaTeX-insert-display-math
               org-mode-map))
+  (with-eval-after-load 'ox-beamer
+    (add-to-list 'org-beamer-environments-extra
+                 '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}")))
   :bind (("C-c a" . org-agenda)
          ("C-c l" . org-store-link)
          ("C-c o c" . org-capture)
