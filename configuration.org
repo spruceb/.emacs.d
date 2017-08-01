@@ -1494,4 +1494,13 @@ than through =org=. This code block is not tangled, rather it is included throug
     :defer 4
     :diminish achievements-mode
     :config (achievements-mode t))
+(defun spruce/split-right-select-new ()
+  (interactive)
+  (select-window (split-window-right)))
+(defun spruce/split-below-select-new ()
+  (interactive)
+  (select-window (split-window-below)))
+
+(bind-key "C-x C-3" #'spruce/split-right-select-new)
+(bind-key "C-x C-2" #'spruce/split-below-select-new)
 #+END_SRC
