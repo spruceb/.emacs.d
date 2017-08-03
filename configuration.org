@@ -650,8 +650,8 @@ always attempting to pop up as if from the mode line.
 Move to company/projectile configs
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-company-projectile :tangle no
 (with-eval-after-load 'company
-  (bind-key "C-:" 'helm-company company-mode-map)
-  (bind-key "C-:" 'helm-company company-active-map))
+  (bind-key "C-'" 'helm-company company-mode-map)
+  (bind-key "C-'" 'helm-company company-active-map))
 (with-eval-after-load 'projectile
   (setq projectile-completion-system 'helm))
 
