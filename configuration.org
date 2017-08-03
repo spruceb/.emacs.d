@@ -764,6 +764,7 @@ and this one does the actual keybinding.
 ("H-i" . isearch-forward)
 ("C-s" . helm-swoop-without-pre-input)
 ("C-M-s" . helm-swoop) ; with input of thing-at-point
+("C-H-s" . helm-multi-swoop-projectile)
 :map isearch-mode-map
 ("C-i" . isearch-repeat-forward)
 #+END_SRC
