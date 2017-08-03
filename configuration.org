@@ -1012,6 +1012,8 @@ setup rtags
   (add-hook 'org-mode-hook (lambda () (setq line-spacing '0.25)))
   (setq org-use-sub-superscripts "{}")
   (setq org-export-headline-levels 5)
+  (setq org-export-with-section-numbers nil)
+
   (setq org-src-ask-before-returning-to-edit-buffer nil)
   (setq org-src-window-setup 'current-window)
   (add-to-list 'org-structure-template-alist
