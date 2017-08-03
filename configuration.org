@@ -820,8 +820,15 @@ folders into projects, with a ~.projectile~ file.
         (write-region "" nil projectile)))))
 #+END_SRC
 ** Company
+Company is the completion framework I use. It requires a backend for each
+language, but generally works quite well. It can use a "mini-popup" at the
+cursor, similar to many IDEs and modern editors. I also have Helm completion for
+more involved search.
+
 #+BEGIN_SRC emacs-lisp
+;; I almost always have Company on, so no need to see in the modeline
 (use-package company :diminish)
+;; C-tab is a good compromise between tab completion and indenting
 (global-set-key (kbd "C-<tab>") 'company-complete)
 #+END_SRC
 ** Appearance
