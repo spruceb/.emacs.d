@@ -359,8 +359,18 @@ though I usually have >= 16GB of RAM, setting the garbage collection threshold
 too high leads to occasional but very noticeable pauses, as large swaths of
 memory are reclaimed. I think ~10MB is a pretty reasonable balance, but I may
 tweak this in the future.
+
+This runs on a timer, waiting until the user has been idle for 5 seconds before
+actually setting the threshold. This is because I increase the threshold to
+about 500 MB as the first line in ~init.el~, to improve Emacs' startup speed.
+
 #+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold 10000000)
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold 10000000)
+   (message "gc-cons-threshold restored to %S"
+            gc-cons-threshold)))
 #+END_SRC
 
 *** =fill-column=
