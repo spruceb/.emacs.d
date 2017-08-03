@@ -520,7 +520,7 @@ conditional on the operating system.
 #+END_SRC
 
 * Appearance
-** Basic Appearance
+** Basic Tweaks
 These are simple changes to the default settings.
 
 *** Useless Information
