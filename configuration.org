@@ -599,7 +599,9 @@ conditional on the operating system.
 #+END_SRC
 
 * General
-** TODO Helm
+** Core Packages
+These packages form some of the most basic and critical functionality I use.
+*** TODO Helm
 Helm is probably the most important package I use. At its core, it's just an
 alternative selection system. Selection is an extremely common activity in
 Emacs, selecting a file, using M-x to select a command, selecting a buffer to
@@ -613,7 +615,7 @@ other packages. I generally put such configs in the other packages, as I now
 view Helm as more part of my default Emacs rather than a separate package. For
 default Emacs features, a large part of this "plugging in" is just rebinding
 default keybindings to Helm versions of Emacs commands.
-*** Helm Proper
+**** Helm Proper
 This is my Helm =use-package=. I use noweb to tangle source blocks below inside
 the use-package.
 #+BEGIN_SRC emacs-lisp :noweb tangle
@@ -632,7 +634,7 @@ the use-package.
          <<helm-persistent-action>>))
 #+END_SRC
 Note: the below is still included inside the Helm =use-package=.
-**** Fuzzy Matching
+***** Fuzzy Matching
 Fuzzy matching makes my typos less important and also doesn't get in my way when
 I know exactly what I want.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-fuzzy-matching :tangle no
@@ -640,13 +642,13 @@ I know exactly what I want.
 (setq helm-mode-fuzzy-match t)
 #+END_SRC
 
-**** Window Split
+***** Window Split
 Default Helm can open buffers in weird and disorienting positions. I prefer it
 always attempting to pop up as if from the mode line.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-window-split :tangle no
 (setq helm-split-window-in-side-p t)
 #+END_SRC
-**** Company/Projectile
+***** Company/Projectile
 Move to company/projectile configs
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-company-projectile :tangle no
 (with-eval-after-load 'company
@@ -654,11 +656,9 @@ Move to company/projectile configs
   (bind-key "C-'" 'helm-company company-active-map))
 (with-eval-after-load 'projectile
   (setq projectile-completion-system 'helm))
-
-
 #+END_SRC
 
-**** Defaults Replacement
+***** Defaults Replacement
 While Helm replaces several default Emacs functions to make many commands behave
 better, it also has specialized versions with extra features. I replace as many
 default options as possible.
@@ -671,7 +671,7 @@ default options as possible.
 ("M-s o" . helm-occur)
 #+END_SRC
 
-**** Persistent Action
+***** Persistent Action
 In Helm a persistent action is something that can be done in a Helm buffer
 without ending the session. By default it's bound to C-z, and tab is bound to
 selection of a non-persistent action. I prefer swapping C-z and tab
@@ -683,7 +683,7 @@ functionality.
 ("C-z" . helm-select-action)
 #+END_SRC
 
-**** Locate Command
+***** Locate Command
 ~helm-locate~ is an extremely useful command to find arbitrary files on the
 file-system. It's best to do this using an external tool. I pick which one based
 on the current operating system. However if this is macOS, then this was already
@@ -697,7 +697,7 @@ set in my macOS.org config file.
             ('windows-nt "es %s")
             (t "locate %s"))))
 #+END_SRC
-*** Helm Flx
+**** Helm Flx
 =flx= is a package that allows for Sublime-like great fuzzy matching. =helm-flx=
 plugs in this functionality to Helm's fuzzy matching.
 #+BEGIN_SRC emacs-lisp
@@ -705,7 +705,7 @@ plugs in this functionality to Helm's fuzzy matching.
   :config (helm-flx-mode t))
 #+END_SRC
 
-*** Helm Projectile
+**** Helm Projectile
 Projectile is another incredibly important package for me, and of course I'd
 like to use Helm for all of its various features.
 #+BEGIN_SRC emacs-lisp
@@ -715,12 +715,12 @@ like to use Helm for all of its various features.
     (helm-projectile-on)))
 #+END_SRC
 
-*** =helm-swoop=
+**** =helm-swoop=
 =helm-swoop= is a replacement for ~isearch~ and ~occur~ that searches buffers with a
 Helm-based interface and automatically moves through the searched buffer and
 highlights the matches. It also allows for editing the searches in a separate
 buffer and saving them back.
-**** Swoop Proper
+***** Swoop Proper
 #+BEGIN_SRC emacs-lisp :noweb tangle
 (use-package helm-swoop
   :config
@@ -732,20 +732,20 @@ buffer and saving them back.
          <<helm-swoop-search-rebinds>>
          <<helm-swoop-switch-to-multi>>))
 #+END_SRC
-**** Swoop Window Splitting
+***** Swoop Window Splitting
 Do the same window split as with the rest of Helm, i.e. inside the current
 buffer and vertically if possible.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-window-splitting :tangle no
 (setq helm-swoop-split-with-multiple-windows t)
 (setq helm-swoop-split-direction 'split-window-vertically)
 #+END_SRC
-**** Font Lock in Searches
+***** Font Lock in Searches
 Keep the font lock (color/highlighting etc) from the searched buffer in the
 results. This slows down the search, but not very perceptibly.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-output-color :tangle no
 (setq helm-swoop-speed-or-color t)
 #+END_SRC
-**** Mark Reactivation
+***** Mark Reactivation
 For some reason helm-swoop deactivates the mark on search selection. This
 wrapper fixes that, by wrapping helm-swoop in a function that will reactivate
 the mark if it was set before search started.
@@ -758,7 +758,7 @@ re-activate it after swooping if it was active before-hand"
     (when marked (activate-mark))))
 (advice-add 'helm-swoop :around #'spruce/helm-swoop-mark-wrapper)
 #+END_SRC
-**** Search Keybindings
+***** Search Keybindings
 I replace the default isearch binding with swoop. I also tend to type new
 searches more often than I use the symbol at the point, so I use the
 no-pre-input version. However, isearch is an important tool for navigation, so I
@@ -783,7 +783,7 @@ and this one does the actual keybinding.
 ("C-i" . isearch-repeat-forward)
 #+END_SRC
 
-**** Multi-Swoop
+***** Multi-Swoop
 Multiswoop, swooping across multiple buffers, is pretty useful. Reasonably often
 I realize a search I started in one buffer needs to expand across multiple, so I
 use this binding to switch to multiswoop from inside a normal swoop.
@@ -792,7 +792,7 @@ use this binding to switch to multiswoop from inside a normal swoop.
 ("M-i" . helm-multi-swoop-all-from-helm-swoop)
 #+END_SRC
 
-** Projectile
+*** Projectile
 Projectile is another critical package. It's a project management utility and
 framework. The main idea is simply that certain folders can be designated as
 "projects", and you can then use utilities to manipulate or process files in
@@ -819,7 +819,8 @@ folders into projects, with a ~.projectile~ file.
       (unless (file-exists-p projectile)
         (write-region "" nil projectile)))))
 #+END_SRC
-** Company
+
+*** Company
 Company is the completion framework I use. It requires a backend for each
 language, but generally works quite well. It can use a "mini-popup" at the
 cursor, similar to many IDEs and modern editors. I also have Helm completion for
