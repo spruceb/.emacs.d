@@ -1261,7 +1261,16 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
         (append sp-navigate-consider-stringlike-sexp (list 'python-mode
                                                            'org-mode
                                                            'coffeescript-mode)))
-  (setq sp-highlight-pair-overlay nil))
+  (setq sp-highlight-pair-overlay nil)
+  (setq sp-escape-quotes-after-insert nil)
+  :bind (("C-M-f" . sp-forward-sexp)
+         ("C-M-b" . sp-backward-sexp)
+         ("C-M-u" . sp-backward-up-sexp)
+         ("C-M-d" . sp-down-sexp)
+         ("C-M-a" . sp-backward-down-sexp)
+         ("C-M-e" . sp-forward-up-sexp)
+         ("C-M-n" . sp-beginning-of-next-sexp)
+         ("C-M-p" . sp-beginning-of-previous-sexp)))
 #+END_SRC
 *** persistent-scratch
 #+BEGIN_SRC emacs-lisp
