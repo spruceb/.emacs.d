@@ -505,7 +505,21 @@ did start using them I found defining slightly more memorable shortcuts to be he
 (bind-keys ("M-[" . kmacro-start-macro)
            ("M-]" . kmacro-end-macro))
 #+END_SRC
+** macOS
+I run [[https://bitbucket.org/mituharu/emacs-mac/overview][Mitsuharu Yamamoto's]] =emacs-macport= on the latest
+version of macOS. There are several configuration options specific to
+this platform that I use.
 
+These settings are kept in a separate file for clean tangling
+conditional on the operating system.
+
+#+BEGIN_SRC emacs-lisp
+(spruce/new-config-file macOS "macOS")
+(when (eq system-type 'darwin)
+  (org-babel-load-file spruce/macOS-config-file))
+#+END_SRC
+
+* Appearance
 ** Basic Appearance
 These are simple changes to the default settings.
 
@@ -584,21 +598,7 @@ touching.
 (setq prettify-symbols-unprettify-at-point 'right-edge)
 #+END_SRC
 
-** macOS
-I run [[https://bitbucket.org/mituharu/emacs-mac/overview][Mitsuharu Yamamoto's]] =emacs-macport= on the latest
-version of macOS. There are several configuration options specific to
-this platform that I use.
 
-These settings are kept in a separate file for clean tangling
-conditional on the operating system.
-
-#+BEGIN_SRC emacs-lisp
-(spruce/new-config-file macOS "macOS")
-(when (eq system-type 'darwin)
-  (org-babel-load-file spruce/macOS-config-file))
-#+END_SRC
-
-* Appearance
 ** Mode Line
 The column number is often useful for me, enough to be in the mode line.
 #+BEGIN_SRC emacs-lisp
