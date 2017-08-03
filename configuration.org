@@ -598,6 +598,69 @@ conditional on the operating system.
   (org-babel-load-file spruce/macOS-config-file))
 #+END_SRC
 
+* Appearance
+** Mode Line
+The column number is often useful for me, enough to be in the mode line.
+#+BEGIN_SRC emacs-lisp
+; (column-number-mode)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq projectile-mode-line " Projectile")
+(spruce/new-config-file blue-spruce-modeline
+                        "blue-spruce/blue-spruce-modeline")
+(org-babel-load-file spruce/blue-spruce-modeline-config-file)
+
+(use-package smart-mode-line
+  :disabled
+  :config
+  (setq sml/theme 'respectful)
+  (setq sml/shorten-directory t)
+  (setq sml/shorten-modes t)
+  (setq sml/replacer-regexp-list nil)
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/line-number-format "  %3l ")
+  (sml/setup))
+
+(use-package autorevert
+  :diminish auto-revert-mode)
+#+END_SRC
+
+** Appearance Heap
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'custom-theme-load-path "/Users/spruce/.emacs.d/literate/blue-spruce/")
+(load-theme 'blue-spruce t)
+
+;; (add-hook 'window-setup-hook (lambda()
+;;                                 (setq ns-auto-hide-menu-bar t)))
+
+(set-face-attribute 'default nil :font "Source Code Pro-12")
+;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
+;;   (load-theme 'spacegray-spruce t))
+
+(set-frame-font "Source Code Pro-12")
+(use-package all-the-icons)
+(use-package neotree)
+(use-package doom-themes
+  :disabled
+  :diminish doom-buffer-mode
+  :after neotree
+  :config
+  ;; (setq doom-neotree-file-icons t)
+  (setq doom-enable-brighter-comments t)
+  (add-hook 'find-file-hook 'doom-buffer-mode)
+  ;; brighter minibuffer when active
+  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  (load-theme 'doom-one t)
+  ;; (require 'doom-neotree)
+  )
+(when (boundp 'window-divider-mode)
+  (setq window-divider-default-places t
+        window-divider-default-bottom-width 1
+        window-divider-default-right-width 1)
+  (window-divider-mode +1))
+#+END_SRC
+
 * General
 ** Core Packages
 These packages form some of the most basic and critical functionality I use.
@@ -832,65 +895,7 @@ more involved search.
 ;; C-tab is a good compromise between tab completion and indenting
 (global-set-key (kbd "C-<tab>") 'company-complete)
 #+END_SRC
-** Appearance
-*** Mode Line
-The column number is often useful for me, enough to be in the mode line.
-#+BEGIN_SRC emacs-lisp
-(column-number-mode)
-#+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(setq projectile-mode-line " Projectile")
-(spruce/new-config-file blue-spruce-modeline 
-                        "blue-spruce/blue-spruce-modeline")
-(org-babel-load-file spruce/blue-spruce-modeline-config-file)
-
-(use-package smart-mode-line
-  :disabled
-  :config
-  (setq sml/theme 'respectful)
-  (setq sml/shorten-directory t)
-  (setq sml/shorten-modes t)
-  (setq sml/replacer-regexp-list nil)
-  (setq sml/no-confirm-load-theme t)
-  (setq sml/line-number-format "  %3l ")
-  (sml/setup))
-
-(use-package autorevert
-  :diminish auto-revert-mode)
-#+END_SRC
-
-*** Appearance Heap
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'custom-theme-load-path "/Users/spruce/.emacs.d/literate/blue-spruce/")
-(load-theme 'blue-spruce t)
-
-(set-face-attribute 'default nil :font "Source Code Pro-12")
-;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
-;;   (load-theme 'spacegray-spruce t))
-
-(set-frame-font "Source Code Pro-12")
-(use-package all-the-icons)
-(use-package neotree)
-(use-package doom-themes
-  :disabled
-  :diminish doom-buffer-mode
-  :after neotree
-  :config
-  ;; (setq doom-neotree-file-icons t)
-  (setq doom-enable-brighter-comments t)
-  (add-hook 'find-file-hook 'doom-buffer-mode)
-  ;; brighter minibuffer when active
-  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
-  (load-theme 'doom-one t)
-  ;; (require 'doom-neotree)
-  )
-(when (boundp 'window-divider-mode)
-  (setq window-divider-default-places t
-        window-divider-default-bottom-width 1
-        window-divider-default-right-width 1)
-  (window-divider-mode +1))
-#+END_SRC
 ** Non-Programming Modes
 *** markdown-mode
 #+BEGIN_SRC emacs-lisp
