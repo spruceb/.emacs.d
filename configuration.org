@@ -357,10 +357,10 @@ The default garbage collection of Emacs is quite aggressive. It collects garbage
 after around 800KB of allocation. This is tiny for modern systems. However even
 though I usually have >= 16GB of RAM, setting the garbage collection threshold
 too high leads to occasional but very noticeable pauses, as large swaths of
-memory are reclaimed. I think 100MB is a pretty reasonable balance, but I may
+memory are reclaimed. I think ~10MB is a pretty reasonable balance, but I may
 tweak this in the future.
 #+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold 10000000)
 #+END_SRC
 
 *** =fill-column=
