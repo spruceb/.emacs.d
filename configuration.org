@@ -371,8 +371,8 @@ is usually enough for me to keep my bearings.
 The mark ring contains information about where marks (selection points) were
 set. Since I have a modern computer I see no reason for this to be small.
 #+BEGIN_SRC emacs-lisp
-(setq global-mark-ring-max 200)
-(setq mark-ring-max 100)
+(setq global-mark-ring-max 2000)
+(setq mark-ring-max 1000)
 #+END_SRC
 Also, I like to be able to pop repeatedly more easily.
 #+BEGIN_SRC emacs-lisp
