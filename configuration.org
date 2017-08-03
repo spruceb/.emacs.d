@@ -888,7 +888,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (setq-default indent-tabs-mode nil)
 (setq global-linum-mode nil)
 (setq-default tab-width 4)
-(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+;; (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 (with-eval-after-load 'smartparens
   (smartparens-global-mode))
 (add-hook 'prog-mode-hook 'global-company-mode)
@@ -1338,7 +1338,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (add-hook 'python-mode-hook #'whitespace-save-fn)
 (add-hook 'lisp-mode-hook #'whitespace-save-fn)
 (add-hook 'prog-mode-hook #'whitespace-mode)
-(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 ;; (setq auto-revert-use-notify nil)
 
 (setq whitespace-line-column 86)
