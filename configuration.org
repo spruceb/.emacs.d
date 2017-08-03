@@ -793,16 +793,31 @@ use this binding to switch to multiswoop from inside a normal swoop.
 #+END_SRC
 
 ** Projectile
+Projectile is another critical package. It's a project management utility and
+framework. The main idea is simply that certain folders can be designated as
+"projects", and you can then use utilities to manipulate or process files in
+that folder specifically. Examples include: searching all files in a project,
+searching through all open buffers for just the current project, saving or
+killing all buffers in a project, opening a specific project known to Projectile
+from anywhere "in Emacs" (even remote/TRAMP projects), etc. Also, generally
+acting as a way for other packages to limit the scope of their function while
+still taking multiple related files into account.
+
+By default, a project is any git repo. There is also support for making non-git
+folders into projects, with a ~.projectile~ file.
+
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
   :diminish
   :config
+  ;; Enable projectile globally
   (projectile-global-mode)
-  (defun init-projectile ()
-  (interactive)
-  (let ((projectile ".projectile"))
-    (unless (file-exists-p projectile)
-      (write-region "" nil projectile)))))
+  ;; Make the current folder a projectile project
+  (defun spruce/init-projectile ()
+    (interactive)
+    (let ((projectile ".projectile"))
+      (unless (file-exists-p projectile)
+        (write-region "" nil projectile)))))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp
