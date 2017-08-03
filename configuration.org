@@ -520,6 +520,9 @@ conditional on the operating system.
 #+END_SRC
 
 * Appearance
+Aesthetic is important. Ugly things are distracting and unpleasant. Emacs
+without any configuration looks terrible, so I've done quite a bit of work to
+fix that.
 ** Basic Tweaks
 These are simple changes to the default settings.
 
@@ -598,67 +601,69 @@ touching.
 (setq prettify-symbols-unprettify-at-point 'right-edge)
 #+END_SRC
 
+*** Window Dividers
+Window divider mode, new in emacs 25, allows for a divider similar to the
+vertical border to be placed in various positions around windows. I use this to
+keep a one-pixel wide line below and to the right of windows, meaning they are
+surrounded on all sides by the border. Without this, there is no such line
+between adjacent modelines etc. I feel this leads to a more consistent
+appearance.
 
-** Mode Line
-The column number is often useful for me, enough to be in the mode line.
 #+BEGIN_SRC emacs-lisp
-; (column-number-mode)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(setq projectile-mode-line " Projectile")
-(spruce/new-config-file blue-spruce-modeline
-                        "blue-spruce/blue-spruce-modeline")
-(org-babel-load-file spruce/blue-spruce-modeline-config-file)
-
-(use-package smart-mode-line
-  :disabled
-  :config
-  (setq sml/theme 'respectful)
-  (setq sml/shorten-directory t)
-  (setq sml/shorten-modes t)
-  (setq sml/replacer-regexp-list nil)
-  (setq sml/no-confirm-load-theme t)
-  (setq sml/line-number-format "  %3l ")
-  (sml/setup))
-
-(use-package autorevert
-  :diminish auto-revert-mode)
-#+END_SRC
-
-** Appearance Heap
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'custom-theme-load-path "/Users/spruce/.emacs.d/literate/blue-spruce/")
-(load-theme 'blue-spruce t)
-
-;; (add-hook 'window-setup-hook (lambda()
-;;                                 (setq ns-auto-hide-menu-bar t)))
-
-(set-face-attribute 'default nil :font "Source Code Pro-12")
-;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
-;;   (load-theme 'spacegray-spruce t))
-
-(set-frame-font "Source Code Pro-12")
-(use-package all-the-icons)
-(use-package neotree)
-(use-package doom-themes
-  :disabled
-  :diminish doom-buffer-mode
-  :after neotree
-  :config
-  ;; (setq doom-neotree-file-icons t)
-  (setq doom-enable-brighter-comments t)
-  (add-hook 'find-file-hook 'doom-buffer-mode)
-  ;; brighter minibuffer when active
-  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
-  (load-theme 'doom-one t)
-  ;; (require 'doom-neotree)
-  )
 (when (boundp 'window-divider-mode)
   (setq window-divider-default-places t
         window-divider-default-bottom-width 1
         window-divider-default-right-width 1)
   (window-divider-mode +1))
+#+END_SRC
+** Theme
+My specific appearance preferences.
+*** Blue Spruce
+This is the actual theme I use. It started as a modified version of Doom Theme,
+which I extracted as a separate ~.el~ because of the number of changes I needed to
+make.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'custom-theme-load-path (concat spruce/org-config-dirpath "/blue-spruce/"))
+(load-theme 'blue-spruce t)
+#+END_SRC
+
+*** Font
+A good font is always important, especially so when programming. Fixed-width is
+essential for vertical alignment. There must be a good distinction between
+somewhat visually similar characters (l, I, and 1, etc). Preferably there should
+be good support for Unicode and various special symbols, but Emacs is pretty
+unique in its font fallback system (it will automatically search for alternate
+fonts if the default doesn't support a certain codepoint, and use the alternate
+only for that individual character).
+
+I've chosen Source Code Pro, and been using it for over 3 years. There's a
+variety of newer fonts that include interesting ligatures and generally look
+pretty good, so I might switch at some point in the future. But for now:
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :font "Source Code Pro-12")
+#+END_SRC
+
+** Mode Line
+After many years of failed attempts to make a good looking modeline with
+Powerline, Smart Modeline, Spaceline, etc, I eventually gave in and learned to
+deal with ~mode-line-format~ on my own. I've written up a good bit of config to
+make my modeline look reasonably nice, but there's always more work to do.
+#+BEGIN_SRC emacs-lisp
+(spruce/new-config-file blue-spruce-modeline
+                        "blue-spruce/blue-spruce-modeline")
+(org-babel-load-file spruce/blue-spruce-modeline-config-file)
+#+END_SRC
+
+** Appearance Packages
+A few packages that can be used to improve Emacs' appearance. Not currently in
+use.
+#+BEGIN_SRC emacs-lisp
+;; Uses fonts to allow usage of many different icons
+(use-package all-the-icons)
+;; A "file sidebar" package
+(use-package neotree)
 #+END_SRC
 
 * General
