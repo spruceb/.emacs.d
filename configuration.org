@@ -773,22 +773,26 @@ and this one does the actual keybinding.
 Multiswoop, swooping across multiple buffers, is pretty useful. Reasonably often
 I realize a search I started in one buffer needs to expand across multiple, so I
 use this binding to switch to multiswoop from inside a normal swoop.
-#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-switch-to-multi :tangle no
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-woop-switch-to-multi :tangle no
 :map helm-swoop-map
 ("M-i" . helm-multi-swoop-all-from-helm-swoop)
 #+END_SRC
 
 ** Projectile
 #+BEGIN_SRC emacs-lisp
-(projectile-global-mode)
-(defun init-projectile ()
+(use-package projectile
+  :diminish
+  :config
+  (projectile-global-mode)
+  (defun init-projectile ()
   (interactive)
   (let ((projectile ".projectile"))
     (unless (file-exists-p projectile)
-      (write-region "" nil projectile))))
+      (write-region "" nil projectile)))))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp
+(use-package company :diminish)
 (global-set-key (kbd "C-<tab>") 'company-complete)
 #+END_SRC
 ** Appearance
@@ -817,28 +821,29 @@ The column number is often useful for me, enough to be in the mode line.
 *** Appearance Heap
 #+BEGIN_SRC emacs-lisp
 
-(set-face-attribute 'default nil :font "Source Code Pro-12")
-;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
-;;   (load-theme 'spacegray-spruce t))
+  (set-face-attribute 'default nil :font "Source Code Pro-12")
+  ;; (when (and (string-match "Carbon" (emacs-version)) (window-system))
+  ;;   (load-theme 'spacegray-spruce t))
 
-(set-frame-font "Source Code Pro-12")
-(use-package all-the-icons)
-(use-package neotree)
-(use-package doom-themes
-  :diminish doom-buffer-mode
-  :after neotree
-  :config
-  (setq doom-neotree-file-icons t)
-  (add-hook 'find-file-hook 'doom-buffer-mode)
-  ;; brighter minibuffer when active
-  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
-  (load-theme 'doom-one t)
-  (require 'doom-neotree))
-(when (boundp 'window-divider-mode)
-  (setq window-divider-default-places t
-        window-divider-default-bottom-width 1
-        window-divider-default-right-width 1)
-  (window-divider-mode +1))
+  (set-frame-font "Source Code Pro-12")
+  (use-package all-the-icons)
+  (use-package neotree)
+  (use-package doom-themes
+    :diminish doom-buffer-mode
+    :after neotree
+    :config
+    (setq doom-neotree-file-icons t)
+    (setq doom-enable-brighter-comments t)
+    (add-hook 'find-file-hook 'doom-buffer-mode)
+    ;; brighter minibuffer when active
+    (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+    (load-theme 'doom-one t)
+    (require 'doom-neotree))
+  (when (boundp 'window-divider-mode)
+    (setq window-divider-default-places t
+          window-divider-default-bottom-width 1
+          window-divider-default-right-width 1)
+    (window-divider-mode +1))
 #+END_SRC
 ** Modes
 ** Packages
@@ -880,7 +885,8 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
-(bind-key "M-;" 'comment-dwim-line prog-mode-map)
+(global-set-key (kbd "M-;") #'comment-dwim-line)
+;; (bind-key "M-;" 'comment-dwim-line prog-mode-map)
 #+END_SRC
 
 *** Heap
@@ -897,7 +903,10 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 
 ** CC
 #+BEGIN_SRC emacs-lisp
-  (use-package cc-mode
+(use-package cc-mode
+    :config
+    ;; (add-hook 'cc-mode-hook (lambda () (setq c-basic-offset 4)))
+    (setq c-default-style "python")
     :bind (:map
            c-mode-base-map
            ("C-c b" . compile)))
@@ -910,12 +919,17 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (add-hook 'c-mode-common-hook
           (lambda ()
             (require 'dtrt-indent)
-            (dtrt-indent-mode nil)))
+            (dtrt-indent-mode t)))
 #+END_SRC
 
 *** C++
 #+BEGIN_SRC emacs-lisp
-(add-hook 'c++-mode-hook (lambda () (setq c-basic-offset 4)))
+(add-hook 'c++-mode-hook (lambda () (setq c-basic-offset 2)))
+#+END_SRC
+
+*** C
+#+BEGIN_SRC emacs-lisp
+(add-hook 'c-mode-hook (lambda () (setq c-basic-offset 4)))
 #+END_SRC
 
 *** TODO Temporary Upgrade Heap
@@ -1305,7 +1319,9 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
     (aggressive-indent-mode t))
   (defun spruce/disable-agressive-indent ()
     (aggressive-indent-mode nil))
-  (add-hook 'cc-mode-hook #'spruce/enable-aggressive-indent))
+  ;; (add-hook 'cc-mode-hook #'spruce/enable-aggressive-indent))
+)
+#+END_SRC
 *** indent-guides
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-indent-guides
@@ -1342,8 +1358,8 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (add-hook 'coffeescript-mode-hook 'whitespace-mode)
 (add-hook 'python-mode-hook 'whitespace-mode)
 (setq whitespace-style
-      '(face trailing space-before-tab tab
-             indentation empty space-after-tab))
+      '(face trailing space-before-tab tabs
+             space-after-tab))
 ;; don't do anything whitespace, use whitespace-fn instead
 (setq whitespace-action nil)
 
@@ -1360,6 +1376,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 
 (setq whitespace-line-column 86)
 (setq hl-line-sticky-flag nil)
+(setq mac-ignore-momentum-wheel-events t)
 #+END_SRC
 * Utility Functions
 These functions are bound to keys and used in various places in my config.
@@ -1447,10 +1464,11 @@ than through =org=. This code block is not tangled, rather it is included throug
   (interactive)
   (revert-buffer t t))
 
-(defun backward-kill-line (arg)5
+(defun backward-kill-line (arg)
   "Kill ARG lines backward."
   (interactive "p")
   (kill-line (- 1 arg)))
+
 (use-package achievements
     :diminish achievements-mode
     :config (achievements-mode t))
