@@ -1297,6 +1297,13 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
   (defun spruce/disable-agressive-indent ()
     (aggressive-indent-mode nil))
   (add-hook 'cc-mode-hook #'spruce/enable-aggressive-indent))
+*** indent-guides
+#+BEGIN_SRC emacs-lisp
+(use-package highlight-indent-guides
+  :config
+  ;; (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+  (setq highlight-indent-guides-method 'character))
+#+END_SRC
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (when (string-equal system-name "Spruces-MacBook-Pro.local")
