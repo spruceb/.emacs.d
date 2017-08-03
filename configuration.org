@@ -115,7 +115,7 @@ interfaces for doing so.
 ** Security
 There are several important security improvements to Emacs that should come as
 early a possible in config, to prevent inevitable network connection attempts
-from being hilariously insecure
+from being hilariously insecure.
 *** TLS
 Much of the following is credited to [[https://glyph.twistedmatrix.com/2015/11/editor-malware.html][Glyph]].
 
@@ -276,11 +276,13 @@ spaces are from the typewriter period and should not be used in modern documents
 #+BEGIN_SRC emacs-lisp
 (setq sentence-end-double-space nil)
 #+END_SRC
+
 Emacs is user-level software, not a shell, so some protection is nice. Using
 a Trash is one such protection I occasionally still appreciate.
 #+BEGIN_SRC emacs-lisp
 (setq delete-by-moving-to-trash t)
 #+END_SRC
+
 Like some terminal emulators, graphical Emacs clients resize "line/column"-wise
 by default (i.e. snapping to the nearest line or column). In theory this could
 be useful, but it's wildly unexpected and odd looking in modern systems. This
@@ -341,7 +343,7 @@ I also appreciate having the ability to kill backwards easily.
 The default garbage collection of Emacs is quite aggressive. It collects garbage
 after around 800KB of allocation. This is tiny for modern systems. However even
 though I usually have >= 16GB of RAM, setting the garbage collection threshold
-too high leads to occasional but very noticeable pauses as large swaths of
+too high leads to occasional but very noticeable pauses, as large swaths of
 memory are reclaimed. I think 100MB is a pretty reasonable balance, but I may
 tweak this in the future.
 #+BEGIN_SRC emacs-lisp
@@ -409,6 +411,7 @@ said links, and it's less nagging.
 #+BEGIN_SRC emacs-lisp
 (setq vc-follow-symlinks t)
 #+END_SRC
+
 *** Debug on error
 There are a lot of things that can go wrong in Emacs, especially with as much
 config as I've got here. Fixing them is of course important, but the default
@@ -438,6 +441,7 @@ competence to press =y= or =n= rather than a full =yes= or =no=.
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
+
 ** Keybindings
 *** Config File Access
 Quickly getting to my config file is important for fluid customization. Just as
