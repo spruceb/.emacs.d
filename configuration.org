@@ -1433,4 +1433,7 @@ than through =org=. This code block is not tangled, rather it is included throug
   "Kill ARG lines backward."
   (interactive "p")
   (kill-line (- 1 arg)))
+(use-package achievements
+    :diminish achievements-mode
+    :config (achievements-mode t))
 #+END_SRC
