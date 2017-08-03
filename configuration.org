@@ -787,7 +787,7 @@ and this one does the actual keybinding.
 Multiswoop, swooping across multiple buffers, is pretty useful. Reasonably often
 I realize a search I started in one buffer needs to expand across multiple, so I
 use this binding to switch to multiswoop from inside a normal swoop.
-#+BEGIN_SRC emacs-lisp :noweb-ref helm-woop-switch-to-multi :tangle no
+#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-switch-to-multi :tangle no
 :map helm-swoop-map
 ("M-i" . helm-multi-swoop-all-from-helm-swoop)
 #+END_SRC
