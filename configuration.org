@@ -214,7 +214,7 @@ do this I use the following macro and list:
                                         spruce/org-config-directory)))
 (setq-default spruce/config-package-directory "packages")
 (setq-default spruce/config-package-dirpath
-              (expand-file-name (concat spruce/org-config-dirpath
+              (expand-file-name (concat spruce/org-config-dirpath "/"
                                         spruce/config-package-directory)))
 (add-to-list 'load-path spruce/org-config-dirpath)
 (add-to-list 'load-path spruce/config-package-dirpath)
