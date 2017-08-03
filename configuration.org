@@ -912,53 +912,73 @@ more involved search.
 #+END_SRC
 
 ** Non-Programming Modes
-*** markdown-mode
+These are various modes (major and minor) that aren't particularly related to
+programming
+*** Markdown
+Markdown is a simple and ubiquitous markup language. I used it before switching
+to Emacs, and generally find it reasonable to work with (although of course now
+I use Org).
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
-  :mode "\\.md\\'"
+  :mode "\\.md\\'" ; This means to activate on .md files
   :config
   (add-hook 'markdown-mode-hook 'visual-line-mode))
 #+END_SRC
-** Other Packages
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'package-directory-list "/Users/spruce/.emacs.d/literate/packages/")
-#+END_SRC
 
-*** persistent-scratch
-#+BEGIN_SRC emacs-lisp
-(use-package persistent-scratch
-  :config (persistent-scratch-setup-default))
-#+END_SRC
-*** transpose-frame
-#+BEGIN_SRC emacs-lisp
-(use-package transpose-frame)
-#+END_SRC
-*** buffer-move
-#+BEGIN_SRC emacs-lisp
-(use-package buffer-move)
-#+END_SRC
-*** fill-column-indicator
-#+BEGIN_SRC emacs-lisp
-(use-package fill-column-indicator)
-#+END_SRC
-*** ESS
+** ESS
+ESS: Emacs Speaks Statistics. This is a large and old package allowing for
+working with a variety of stats programs and languages. I have only ever used
+this for R, and it works quite well for that.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ess
   :defer 3
   :init (require 'ess-site)
   :config
+  ;; aggressive-indent interfears with the ESS REPL
   (with-eval-after-load 'aggressive-indent
     (add-hook 'inferior-ess-mode-hook #'spruce/disable-agressive-indent)))
 #+END_SRC
-*** Tramp
+
+** TODO IRC
+This is for configuration of IRC in Emacs. Currently I just use the Circe
+package with no configuration.
+
+#+BEGIN_SRC emacs-lisp
+(use-package circe)
+#+END_SRC
+
+** Default Package Configuration
+Emacs has a large number of "packages" that are built in. This modularizes the
+massive amount of available functionality. I tend to still use ~use-package~
+blocks for tweaks to these default packages. It's more consistent and visually
+pleasing.
+*** TRAMP
+TRAMP, "Transparent Remote Access, Multiple Protocols", is Emacs' method for
+communicating with and editing files on remote servers. Its beauty and utility
+comes from its ability to transparently allow Emacs functionality to work
+remotely as if it were working locally, and to do so over many different kinds
+of remote connections.
+
+The problem is that it isn't perfect. Sometimes issues can arise, and there are
+many warts left over from ancient compatibility concerns. It can feel
+drastically slower at times (mostly due to Emacs' "issues" with multithreading).
+But when it does work well, it's massively convenient.
 #+BEGIN_SRC emacs-lisp
 (use-package tramp
   :config
+  ;; Use SSH ControlMasters to try to keep any connections alive as long as
+  ;; possible. This gets rid of a lot of time spent reconnecting and
+  ;; re-inputting credentials
   (setq tramp-ssh-controlmaster-options
         "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=yes")
+  ;; SSH is generally the best remote connection method
   (setq tramp-default-method "ssh"))
 #+END_SRC
-*** recentf
+
+*** Recentf
+Recentf is a builtin package that keeps a list of recently visited files. The
+utility is pretty obvious, and I keep this on at all times.
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
   :config
@@ -966,22 +986,11 @@ more involved search.
   (recentf-mode t)
   :bind ("C-x C-r" . helm-recentf))
 #+END_SRC
-*** undo-tree
-#+BEGIN_SRC emacs-lisp
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :config
-  (setq undo-tree-auto-save-history t)
-  (add-to-list 'undo-tree-history-directory-alist
-               '("." . "~/.emacs.d/cache/undo"))
-  (global-undo-tree-mode))
-#+END_SRC
-** IRC
-#+BEGIN_SRC emacs-lisp
-(use-package circe)
-#+END_SRC
-** Misc
-*** Desktop mode
+
+*** Desktops
+Desktops allows you to save just about everything about the state of Emacs when
+it closes and restore on startup. Frames, frame position, window position,
+variable state, basically everything. This can be quite convenient 
 #+BEGIN_SRC emacs-lisp
 (setq dekstop-auto-save-timeout 300)
 (if (display-graphic-p)
@@ -991,6 +1000,86 @@ more involved search.
       desktop-auto-save-timeout 30
       desktop-save nil)
 #+END_SRC
+
+** Misc Packages
+This section is for a variety of packages that are pretty small or otherwise
+don't seem like they need their own section in General.
+
+This adds a local directory for any .el files not on MELPA or packages I write
+myself.
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'package-directory-list  (concat spruce/org-config-dirpath "/packages/"))
+#+END_SRC
+
+*** undo-tree
+One of the more critical packages I use (albeit small and pretty simple). The
+idea is pretty simple, but powerful. In many applications, if you make a change
+to a file (change A), undo that change, and then make any other change (change
+B), then change A is lost forever. The "history state" is simply a chain. You
+can move forward and backwards along the chain (undo and redo), but if you
+modify the chain (by introducing a new change while at some point in the chain
+besides the tip/head), you lose all references to those existing "links".
+
+undo-tree fixes this. Instead of a chain, the undo state is a tree. If you undo
+a change, and then make some further modification, that creates a "branch
+point". Then later, you can undo to that branch point and redo into the old
+branch.
+
+It's somewhat like making every file an automatic Git repo, with every change
+automatically being a commit, and branching/reverting happening automatically
+with undo and redo.
+
+It might seem like this would make most normal undo/redo workflows
+unnecessarily. However it doesn't, you can use undo and redo commands totally as
+normal. This is because there's a concept of "active branches". If you make a
+new branch, that becomes the active branch for its branch point. If you undo
+through that branch point and then redo, you automatically follow the active
+branch.
+
+If you want to select a different branch, you use the visual view of history,
+which shows every "change point" and "branch point", along with the option do
+show what each point changes etc. And of course navigate through the changes.
+
+Additionally, you can save this undo state to disk, to keep it persistently.
+
+Once I got used to this package I ended up using it far more than I expected.
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (setq undo-tree-auto-save-history t)
+  (add-to-list 'undo-tree-history-directory-alist
+               '("." . "~/.emacs.d/cache/undo"))
+  (global-undo-tree-mode))
+#+END_SRC
+
+*** Persistent Scratch
+I don't use =*scratch*= too often these days, but when I do, I generally want the
+contents to stick around through restarts. I lost a reasonable amount of
+relevant information due to carelessness before installing this package.
+#+BEGIN_SRC emacs-lisp
+(use-package persistent-scratch
+  :config (persistent-scratch-setup-default))
+#+END_SRC
+
+*** transpose-frame
+A simple package that allows for transposing the windows in a frame (i.e.
+swapping the "rows" and "columns" of the windows). It also includes a few other
+window-manipulation functions, such as flip-frame etc. In general it's quite
+useful when trying to obtain a specific window arrangement quickly.
+#+BEGIN_SRC emacs-lisp
+(use-package transpose-frame)
+#+END_SRC
+
+*** buffer-move
+Similar to ~transpose-frame~, except allowing for the movement of a single window
+(or rather, the buffer in that window), up/down/left/right. I don't currently
+have keybindings for this, and don't use it much, but that may change in the
+future.
+#+BEGIN_SRC emacs-lisp
+(use-package buffer-move)
+#+END_SRC
+
 * Programming
 ** =prog=
 *** Spacing and Indentation
