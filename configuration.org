@@ -911,8 +911,35 @@ more involved search.
 (global-set-key (kbd "C-<tab>") 'company-complete)
 #+END_SRC
 
+** Magit
+Magit is another of the most important packages I use. It's a Git porcelain, a
+higher level interface to git. In many ways you can see this as similar to the
+"graphical" version control interfaces built into many IDEs and programs such as
+the Github Desktop app. And that is true, Magit is a non-CLI interface. But
+unlike most such Git wrappers, Magit offers a good bit MORE power than the
+normal command line, wrapping some complicated but useful operations into single
+commands, but still exposing everything you can do on the command line. It also
+allows for many many kinds of complex visualizations of diffs, logs, and data,
+stuff that would require some external processing to get out of normal git
+commands.
+
+Especially important is that it's in Emacs. It's an Emacs-based UI (although one
+of the better ones), it has the same keyboard shortcuts and config, it's
+incredibly easy to access while editing. Honestly, even if it was a poor git
+porcelain, I'd probably use it most of the time. But not only is it more
+convenient than switching to a command prompt, it's also faster and easier to
+use, and generally pretty beautiful.
+
+Of course it's still a good idea to be comfortable with the git CLI. It's one of
+the most ubiquitous tools in software, and you don't always have Emacs
+everywhere (yet).
+
 #+BEGIN_SRC emacs-lisp
+(use-package magit
   :config
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (setq magit-auto-revert-mode t)
+  :bind ("C-c g" . magit-status))
 #+END_SRC
 
 ** ESS
@@ -1506,15 +1533,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
   (setq ispell-program-name "/usr/local/bin/ispell")
   (add-hook 'text-mode-hook #'spruce/enable-text-flyspell))
 #+END_SRC
-*** magit
-#+BEGIN_SRC emacs-lisp
-(use-package magit
-  :config
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  (setq magit-auto-revert-mode t)
-  :bind ("C-c g" . magit-status))
-#+END_SRC
-
 *** aggressive indent
 #+BEGIN_SRC emacs-lisp
 (use-package aggressive-indent
