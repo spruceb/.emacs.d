@@ -1289,7 +1289,7 @@ setup rtags
   (defun spruce/org-clock-select ()
     (interactive)
     (org-clock-in '(4)))
-  (setq org-log-done 'time)
+
   (setq org-log-into-drawer t)
   (with-eval-after-load 'latex
     (bind-key "H-C-j" #'LaTeX-insert-inline-math
