@@ -1262,7 +1262,13 @@ setup rtags
         (concat "<style type=\"text/css\">"
                 (with-temp-buffer
                   (insert-file-contents "~/.emacs.d/literate/css/org-export.css")
-                  (buffer-string))
+                   (end-of-buffer)
+                   (insert ".src {\n    background-color: "
+                           (face-attribute 'default :background)
+                           ";\n   color: "
+                           (face-attribute 'default :foreground)
+                           ";\n}")
+                   (buffer-string))
                 "</style>"))
   (defun spruce/org-cycle-current-subtree ()
     (interactive)
