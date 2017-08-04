@@ -1206,6 +1206,12 @@ setup rtags
 (setq coffee-tab-width 2)
 #+END_SRC
 
+** Haskell
+#+BEGIN_SRC emacs-lisp
+(use-package haskell-mode)
+(use-package intero)
+#+END_SRC
+
 * Org
 #+BEGIN_SRC emacs-lisp
 (use-package org
