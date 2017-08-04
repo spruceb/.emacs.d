@@ -221,12 +221,12 @@ do this I use the following macro and list:
 #+BEGIN_SRC emacs-lisp
 (setq-default spruce/org-config-directory "literate")
 (setq-default spruce/org-config-dirpath
-              (expand-file-name (concat user-emacs-directory
-                                        spruce/org-config-directory)))
+              (expand-file-name (with-user-d spruce/org-config-directory)))
 (setq-default spruce/config-package-directory "packages")
 (setq-default spruce/config-package-dirpath
-              (expand-file-name (concat spruce/org-config-dirpath "/"
-                                        spruce/config-package-directory)))
+              (expand-file-name
+               (concat-directories spruce/org-config-dirpath
+                                   spruce/config-package-directory)))
 (add-to-list 'load-path spruce/org-config-dirpath)
 (add-to-list 'load-path spruce/config-package-dirpath)
 (setq-default spruce/config-org-files nil)
@@ -236,7 +236,7 @@ do this I use the following macro and list:
 (defmacro spruce/new-config-file (name filename)
   (let ((full-file (make-symbol "full-filename")))
     `(let ((,full-file
-            (concat spruce/org-config-dirpath "/" ,filename ".org")))
+            (concat (file-name-as-directory spruce/org-config-dirpath) ,filename ".org")))
        (defvar ,(intern (concat "spruce/" (symbol-name name) "-config-file"))
          ,full-file)
        (add-to-list
@@ -250,7 +250,10 @@ and configure settings, but I generally don't use it anymore and dislike the
 undocumented format. However sometimes these settings still crop up, so I dump
 them in a file and eventually configure them correctly.
 #+BEGIN_SRC emacs-lisp
-(setq custom-file (concat spruce/org-config-dirpath "/temp-custom.el"))
+(setq custom-file
+      (concat
+       (file-name-as-directory spruce/org-config-dirpath)
+       "temp-custom.el"))
 (load-file custom-file)
 #+END_SRC
 
@@ -325,7 +328,7 @@ option.
 I have plenty of disk space, so as many backups as possible is great. However I
 definitely don't want them cluttering up random directories.
 #+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist '((".*" . "~/.emacs.d/backups/"))
+(setq backup-directory-alist `((".*" . ,(with-user-d "backups/")))
       backup-by-copying t    ; Don't delink hardlinks
       version-control t      ; Use version numbers on backups
       delete-old-versions 'never)
@@ -333,9 +336,8 @@ definitely don't want them cluttering up random directories.
 
 Additionally I want to autosave early and often, but not cause clutter.
 #+BEGIN_SRC emacs-lisp
-;; (setq auto-save-file-name-transforms
-;;       `((".*" "/Users/spruce/.emacs.d/autosaves/" t)))
-(setq auto-save-list-file-prefix "~/.emacs.d/autosaves/.saves-")
+(setq auto-save-list-file-prefix
+      (with-user-d-s ".saves-" "autosaves"))
 (setq auto-save-interval 100) ; 100 characters
 (setq auto-save-timeout 10)   ; or 10 seconds
 #+END_SRC
@@ -995,8 +997,8 @@ variable state, basically everything. This can be quite convenient
 (setq dekstop-auto-save-timeout 300)
 (if (display-graphic-p)
     (desktop-save-mode nil))
-(setq desktop-dirname "~/.emacs.d/desktops/"
-      desktop-path (quote ("~/.emacs.d/desktops/"))
+(setq desktop-dirname (with-user-d "desktops")
+      desktop-path (list desktop-dirname)
       desktop-auto-save-timeout 30
       desktop-save nil)
 #+END_SRC
@@ -1049,7 +1051,7 @@ Once I got used to this package I ended up using it far more than I expected.
   :config
   (setq undo-tree-auto-save-history t)
   (add-to-list 'undo-tree-history-directory-alist
-               '("." . "~/.emacs.d/cache/undo"))
+               `("." . ,(with-user-d "cache" "undo")))
   (global-undo-tree-mode))
 #+END_SRC
 
@@ -1232,7 +1234,7 @@ setup rtags
   (setq org-confirm-babel-evaluate nil
         org-src-fontify-natively t
         org-src-tab-acts-natively t)
-  (setq org-archive-location "~/.emacs.d/org/archive/%s-archive::")
+  (setq org-archive-location (with-user-d-s "%s-archive::" "org" "archive"))
   (setq org-startup-folded 'content)
   ;; in org mode C-a/e moves to beginning of text in line, after header asterisks
   ;; however you can press it again to go all the way
@@ -1418,7 +1420,7 @@ setup rtags
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t))
 
-(setq latex-templates-directory "~/.emacs.d/templates/latex-templates/")
+(setq latex-templates-directory (with-user-d "templates" "latex-templates"))
 (defun latex-template ()
   (interactive)
   (let* ((files (file-expand-wildcards (concat latex-templates-directory "*.tex")))
