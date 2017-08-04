@@ -1211,8 +1211,11 @@ setup rtags
 (use-package org
   :diminish org-indent-mode
   :config
-  (setq org-agenda-files (list "~/Documents/Classes/school-schedule.org"
-                               (concat user-emacs-directory "emacs-todo.org")))
+  (setq org-startup-indented t)
+  (let ((file-list (list (with-user-d-s "emacs-todo.org"))))
+    (when (string-equal system-name "spruce-machine")
+      (add-to-list 'file-list "~/Documents/Classes/school-schedule.org"))
+    (setq org-agenda-files file-list))
   (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○"))
   (setq org-export-backends '(ascii html icalendar latex md))
   (setq org-fontify-whole-heading-line t)
@@ -1226,7 +1229,6 @@ setup rtags
      (python . t)
      (sh . t)
      (latex . t)))
-  (setq org-startup-indented t)
   (setq org-hide-leading-stars t)
   (set-face-attribute 'org-hide nil :foreground (face-attribute 'default :background))
   (setq org-src-preserve-indentation nil
