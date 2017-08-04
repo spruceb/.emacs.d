@@ -1256,6 +1256,7 @@ setup rtags
   (setq org-use-sub-superscripts "{}")
   (setq org-export-headline-levels 5)
   (setq org-export-with-section-numbers nil)
+  (setq org-export-with-tags nil)
 
   (setq org-src-ask-before-returning-to-edit-buffer nil)
   (setq org-src-window-setup 'current-window)
@@ -1530,14 +1531,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (setq doc-view-continuous t)
 (setq doc-view-ghostscript-program "/usr/local/bin/gs")
 
-;; Use Source Code Sans (pretty variable width font) for org mode
-;;; function that sets current buffer to Source Code Sans
-;; (defun my-buffer-face-mode-variable ()
-;;   "Set font to a variable width (proportional) fonts in current buffer"
-;;   (interactive)
-;;   (setq buffer-face-mode-face '(:family "Source Code Sans" :height 100 :width semi-condensed))
-;;   (buffer-face-mode))
-
 
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -1568,8 +1561,8 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 These functions are bound to keys and used in various places in my config.
 Functions are only here if I felt they were sufficiently general, not tied to a
 specific setting. Documentation is generally provided in the docstring rather
-than through =org=. This code block is not tangled, rather it is included through
-=noweb= near the top of this file.
+than through =org=. This code block is not directly tangled, rather it is included
+through =noweb= near the top of this file.
 
 #+BEGIN_SRC emacs-lisp :noweb-ref utility-functions :tangle no
 ;; see http://ergoemacs.org/emacs/modernization_elisp_lib_problem.html
