@@ -1080,6 +1080,11 @@ future.
 (use-package buffer-move)
 #+END_SRC
 
+*** xscheme
+A package for using MIT Scheme in an Emacs buffer as a REPL/inferior "shell".
+#+BEGIN_SRC emacs-lisp
+(use-package xscheme)
+#+END_SRC
 * Programming
 ** =prog=
 *** Spacing and Indentation
@@ -1460,10 +1465,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
     (flyspell-mode t))
   (setq ispell-program-name "/usr/local/bin/ispell")
   (add-hook 'text-mode-hook #'spruce/enable-text-flyspell))
-#+END_SRC
-*** xscheme
-#+BEGIN_SRC emacs-lisp
-(use-package xscheme)
 #+END_SRC
 *** magit
 #+BEGIN_SRC emacs-lisp
