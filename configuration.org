@@ -1658,4 +1658,12 @@ than through =org=. This code block is not tangled, rather it is included throug
   (let ((buffer (generate-new-buffer "notes")))
     (switch-to-buffer buffer)
     (org-mode)))
+
+(defun concat-directories (&rest directories)
+  (apply 'concat (mapcar 'file-name-as-directory directories)))
+
+(defun with-user-d (&rest directories)
+  (apply 'concat-directories user-emacs-directory directories))
+(defun with-user-d-s (suffix &rest directories)
+  (concat (apply 'with-user-d directories) suffix))
 #+END_SRC
