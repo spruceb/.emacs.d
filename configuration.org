@@ -176,6 +176,17 @@ evaluation otherwise. Currently disabled for speed.
                   (lambda (retrieved) t))))
 #+END_SRC
 
+** Utility Functions
+I have a number of functions not particularly tied to a specific mode or
+feature-set. Many of them were defined exclusively to be accessible through a
+keybinding, however if I deem them sufficiently general they get put in the
+Utility Functions section, and included up here. These functions are in fact
+defined at the bottom of this file, but are accessible to all config below this
+point.
+#+BEGIN_SRC emacs-lisp :noweb tangle :exports none
+<<utility-functions>>
+#+END_SRC
+
 ** Configuration Management
 *** =use-package=
 I use the =use-package= package [[https://github.com/jwiegley/use-package][(here)]] to configure both Emacs and the large
@@ -258,17 +269,6 @@ My name and primary email for use in various other places.
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Spruce Bondera"
       user-mail-address "sprucebondera@gmail.com")
-#+END_SRC
-
-** Utility Functions
-I have a number of functions not particularly tied to a specific mode or
-feature-set. Many of them were defined exclusively to be accessible through a
-keybinding, however if I deem them sufficiently general they get put in the
-Utility Functions section, and included up here. These functions are in fact
-defined at the bottom of this file, but are accessible to all config below this
-point.
-#+BEGIN_SRC emacs-lisp :noweb tangle :exports none
-<<utility-functions>>
 #+END_SRC
 
 ** Default Settings
