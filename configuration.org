@@ -1085,6 +1085,42 @@ A package for using MIT Scheme in an Emacs buffer as a REPL/inferior "shell".
 #+BEGIN_SRC emacs-lisp
 (use-package xscheme)
 #+END_SRC
+*** Smartparens
+This is the s-expression manipulation package I use. It includes a variety of
+extensions to the default methods of manipulating expressions, and support for
+treating many many kinds of "paired" objects as s-expressions (including many
+LaTeX entities).
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens
+  :diminish smartparens-mode
+  :config
+  (require 'smartparens-config)
+  ;; Unwrap, or remove the parens/outer pair from the current s-exp
+  (global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
+  ;; There's several modes in which I usually prefer strings to be treated
+  ;; similar to s-expressions. In others its less relevant/string literals are
+  ;; less common.
+  (setq sp-navigate-consider-stringlike-sexp
+        (append sp-navigate-consider-stringlike-sexp (list 'python-mode
+                                                           'org-mode
+                                                           'coffeescript-mode)))
+  ;; This overlay ended up being on basically all the time and overriding my
+  ;; syntax highlighting. More distracting than helpful.
+  (setq sp-highlight-pair-overlay nil)
+  ;; Smartparens escapes quotes inside quotes to avoid "breaking the structure".
+  ;; I can see the motivation, but this just always ends up being annoying.
+  (setq sp-escape-quotes-after-insert nil)
+  :bind (("C-M-f" . sp-forward-sexp)
+         ("C-M-b" . sp-backward-sexp)
+         ("C-M-u" . sp-backward-up-sexp)
+         ("C-M-d" . sp-down-sexp)
+         ("C-M-a" . sp-backward-down-sexp)
+         ("C-M-e" . sp-forward-up-sexp)
+         ("C-M-n" . sp-beginning-of-next-sexp)
+         ("C-M-p" . sp-beginning-of-previous-sexp)))
+#+END_SRC
+
+
 * Programming
 ** =prog=
 *** Spacing and Indentation
@@ -1473,28 +1509,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
   (setq magit-last-seen-setup-instructions "1.4.0")
   (setq magit-auto-revert-mode t)
   :bind ("C-c g" . magit-status))
-#+END_SRC
-*** smartparens
-#+BEGIN_SRC emacs-lisp
-(use-package smartparens
-  :diminish smartparens-mode
-  :config
-  (require 'smartparens-config)
-  (global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
-  (setq sp-navigate-consider-stringlike-sexp
-        (append sp-navigate-consider-stringlike-sexp (list 'python-mode
-                                                           'org-mode
-                                                           'coffeescript-mode)))
-  (setq sp-highlight-pair-overlay nil)
-  (setq sp-escape-quotes-after-insert nil)
-  :bind (("C-M-f" . sp-forward-sexp)
-         ("C-M-b" . sp-backward-sexp)
-         ("C-M-u" . sp-backward-up-sexp)
-         ("C-M-d" . sp-down-sexp)
-         ("C-M-a" . sp-backward-down-sexp)
-         ("C-M-e" . sp-forward-up-sexp)
-         ("C-M-n" . sp-beginning-of-next-sexp)
-         ("C-M-p" . sp-beginning-of-previous-sexp)))
 #+END_SRC
 
 *** aggressive indent
