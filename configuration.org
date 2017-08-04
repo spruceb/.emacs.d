@@ -911,18 +911,8 @@ more involved search.
 (global-set-key (kbd "C-<tab>") 'company-complete)
 #+END_SRC
 
-** Non-Programming Modes
-These are various modes (major and minor) that aren't particularly related to
-programming
-*** Markdown
-Markdown is a simple and ubiquitous markup language. I used it before switching
-to Emacs, and generally find it reasonable to work with (although of course now
-I use Org).
 #+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
-  :mode "\\.md\\'" ; This means to activate on .md files
   :config
-  (add-hook 'markdown-mode-hook 'visual-line-mode))
 #+END_SRC
 
 ** ESS
@@ -946,6 +936,20 @@ package with no configuration.
 
 #+BEGIN_SRC emacs-lisp
 (use-package circe)
+#+END_SRC
+
+** Non-Programming Modes
+These are various modes (major and minor) that aren't particularly related to
+programming
+*** Markdown
+Markdown is a simple and ubiquitous markup language. I used it before switching
+to Emacs, and generally find it reasonable to work with (although of course now
+I use Org).
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :mode "\\.md\\'" ; This means to activate on .md files
+  :config
+  (add-hook 'markdown-mode-hook 'visual-line-mode))
 #+END_SRC
 
 ** Default Package Configuration
