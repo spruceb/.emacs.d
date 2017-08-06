@@ -707,6 +707,9 @@ the use-package.
   <<helm-window-split>>
   <<helm-company-projectile>>
   <<helm-set-locate-command>>
+  ;; Note: due to how noweb works, there cannot be any non-whitespace characters
+  ;; on a line prior to a <<block>> construct. This is why there's a newline
+  ;; after the first open-paren here.
   :bind (
          <<helm-replace-defaults>>
          <<helm-persistent-action>>))
