@@ -909,9 +909,13 @@ more involved search.
 
 #+BEGIN_SRC emacs-lisp
 ;; I almost always have Company on, so no need to see in the modeline
-(use-package company :diminish)
-;; C-tab is a good compromise between tab completion and indenting
-(global-set-key (kbd "C-<tab>") 'company-complete)
+(use-package company
+  :diminish
+  :config
+  ;; Should be enabled in every programming mode
+  (add-hook 'prog-mode-hook 'global-company-mode)
+  ;; C-tab is a good compromise between tab completion and indenting
+  :bind ("C-<tab>" . company-complete))
 #+END_SRC
 
 ** Magit
@@ -1146,6 +1150,7 @@ LaTeX entities).
   :diminish smartparens-mode
   :config
   (require 'smartparens-config)
+  (smartparens-global-mode)
   ;; Unwrap, or remove the parens/outer pair from the current s-exp
   (global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
   ;; There's several modes in which I usually prefer strings to be treated
@@ -1214,12 +1219,42 @@ but not enabled by default in any modes.
   (setq highlight-indent-guides-method 'character))
 #+END_SRC
 
-
 * Programming
-** =prog=
+This is the section for heavily or exclusively programming-focused config. It
+includes my config for each programming major mode (effectively language).
+** Prog Mode
+~prog-mode~ is the "supermode" for every programming major mode. Config here is
+for anything that applies to every (or almost every) programming mode. If
+there's a few modes that need to disable general functionality, this happens in
+their specific sections.
+
 *** Spacing and Indentation
+In effectively all programming modes, I prefer to fit as much code as possible
+in a given vertical space. So in those modes, as little spacing between lines as
+possible. While I find this very slightly less pleasant to read, it's overall
+worth it, and I'm used to it when reading code.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook (lambda () (setq line-spacing nil)))
+#+END_SRC
+
+I use spaces, not tabs. Partially this decision is influenced by my roots in
+Python, in which use of tabs is /heavily/ discouraged. But in general, it seem
+pretty clear to me that consistent indentation levels is critical. If someone
+writes code that stops at around 80 columns for readability, but indents with
+tabs, then someone else looking at the code might see very different end
+columns. Especially on GitHub, where each tab is 8 spaces. Beyond that, various
+forms of manual vertical alignment that improve readability can be ruined if
+variable-width tabs are included. The advantages of tabs seem to be slightly
+smaller source size and the ability for programmers to choose their indentation
+level when this doesn't interfere with readability. Overall, I think spaces win.
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+#+END_SRC
+
+On the other hand, some files do have tabs (why, Makefiles, why). And in those
+cases, 8 spaces is far too much for "one conceptual indentation level".
+#+BEGIN_SRC emacs-lisp
+(setq-default tab-width 4)
 #+END_SRC
 
 *** TODO Commenting
@@ -1238,20 +1273,7 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
   (if (and (not (region-active-p)) (not (looking-at "[ \t]*$")))
       (comment-or-uncomment-region (line-beginning-position) (line-end-position))
     (comment-dwim arg)))
-(global-set-key (kbd "M-;") #'comment-dwim-line)
-;; (bind-key "M-;" 'comment-dwim-line prog-mode-map)
-#+END_SRC
-
-*** Heap
-#+BEGIN_SRC emacs-lisp
-(setq-default indent-tabs-mode nil)
-(setq global-linum-mode nil)
-(setq-default tab-width 4)
-;; (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
-(with-eval-after-load 'smartparens
-  (smartparens-global-mode))
-(add-hook 'prog-mode-hook 'global-company-mode)
-(add-hook 'prog-mod (lambda () (abbrev-mode nil)))
+(bind-key "M-;" #'comment-dwim-line)
 #+END_SRC
 
 ** CC
