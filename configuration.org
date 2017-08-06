@@ -1321,7 +1321,7 @@ setup rtags
   (setq org-hide-emphasis-markers t)
   (setq org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t)
-
+  (setq org-startup-truncated nil)
   (add-hook 'org-mode-hook (lambda () (setq line-spacing '0.25)))
   (setq org-use-sub-superscripts "{}")
   (setq org-export-headline-levels 5)
