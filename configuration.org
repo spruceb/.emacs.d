@@ -1032,6 +1032,23 @@ variable state, basically everything. This can be quite convenient
       desktop-save nil)
 #+END_SRC
 
+*** Flyspell
+Flyspell is the spell-checking package in Emacs. Unfortunately, I don't know of
+any way to use system spellcheckers in Emacs buffers (because the text here is
+fundamentally not the same as an NSText window, or any Linux equivalent). Due to
+that fact, I use Flyspell, the built in spell-checking framework, along with the
+~ispell~ backend.
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell
+  :diminish
+  :config
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  (defun spruce/enable-text-flyspell ()
+    (flyspell-mode t))
+  (setq ispell-program-name "/usr/local/bin/ispell")
+  (add-hook 'text-mode-hook #'spruce/enable-text-flyspell))
+#+END_SRC
+
 ** Misc Packages
 This section is for a variety of packages that are pretty small or otherwise
 don't seem like they need their own section in General.
@@ -1150,7 +1167,6 @@ LaTeX entities).
          ("C-M-n" . sp-beginning-of-next-sexp)
          ("C-M-p" . sp-beginning-of-previous-sexp)))
 #+END_SRC
-
 
 * Programming
 ** =prog=
@@ -1522,17 +1538,6 @@ in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
 ** Package Heap
 
-*** flyspell
-#+BEGIN_SRC emacs-lisp
-(use-package flyspell
-  :diminish
-  :config
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
-  (defun spruce/enable-text-flyspell ()
-    (flyspell-mode t))
-  (setq ispell-program-name "/usr/local/bin/ispell")
-  (add-hook 'text-mode-hook #'spruce/enable-text-flyspell))
-#+END_SRC
 *** aggressive indent
 #+BEGIN_SRC emacs-lisp
 (use-package aggressive-indent
