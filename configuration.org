@@ -1767,4 +1767,15 @@ through =noweb= near the top of this file.
   (apply 'concat-directories user-emacs-directory directories))
 (defun with-user-d-s (suffix &rest directories)
   (concat (apply 'with-user-d directories) suffix))
+
+;; delete current frame, or window if it's the last one
+(defun delete-frame-or-window ()
+  (interactive)
+  (if (one-window-p)
+      (delete-frame)
+    (delete-window)))
+;; go back a window in the same frame
+(defun back-window ()
+  (interactive)
+  (other-window -1))
 #+END_SRC

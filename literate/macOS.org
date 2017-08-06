@@ -28,8 +28,6 @@ I prefer various bindings to work the same in Emacs as commonly in macOS apps. I
 no longer rely on these bindings, but they remain convenient on occasion.
 
 #+BEGIN_SRC emacs-lisp :noweb yes
-<<macOS-keybound-functions>>
-
 (bind-keys*
  ("H-a" . mark-whole-buffer)
  ("H-v" . yank)
@@ -47,21 +45,6 @@ no longer rely on these bindings, but they remain convenient on occasion.
  ("M-~" . back-window))
 #+END_SRC
 
-This contains utility functions that these keys may be bound to
-
-#+NAME: macOS-keybound-functions
-#+BEGIN_SRC emacs-lisp :tangle no
-;; delete current frame, or window if it's the last one
-(defun delete-frame-or-window ()
-  (interactive)
-  (if (one-window-p)
-      (delete-frame)
-    (delete-window)))
-;; go back a window in the same frame
-(defun back-window ()
-  (interactive)
-  (other-window -1))
-#+END_SRC
 * Package Configuration
 ** Helm
 *** Helm Locate
