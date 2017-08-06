@@ -1170,6 +1170,33 @@ LaTeX entities).
          ("C-M-n" . sp-beginning-of-next-sexp)
          ("C-M-p" . sp-beginning-of-previous-sexp)))
 #+END_SRC
+*** Aggressive Indent
+A lot of the time, I prefer things to happen automatically as I type.
+Autocorrect, inserting matching parens/brackets, etc. So when it's possible,
+automatically indenting code as I type and make modifications is preferable.
+Aggressive indent does this, including automatically shifting code when blocks
+are added or removed, or automatically moving lower columns if you change the
+indent of higher ones.
+
+The problem is, this effectively takes over indentation completely. If for some
+reason the config isn't set up correctly/perfectly in some situation, manually
+correcting it is annoying and prone to getting reverted as soon as you press
+enter. Additionally it doesn't work very well in whitespace-based languages such
+as Python.
+
+But in concept this is what I would prefer, and sometimes I enable it.
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :config
+  (defun spruce/enable-aggressive-indent ()
+    (interactive)
+    (aggressive-indent-mode t))
+  (defun spruce/disable-agressive-indent ()
+    (interactive)
+    (aggressive-indent-mode nil))
+  ;; Aggressive indent works best in C-like modes
+  (add-hook 'cc-mode-hook #'spruce/enable-aggressive-indent))
+#+END_SRC
 
 * Programming
 ** =prog=
@@ -1541,17 +1568,6 @@ in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
 ** Package Heap
 
-*** aggressive indent
-#+BEGIN_SRC emacs-lisp
-(use-package aggressive-indent
-  :config
-  (defun spruce/enable-aggressive-indent ()
-    (aggressive-indent-mode t))
-  (defun spruce/disable-agressive-indent ()
-    (aggressive-indent-mode nil))
-  ;; (add-hook 'cc-mode-hook #'spruce/enable-aggressive-indent))
-)
-#+END_SRC
 *** indent-guides
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-indent-guides
