@@ -1198,6 +1198,23 @@ But in concept this is what I would prefer, and sometimes I enable it.
   (add-hook 'cc-mode-hook #'spruce/enable-aggressive-indent))
 #+END_SRC
 
+*** Indent Guides
+Deep nesting is often a sign of poor design, but in other situations it's
+unavoidable or temporarily the best option. Regardless, it's almost always
+somewhat difficult to understand and keep in working memory. Indent guides make
+sure you know which indentation level a given line of code is at a glance,
+regardless of the syntax or number of spaces per indentation level.
+
+On the other hand, this package is somewhat buggy and doesn't look quite
+perfect. If I needed it more I'd put in the work to fix it. For now, it's here
+but not enabled by default in any modes.
+#+BEGIN_SRC emacs-lisp
+(use-package highlight-indent-guides
+  :config
+  (setq highlight-indent-guides-method 'character))
+#+END_SRC
+
+
 * Programming
 ** =prog=
 *** Spacing and Indentation
@@ -1566,15 +1583,7 @@ setup rtags
 Sometimes I want to test out a tweak or fix an annoyance fast, without putting
 in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
-** Package Heap
 
-*** indent-guides
-#+BEGIN_SRC emacs-lisp
-(use-package highlight-indent-guides
-  :config
-  ;; (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-  (setq highlight-indent-guides-method 'character))
-#+END_SRC
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (when (string-equal system-name "Spruces-MacBook-Pro.local")
