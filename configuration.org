@@ -1698,6 +1698,11 @@ in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
 
 ** Tweak Heap
+#+BEGIN_SRC emacs-lisp
+(bind-key "C-x C-3" #'spruce/split-right-select-new)
+(bind-key "C-x C-2" #'spruce/split-below-select-new)
+(bind-key "C-H-q" #'ace-window)
+#+END_SRC
 ** Package Heap
 *** ebnf
 #+BEGIN_SRC emacs-lisp
@@ -1916,10 +1921,6 @@ through =noweb= near the top of this file.
 (defun spruce/split-below-select-new ()
   (interactive)
   (select-window (split-window-below)))
-
-(bind-key "C-x C-3" #'spruce/split-right-select-new)
-(bind-key "C-x C-2" #'spruce/split-below-select-new)
-(bind-key "C-H-q" #'ace-window)
 
 (defun spruce/make-note ()
   (interactive)
