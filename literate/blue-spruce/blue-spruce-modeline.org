@@ -55,16 +55,28 @@ can be used to add a number of spaces to the front and back of the string."
   does something. For example, Org Src editing buffers"
   (or (buffer-is-org-src-edit-p) (buffer-has-file-p)))
 
+(defvar ml-unselected-darken-alpha 0.45)
+
+(defun spruce/modeline-selected-darken (color)
+  (if (ml-in-selected-window-p)
+      color
+    (blue-spruce-darken color ml-unselected-darken-alpha)))
+
+(defun spruce/modeline-colorize-text (text foreground-color)
+  (propertize text 'face
+              `(:foreground
+                ,(spruce/modeline-selected-darken foreground-color))))
+
 (defun spruce/get-mode-line-modified ()
   (if (buffer-associated-with-file-p)
       (cond ((and (buffer-modified-p) (not buffer-read-only))
-             (propertize "◉" 'face '(:foreground "orange red")))
+             (spruce/modeline-colorize-text "◉" "orange red"))
             ((and (buffer-modified-p) buffer-read-only)
-             (propertize "M" 'face '(:foreground "orange")))
+             (spruce/modeline-colorize-text "M" "orange"))
             ((and (not (buffer-modified-p)) (not buffer-read-only))
-             (propertize "○" 'face '(:foreground "green")))
+             (spruce/modeline-colorize-text "○" "green"))
             ((and (not (buffer-modified-p)) buffer-read-only)
-             (propertize "R" 'face '(:foreground "yellow"))))
+             (spruce/modeline-colorize-text "R" "yellow")))
     (propertize "" 'face '(:foreground "light grey"))))
 
 (defvar spruce/mode-line-modified '(:eval (spruce/get-mode-line-modified)))
