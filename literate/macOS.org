@@ -39,8 +39,8 @@ no longer rely on these bindings, but they remain convenient on occasion.
  ("H-=" . text-scale-increase)
  ("H--" . text-scale-decrease)
  ;; technically, Command-` and Command-Shift-` still work for Emacs. However
- ;; they cycle macOS windows rather than Emacs windows, so using Meta versions
- ;; for similar functionality is useful
+ ;; they cycle macOS windows (Emacs frames) rather than Emacs windows, so using
+ ;; Meta versions for similar functionality is useful
  ("M-`" . other-window) 
  ("M-~" . back-window))
 #+END_SRC
@@ -48,8 +48,8 @@ no longer rely on these bindings, but they remain convenient on occasion.
 * Package Configuration
 ** Helm
 *** Helm Locate
-On macOS, the best option for file location is currently =mdfind=. The way helm
-does fuzzy matching doesn't work so well with it however.
+On macOS, the best option for file location is currently =mdfind=. Unfortunately
+helm fuzzy matching doesn't work so well with it...
 #+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'helm
   (setq helm-locate-command
