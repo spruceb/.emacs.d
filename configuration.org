@@ -1367,8 +1367,60 @@ setup rtags
   :defer 3)
 #+END_SRC
 ** Python
-#+BEGIN_SRC emacs-lisp
+Python is, and has been for many years, my most used language. Whether it's my
+favorite is more in question (more functional and typed languages are
+encroaching), but nevertheless it's an important major mode.
+
+#+BEGIN_SRC emacs-lisp :noweb tangle
+(use-package python-mode
+  :config
+  <<python-utility-functions>>
+  <<jedi-config>>
+  <<python-shell-config>>
+  :bind (:map
+         python-mode-map
+         ;; I use this keybinding to toggle "breakpoints" in Python code
+         ("C-c C-d" . toggle-pdb)))
+#+END_SRC
+
+*** Jedi Config
+Jedi is an autocompletion and semantic analysis framework for Python. In fact,
+it's totally separate from Emacs, and can be used "plug-n-play" in a variety of
+situations. But here, I use it as a Company backend for Python, and as a way to
+do a few "IDE-like" tasks.
+#+BEGIN_SRC emacs-lisp :noweb-ref jedi-config :tangle no
+(use-package jedi
+  :config
+  ;; Automatically start completion on property access
+  (setq jedi:complete-on-dot t)
+  (defun jedi-python-mode-hook-add-company ()
+    (add-to-list 'company-backends 'company-jedi))
+  (add-hook 'python-mode-hook jedi-python-mode-hook-add-company)
+  :bind (:map
+         python-mode-map
+         ("C-c /" . jedi:show-doc)
+         ("C-c ." . jedi:goto-definition)))
+
+#+END_SRC
+
+*** Python Shell Config
+The Python REPL buffer can be extremely useful for quick development and
+testing. I'm a Python 3 guy, so I use that. The "-i", interactive flag, tries to
+ensure the interpreter uses prompts even if it thinks it's being called
+non-interactively.
+#+BEGIN_SRC emacs-lisp :noweb-ref python-shell-config :tangle no
+(setq python-shell-interpreter "python3"
+      python-shell-interpreter-args "-i")
+#+END_SRC
+
+*** Python Utility Functions
+Here is for any Python-specific utility functions I write or "borrow" from
+others.
+#+BEGIN_SRC emacs-lisp :noweb-ref python-utility-functions :tangle no
+;; Written by Spruce Bondera
 (defun toggle-pdb ()
+  "Toggles a breakpoint line at the current point location,
+handling the case where there's code at the point"
   (interactive)
   (let ((line (s-trim (thing-at-point 'line t)))
         (debug "import ipdb; ipdb.set_trace()"))
@@ -1383,24 +1435,8 @@ setup rtags
                     (move-end-of-line 1)
                     (newline-and-indent)
                     (insert debug)))))))
-
-(add-hook 'python-mode-hook
-          (lambda () (local-set-key (kbd "C-c C-d") #'toggle-pdb)))
-
-(setq python-shell-interpreter "python3"
-      python-shell-interpreter-args "-i")
-
-(use-package jedi
-  :bind (("C-c /" . jedi:show-doc)))
-(eval-after-load "python-mode"
-  '(define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
-(defun jedi-python-mode-hook ()
-  (add-to-list 'company-backends 'company-jedi)
-  (define-key python-mode-map (kbd "C-c .") 'jedi:goto-definition))
-
-(add-hook 'python-mode-hook 'jedi-python-mode-hook)
-(setq jedi:complete-on-dot t)
 #+END_SRC
+
 
 ** Emacs Lisp
 The config for Emacs Lisp mode. I'm largely fine with the defaults (augmented by
@@ -1669,8 +1705,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 
 (setq doc-view-continuous t)
 (setq doc-view-ghostscript-program "/usr/local/bin/gs")
-
-
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-hook 'coffeescript-mode-hook 'whitespace-mode)
