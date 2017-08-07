@@ -86,25 +86,31 @@ has consistent interfaces for doing so.
   - [[Literate Configuration][Literate Configuration]]
 - [[Bootstrap][Bootstrap]]
   - [[Security][Security]]
+  - [[Utility Functions][Utility Functions]]
   - [[Configuration Management][Configuration Management]]
   - [[Personal Information][Personal Information]]
-  - [[Utility Functions][Utility Functions]]
   - [[Default Settings][Default Settings]]
   - [[Keybindings][Keybindings]]
-  - [[Basic Appearance][Basic Appearance]]
   - [[macOS][macOS]]
+- [[Appearance][Appearance]]
+  - [[Basic Tweaks][Basic Tweaks]]
+  - [[Theme][Theme]]
+  - [[Mode Line][Mode Line]]
+  - [[Appearance Packages][Appearance Packages]]
 - [[General][General]]
   - [[Helm][Helm]]
   - [[Projectile][Projectile]]
   - [[Company][Company]]
-  - [[Appearance][Appearance]]
-  - [[Modes][Modes]]
-  - [[Packages][Packages]]
+  - [[Magit][Magit]]
+  - [[ESS][ESS]]
   - [[IRC][IRC]]
-  - [[Misc][Misc]]
+  - [[Non-Programming Modes][Non-Programming Modes]]
+  - [[Default Package Configuration][Default Package Configuration]]
+  - [[Misc Packages][Misc Packages]]
+  - [[Fun][Fun]]
 - [[Programming][Programming]]
-  - [[=prog=][=prog=]]
-  - [[CC][CC]]
+  - [[Prog Mode][Prog Mode]]
+  - [[CC Mode][CC Mode]]
   - [[Python][Python]]
   - [[Emacs Lisp][Emacs Lisp]]
   - [[Coffeescript][Coffeescript]]
@@ -112,7 +118,7 @@ has consistent interfaces for doing so.
 - [[Org][Org]]
 - [[LaTeX][LaTeX]]
 - [[The Heap][The Heap]]
-  - [[Package Heap][Package Heap]]
+  - [[Tweak Heap][Tweak Heap]]
   - [[Old Heap][Old Heap]]
 - [[Utility Functions][Utility Functions]]
 
@@ -1028,7 +1034,7 @@ utility is pretty obvious, and I keep this on at all times.
 *** Desktops
 Desktops allows you to save just about everything about the state of Emacs when
 it closes and restore on startup. Frames, frame position, window position,
-variable state, basically everything. This can be quite convenient 
+variable state, basically everything. This can be quite convenient
 #+BEGIN_SRC emacs-lisp
 (setq dekstop-auto-save-timeout 300)
 (if (display-graphic-p)
@@ -1696,6 +1702,7 @@ Sometimes I want to test out a tweak or fix an annoyance fast, without putting
 in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
 
+** Tweak Heap
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (setq exec-path (append exec-path '(":/usr/local/bin")))
@@ -1729,6 +1736,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (setq whitespace-line-column 86)
 (setq hl-line-sticky-flag nil)
 (setq mac-ignore-momentum-wheel-events t)
+(use-package ebnf-mode)
 #+END_SRC
 
 * Utility Functions
@@ -1857,4 +1865,14 @@ through =noweb= near the top of this file.
 (defun back-window ()
   (interactive)
   (other-window -1))
+
+(defun spruce/add-dictionary-word ()
+  "From https://stackoverflow.com/questions/22107182/"
+  (interactive)
+  (let ((current-location (point))
+         (word (flyspell-get-word)))
+    (when (consp word)
+      (flyspell-do-correct 'save nil (car word)
+       current-location (cadr word) (caddr word)
+       current-location))))
 #+END_SRC
