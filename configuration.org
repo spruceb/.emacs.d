@@ -1151,8 +1151,6 @@ LaTeX entities).
   :config
   (require 'smartparens-config)
   (smartparens-global-mode)
-  ;; Unwrap, or remove the parens/outer pair from the current s-exp
-  (global-set-key (kbd "C-M-<backspace>") 'sp-unwrap-sexp)
   ;; There's several modes in which I usually prefer strings to be treated
   ;; similar to s-expressions. In others its less relevant/string literals are
   ;; less common.
@@ -1173,7 +1171,9 @@ LaTeX entities).
          ("C-M-a" . sp-backward-down-sexp)
          ("C-M-e" . sp-forward-up-sexp)
          ("C-M-n" . sp-beginning-of-next-sexp)
-         ("C-M-p" . sp-beginning-of-previous-sexp)))
+         ("C-M-p" . sp-beginning-of-previous-sexp)
+         ;; Unwrap, or remove the parens/outer pair from the current s-exp
+         ("C-M-<backspace>" . sp-unwrap-sexp))) 
 #+END_SRC
 *** Aggressive Indent
 A lot of the time, I prefer things to happen automatically as I type.
