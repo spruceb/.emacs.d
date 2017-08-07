@@ -1662,11 +1662,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
-(when (string-equal system-name "Spruces-MacBook-Pro.local")
-  (add-to-list 'load-path "/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig")
-  (add-to-list 'load-path "/usr/local/lib/pkgconfig")
-  (add-to-list 'load-path "/opt/X11/lib/pkgconfig"))
-
 (setq exec-path (append exec-path '(":/usr/local/bin")))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '(":/usr/texbin")))
@@ -1701,6 +1696,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (setq hl-line-sticky-flag nil)
 (setq mac-ignore-momentum-wheel-events t)
 #+END_SRC
+
 * Utility Functions
 These functions are bound to keys and used in various places in my config.
 Functions are only here if I felt they were sufficiently general, not tied to a
