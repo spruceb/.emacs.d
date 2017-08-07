@@ -1348,14 +1348,17 @@ Astyle is a program that automatically styles a buffer. This simply calls that
 #+END_SRC
 
 *** C++
+This is the location for C++ specific configuration.
+
+Currently the only such config I have is a lower number of spaces per
+indentation level. This is because C++ tends to get quite nested, quite fast.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'c++-mode-hook (lambda () (setq c-basic-offset 2)))
 #+END_SRC
 
 *** C
-#+BEGIN_SRC emacs-lisp
-(add-hook 'c-mode-hook (lambda () (setq c-basic-offset 4)))
-#+END_SRC
+This is the location for C specific configuration. Currently I have no such
+config. If I work more extensively with C in the future it is likely to appear.
 
 *** TODO Temporary Upgrade Heap
 setup rtags
@@ -1798,7 +1801,6 @@ through =noweb= near the top of this file.
 (bind-key "C-x C-3" #'spruce/split-right-select-new)
 (bind-key "C-x C-2" #'spruce/split-below-select-new)
 (bind-key "C-H-q" #'ace-window)
-
 
 (defun spruce/make-note ()
   (interactive)
