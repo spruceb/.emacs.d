@@ -1228,6 +1228,19 @@ become problematic when trying to /fix/ poor style choices however.
 (use-package dtrt-indent)
 #+END_SRC
 
+** Fun
+This section is for various fun or ridiculous packages/games.
+*** Achievements Mode
+Achievements is a fun little package that keeps track of your actions in Emacs
+and awards achievements when certain conditions are met. Some are good, some are
+bad, some are mutually exclusive. I hope to get a good number of them over time.
+#+BEGIN_SRC emacs-lisp
+(use-package achievements
+  :defer 4
+  :diminish achievements-mode
+  :config (achievements-mode t))
+#+END_SRC
+
 * Programming
 This is the section for heavily or exclusively programming-focused config. It
 includes my config for each programming major mode (effectively language).
@@ -1775,10 +1788,6 @@ through =noweb= near the top of this file.
   (interactive "p")
   (kill-line (- 1 arg)))
 
-(use-package achievements
-    :defer 4
-    :diminish achievements-mode
-    :config (achievements-mode t))
 (defun spruce/split-right-select-new ()
   (interactive)
   (select-window (split-window-right)))
