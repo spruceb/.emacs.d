@@ -119,6 +119,7 @@ has consistent interfaces for doing so.
 - [[LaTeX][LaTeX]]
 - [[The Heap][The Heap]]
   - [[Tweak Heap][Tweak Heap]]
+  - [[Package Heap][Package Heap]]
   - [[Old Heap][Old Heap]]
 - [[Utility Functions][Utility Functions]]
 
@@ -1366,12 +1367,6 @@ indentation level. This is because C++ tends to get quite nested, quite fast.
 This is the location for C specific configuration. Currently I have no such
 config. If I work more extensively with C in the future it is likely to appear.
 
-*** TODO Temporary Upgrade Heap
-setup rtags
-#+BEGIN_SRC emacs-lisp
-(use-package rtags
-  :defer 3)
-#+END_SRC
 ** Python
 Python is, and has been for many years, my most used language. Whether it's my
 favorite is more in question (more functional and typed languages are
@@ -1703,6 +1698,92 @@ in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
 
 ** Tweak Heap
+** Package Heap
+*** ebnf
+#+BEGIN_SRC emacs-lisp
+(use-package ebnf-mode)
+#+END_SRC
+*** rtags
+#+BEGIN_SRC emacs-lisp
+(use-package rtags
+  :defer 3)
+#+END_SRC
+*** bison-mode
+#+BEGIN_SRC emacs-lisp
+(use-package bison-mode)
+#+END_SRC
+*** csv-mode
+#+BEGIN_SRC emacs-lisp
+(use-package csv-mode)
+#+END_SRC
+*** fireplace
+#+BEGIN_SRC emacs-lisp
+(use-package fireplace)
+#+END_SRC
+*** fish-mode
+#+BEGIN_SRC emacs-lisp
+(use-package fish-mode)
+#+END_SRC
+*** go mode
+#+BEGIN_SRC emacs-lisp
+(use-package go-mode)
+#+END_SRC
+*** EMMS
+#+BEGIN_SRC emacs-lisp
+(use-package emms)
+#+END_SRC
+*** julia mode
+#+BEGIN_SRC emacs-lisp
+(use-package julia-mode)
+#+END_SRC
+*** llvm mode
+#+BEGIN_SRC emacs-lisp
+(use-package llvm-mode)
+#+END_SRC
+*** lua mode
+#+BEGIN_SRC emacs-lisp
+(use-package lua-mode)
+#+END_SRC
+*** paradox
+#+BEGIN_SRC emacs-lisp
+(use-package paradox)
+#+END_SRC
+*** multiple cursors
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors)
+#+END_SRC
+*** projectile ripgrep
+#+BEGIN_SRC emacs-lisp
+(use-package projectile-ripgrep)
+#+END_SRC
+*** rainbow mode
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-mode)
+#+END_SRC
+*** ace window
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window)
+#+END_SRC
+*** rust mode
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode)
+#+END_SRC
+*** SLIME
+#+BEGIN_SRC emacs-lisp
+(use-package slime)
+#+END_SRC
+*** pyvenv
+#+BEGIN_SRC emacs-lisp
+(use-package pyvenv)
+#+END_SRC
+*** autopep8
+#+BEGIN_SRC emacs-lisp
+(use-package py-autopep8)
+#+END_SRC
+*** Pylint
+#+BEGIN_SRC emacs-lisp
+(use-package pylint)
+#+END_SRC
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (setq exec-path (append exec-path '(":/usr/local/bin")))
@@ -1736,7 +1817,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (setq whitespace-line-column 86)
 (setq hl-line-sticky-flag nil)
 (setq mac-ignore-momentum-wheel-events t)
-(use-package ebnf-mode)
 #+END_SRC
 
 * Utility Functions
