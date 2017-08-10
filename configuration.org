@@ -1373,7 +1373,7 @@ favorite is more in question (more functional and typed languages are
 encroaching), but nevertheless it's an important major mode.
 
 #+BEGIN_SRC emacs-lisp :noweb tangle
-(use-package python-mode
+(use-package python
   :config
   <<python-utility-functions>>
   <<jedi-config>>
@@ -1396,12 +1396,10 @@ do a few "IDE-like" tasks.
   (setq jedi:complete-on-dot t)
   (defun jedi-python-mode-hook-add-company ()
     (add-to-list 'company-backends 'company-jedi))
-  (add-hook 'python-mode-hook jedi-python-mode-hook-add-company)
-  :bind (:map
-         python-mode-map
+  (add-hook 'python-mode-hook #'jedi-python-mode-hook-add-company)
+  :bind (:map python-mode-map
          ("C-c /" . jedi:show-doc)
          ("C-c ." . jedi:goto-definition)))
-
 #+END_SRC
 
 *** Python Shell Config
