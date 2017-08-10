@@ -1451,8 +1451,16 @@ be able to run the current buffer easily.
 #+END_SRC
 
 ** Coffeescript
+Coffeescript is one of many languages that compiles to Javascript. Generally, I
+regard it as a "Pythonization" (or maybe more "Rubyization") of Javascript.
+However, since I've used Coffeescript much more than I ever have Javascript, I
+can't make particularly intelligent comparisons. From what I've heard, most of
+the utility has been replaced by ES6 (although still with less bracey syntax).
+But I keep the mode around due to past usage.
 #+BEGIN_SRC emacs-lisp
-(setq coffee-tab-width 2)
+(use-package coffee-mode
+  :config
+  (setq coffee-tab-width 2))
 #+END_SRC
 
 ** Haskell
