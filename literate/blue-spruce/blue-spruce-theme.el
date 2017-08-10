@@ -5,6 +5,8 @@
   "Options for blue-spruce"
   :group 'faces)
 
+(require 'dash)
+
 ;; Color helper functions
 ;; "Borrowed" from doom-themes, who "borrowed" from solarized
 (defun blue-spruce-name-to-rgb (color &optional frame)
