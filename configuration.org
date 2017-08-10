@@ -1444,7 +1444,10 @@ The config for Emacs Lisp mode. I'm largely fine with the defaults (augmented by
 Smartparens of course). However, since Emacs is an elisp-machine, it is nice to
 be able to run the current buffer easily.
 #+BEGIN_SRC emacs-lisp
-(bind-key "H-e" #'eval-buffer emacs-lisp-mode-map)
+(use-package emacs-lisp-mode
+  :ensure nil
+  :bind (:map emacs-lisp-mode-map
+              ("H-e" . eval-buffer)))
 #+END_SRC
 
 ** Coffeescript
