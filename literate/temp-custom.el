@@ -10,7 +10,6 @@
  '(erc-log-mode t)
  '(global-whitespace-mode t)
  '(helm-descbinds-mode t)
- '(line-number-mode t)
  '(package-selected-packages
    (quote
     (ebnf-mode meta-syntax-faces font-lock-ext intero fish-mode ag blue-spruce projectile-ripgrep lua-mode achievements rust-mode bison-mode go-mode haskell-mode fireplace default-text-scale doom-themes csv-mode rtags helm-descbinds circe ess toc-org validate htmlize paradox company-auctex auctex markdown-mode yasnippet w3m visible-mark use-package undo-tree transpose-frame spaceline spacegray-theme smartparens smart-mode-line-powerline-theme slime reveal-in-finder rainbow-mode pyvenv python-info pylint py-autopep8 persistent-scratch org-pandoc org-bullets multiple-cursors magit llvm-mode julia-mode indent-guide highlight-indentation highlight-indent-guides helm-swoop helm-pydoc helm-projectile helm-flx helm-company helm-ag flycheck find-file-in-project fill-column-indicator emms dtrt-indent debbugs company-jedi column-marker color-theme buffer-move auto-complete aggressive-indent)))
@@ -19,9 +18,7 @@
    (quote
     ((eval setq byte-compile-not-obsolete-vars
            (quote
-            (display-buffer-function))))))
- '(smartparens-global-mode t)
- '(sp-escape-quotes-after-insert nil))
+            (display-buffer-function)))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

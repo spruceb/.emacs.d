@@ -1154,10 +1154,9 @@ treating many many kinds of "paired" objects as s-expressions (including many
 LaTeX entities).
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
-  :diminish smartparens-mode
   :config
+  (smartparens-global-mode t)
   (require 'smartparens-config)
-  (smartparens-global-mode)
   ;; There's several modes in which I usually prefer strings to be treated
   ;; similar to s-expressions. In others its less relevant/string literals are
   ;; less common.
@@ -1433,7 +1432,6 @@ handling the case where there's code at the point"
                     (newline-and-indent)
                     (insert debug)))))))
 #+END_SRC
-
 
 ** Emacs Lisp
 The config for Emacs Lisp mode. I'm largely fine with the defaults (augmented by
@@ -1781,7 +1779,9 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 #+END_SRC
 *** paradox
 #+BEGIN_SRC emacs-lisp
-(use-package paradox)
+(use-package paradox
+  :config
+  (setq paradox-github-token t))
 #+END_SRC
 *** multiple cursors
 #+BEGIN_SRC emacs-lisp
