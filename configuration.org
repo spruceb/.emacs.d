@@ -1464,6 +1464,30 @@ But I keep the mode around due to past usage.
 #+END_SRC
 
 ** Haskell
+Haskell, the pure functional language. One of few, and one of the most well
+known functional language in some practical use. Also known for the inclusion of
+concepts from category theory, such as monads (although these are somewhat
+different from the actual mathematical definitions).
+
+I enjoy learning and using Haskell, although I remain a definite novice. To me,
+it has a similar feel as my summer learning J many years ago, in that difficult
+concepts compose with great power, and short cryptic lines hold implausible
+amounts of meaning. However the difference is, it's much easier to see the
+practical utility in Haskell, and indeed make use of it.
+
+The type system is by far sufficient for me to be happy using it (unlike say,
+Java, C, and C++-before-concepts). The built in library is pretty seriously
+extensive. There's a large ecosystem, although it's made up of the kind of
+people who like programming in Haskell, so there's often not one clear best
+choice.
+
+I'll add more to this section as I gain more experience and am more confident in
+the validity of my opinions. For now it seems like the most promising avenue for
+me, PL-wise.
+
+I've not got much config here at the moment. Just the major mode and Intero.
+Intero includes Flycheck support and a REPL buffer, etc. More of a complete IDE
+experience. As I use Haskell more, more preferences will accumulate.
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-mode)
 (use-package intero)
