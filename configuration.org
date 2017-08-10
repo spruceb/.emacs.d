@@ -1320,8 +1320,7 @@ This is the base package location in which config is nowebbed into.
     (with-eval-after-load 'dtrt-indent
       (add-hook 'c-mode-common-hook
               (lambda () (dtrt-indent-mode t))))
-    :bind (:map
-           c-mode-base-map
+    :bind (:map c-mode-base-map
            ;; Compiling within Emacs is pretty critical, and a massive
            ;; productivity boost over using a separate terminal
            ("C-c b" . compile)))
@@ -1378,8 +1377,7 @@ encroaching), but nevertheless it's an important major mode.
   <<python-utility-functions>>
   <<jedi-config>>
   <<python-shell-config>>
-  :bind (:map
-         python-mode-map
+  :bind (:map python-mode-map
          ;; I use this keybinding to toggle "breakpoints" in Python code
          ("C-c C-d" . toggle-pdb)))
 #+END_SRC
@@ -1445,7 +1443,7 @@ be able to run the current buffer easily.
 (use-package emacs-lisp-mode
   :ensure nil
   :bind (:map emacs-lisp-mode-map
-              ("H-e" . eval-buffer)))
+         ("H-e" . eval-buffer)))
 #+END_SRC
 
 ** Coffeescript
@@ -1706,8 +1704,7 @@ experience. As I use Haskell more, more preferences will accumulate.
       (set-face-attribute 'font-latex-sedate-face nil
                           :inherit 'font-lock-constant-face
                           :foreground 'unspecified))
-    :bind (:map
-           LaTeX-mode-map
+    :bind (:map LaTeX-mode-map
            ("C-c c" . latex-compile))))
 
 (use-package reftex
