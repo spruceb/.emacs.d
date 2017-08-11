@@ -14,7 +14,7 @@
   (unless (yes-or-no-p "This Emacs is old, config probably won't work. Kill? ")
     (kill-emacs)))
 
-;; Set up package management and ensure org is up to date
+;; Set up package management
 (when (>= emacs-major-version 24)
   (require 'package)
   (setq package-archives
@@ -23,7 +23,6 @@
           ("org" . "http://orgmode.org/elpa/")))
   (package-initialize)
   (unless (package-installed-p 'org)
-    (package-refresh-contents)
     (package-install 'org)))
 (require 'org)
 
