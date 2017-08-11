@@ -1027,7 +1027,7 @@ utility is pretty obvious, and I keep this on at all times.
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
   :config
-  (setq recentf-max-menu-items 100)
+  (setq recentf-max-menu-items 1000)
   (recentf-mode t)
   :bind ("C-x C-r" . helm-recentf))
 #+END_SRC
