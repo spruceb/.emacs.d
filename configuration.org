@@ -80,7 +80,7 @@ has consistent interfaces for doing so.
 
 ** Literate Configuration
 
-* Contents                                                        :TOC_2_gh:
+* Contents                                        :TOC_2_gh:
 - [[#about][About]]
   - [[#why-emacs][Why Emacs]]
   - [[#literate-configuration][Literate Configuration]]
@@ -1566,6 +1566,7 @@ experience. As I use Haskell more, more preferences will accumulate.
   (with-eval-after-load 'ox-beamer
     (add-to-list 'org-beamer-environments-extra
                  '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}")))
+  (customize-set-variable 'org-tags-column -60)
 
   :bind (("C-c a" . org-agenda)
          ("C-c l" . org-store-link)
