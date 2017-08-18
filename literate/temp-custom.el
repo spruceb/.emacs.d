@@ -24,11 +24,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(font-lock-function-name-face ((t (:foreground "#46D9FF"))))
- '(font-lock-variable-name-face ((t (:foreground "#8ee5ff"))))
- '(linum ((t (:background "#22252c" :foreground "light gray" :weight normal))))
- '(org-level-2 ((t (:inherit outline-2 :foreground "#46D9FF" :height 1.15))))
- '(org-level-3 ((t (:foreground "#51afef"))))
- '(org-level-4 ((t (:foreground "#46D9FF"))))
- '(org-level-5 ((t (:foreground "#51afef"))))
- '(org-level-6 ((t (:foreground "#46D9FF")))))
+ '(linum ((t (:background "#22252c" :foreground "light gray" :weight normal)))))

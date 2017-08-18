@@ -81,13 +81,14 @@
      (green          "#7bc275")
 
      ;; variant colors
-     (bright-black-1 "#1c1f24")
+     (bright-black-1    "#1c1f24")
      (dark-grey         "#3D3D48")
-     (dark-grey-2        "#404850")
+     (dark-grey-2       "#404850")
      (dark-yellow       "#CDB464")
      (dark-cyan         "#5699AF")
+     (light-cyan        "#8ee5ff")
      (dark-blue         "#1F5582")
-     (muted-green          "#98BE65")
+     (muted-green       "#98BE65")
 
      )
 
@@ -104,13 +105,13 @@
        (comments       dark-cyan)
        (doc-comments   teal)
        (constants      violet)
-       (functions      magenta)
+       (functions      cyan)
        (keywords       blue)
        (methods        cyan)
        (operators      blue)
        (type           yellow)
        (strings        green)
-       (variables      white)
+       (variables      light-cyan)
        (numbers        orange)
        (region         "#3d4451")
        ;; tabs
@@ -484,12 +485,12 @@
                                                 :foreground ,blue
                                                 :bold ,bold :height 1.25
                                                 :box (:line-width 4 :color ,current-line)))))
-     `(org-level-2               ((,c (:inherit outline-2 :foreground ,blue
+     `(org-level-2               ((,c (:inherit outline-2 :foreground ,cyan
                                                 :height 1.15))))
      `(org-level-3               ((,c (                          :foreground ,blue))))
-     `(org-level-4               ((,c (                          :foreground ,blue))))
+     `(org-level-4               ((,c (                          :foreground ,cyan))))
      `(org-level-5               ((,c (                          :foreground ,blue))))
-     `(org-level-6               ((,c (                          :foreground ,blue))))
+     `(org-level-6               ((,c (                          :foreground ,cyan))))
      `(org-level-7               ((,c (                          :foreground ,blue))))
      `(org-code                  ((,c (:foreground ,orange))))
      `(org-verbatim              ((,c (:foreground ,green))))
