@@ -189,7 +189,7 @@ feature-set. Many of them were defined exclusively to be accessible through a
 keybinding, however if I deem them sufficiently general they get put in the
 Utility Functions section, and included up here. These functions are in fact
 defined at the bottom of this file, but are accessible to all config below this
-point.
+point. The code that does this is not visibly exported.
 #+BEGIN_SRC emacs-lisp :noweb tangle :exports none
 <<utility-functions>>
 #+END_SRC
