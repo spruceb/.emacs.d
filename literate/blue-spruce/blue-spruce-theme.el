@@ -472,8 +472,9 @@
      `(org-quote                 ((,c (:slant italic :foreground ,grey :background ,current-line))))
      `(org-document-info         ((,c (:foreground ,orange))))
      `(org-document-info-keyword ((,c (:foreground ,dark-grey))))
-     `(org-meta-line             ((,c (:foreground ,doc-comments))))
-     `(org-block-begin-line      ((,c (:background ,current-line :foreground ,comments))))
+     `(org-meta-line             ((,c (:foreground ,dark-grey-2 :height 0.8))))
+     `(org-block-begin-line      ((,c (:background ,current-line :foreground
+                                                   ,dark-grey-2 :height 0.8))))
      `(org-block-end-line        ((,c (:inherit org-block-begin-line))))
      `(org-block-background      ((,c (:background ,current-line))))
      `(org-archived              ((,c (:foreground ,grey))))
