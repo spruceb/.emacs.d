@@ -523,6 +523,7 @@ did start using them I found defining slightly more memorable shortcuts to be he
 (bind-keys ("M-[" . kmacro-start-macro)
            ("M-]" . kmacro-end-macro))
 #+END_SRC
+
 ** macOS
 I run [[https://bitbucket.org/mituharu/emacs-mac/overview][Mitsuharu Yamamoto's]] =emacs-macport= on the latest
 version of macOS. There are several configuration options specific to
@@ -619,7 +620,6 @@ keep a one-pixel wide line below and to the right of windows, meaning they are
 surrounded on all sides by the border. Without this, there is no such line
 between adjacent modelines etc. I feel this leads to a more consistent
 appearance.
-
 #+BEGIN_SRC emacs-lisp
 (when (boundp 'window-divider-mode)
   (setq window-divider-default-places t
@@ -627,6 +627,7 @@ appearance.
         window-divider-default-right-width 1)
   (window-divider-mode +1))
 #+END_SRC
+
 ** Theme
 My specific appearance preferences.
 *** Blue Spruce
@@ -728,6 +729,7 @@ always attempting to pop up as if from the mode line.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-window-split :tangle no
 (setq helm-split-window-in-side-p t)
 #+END_SRC
+
 **** Company/Projectile
 Move to company/projectile configs
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-company-projectile :tangle no
@@ -777,6 +779,7 @@ set in my macOS.org config file.
             ('windows-nt "es %s")
             (t "locate %s"))))
 #+END_SRC
+
 *** Helm Flx
 =flx= is a package that allows for Sublime-like great fuzzy matching. =helm-flx=
 plugs in this functionality to Helm's fuzzy matching.
@@ -812,6 +815,7 @@ buffer and saving them back.
          <<helm-swoop-search-rebinds>>
          <<helm-swoop-switch-to-multi>>))
 #+END_SRC
+
 **** Swoop Window Splitting
 Do the same window split as with the rest of Helm, i.e. inside the current
 buffer and vertically if possible.
@@ -819,12 +823,14 @@ buffer and vertically if possible.
 (setq helm-swoop-split-with-multiple-windows t)
 (setq helm-swoop-split-direction 'split-window-vertically)
 #+END_SRC
+
 **** Font Lock in Searches
 Keep the font lock (color/highlighting etc) from the searched buffer in the
 results. This slows down the search, but not very perceptibly.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-output-color :tangle no
 (setq helm-swoop-speed-or-color t)
 #+END_SRC
+
 **** Mark Reactivation
 For some reason helm-swoop deactivates the mark on search selection. This
 wrapper fixes that, by wrapping helm-swoop in a function that will reactivate
@@ -838,6 +844,7 @@ re-activate it after swooping if it was active before-hand"
     (when marked (activate-mark))))
 (advice-add 'helm-swoop :around #'spruce/helm-swoop-mark-wrapper)
 #+END_SRC
+
 **** Search Keybindings
 I replace the default isearch binding with swoop. I also tend to type new
 searches more often than I use the symbol at the point, so I use the
@@ -1139,6 +1146,7 @@ A package for using MIT Scheme in an Emacs buffer as a REPL/inferior "shell".
 #+BEGIN_SRC emacs-lisp
 (use-package xscheme)
 #+END_SRC
+
 *** Smartparens
 This is the s-expression manipulation package I use. It includes a variety of
 extensions to the default methods of manipulating expressions, and support for
@@ -1173,6 +1181,7 @@ LaTeX entities).
          ;; Unwrap, or remove the parens/outer pair from the current s-exp
          ("C-M-<backspace>" . sp-unwrap-sexp))) 
 #+END_SRC
+
 *** Aggressive Indent
 A lot of the time, I prefer things to happen automatically as I type.
 Autocorrect, inserting matching parens/brackets, etc. So when it's possible,
@@ -1216,6 +1225,7 @@ but not enabled by default in any modes.
   :config
   (setq highlight-indent-guides-method 'character))
 #+END_SRC
+
 *** DTRT Indent
 This package contains a minor mode that will automatically figure out what
 preferences were used in the creation of an existing source file and temporarily
@@ -1725,95 +1735,117 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (bind-key "C-x C-2" #'spruce/split-below-select-new)
 (bind-key "C-H-q" #'ace-window)
 #+END_SRC
+
 ** Package Heap
 *** ebnf
 #+BEGIN_SRC emacs-lisp
 (use-package ebnf-mode
   :ensure nil)
 #+END_SRC
+
 *** rtags
 #+BEGIN_SRC emacs-lisp
 (use-package rtags
   :defer 3)
 #+END_SRC
+
 *** bison-mode
 #+BEGIN_SRC emacs-lisp
 (use-package bison-mode)
 #+END_SRC
+
 *** csv-mode
 #+BEGIN_SRC emacs-lisp
 (use-package csv-mode)
 #+END_SRC
+
 *** fireplace
 #+BEGIN_SRC emacs-lisp
 (use-package fireplace)
 #+END_SRC
+
 *** fish-mode
 #+BEGIN_SRC emacs-lisp
 (use-package fish-mode)
 #+END_SRC
+
 *** go mode
 #+BEGIN_SRC emacs-lisp
 (use-package go-mode)
 #+END_SRC
+
 *** EMMS
 #+BEGIN_SRC emacs-lisp
 (use-package emms)
 #+END_SRC
+
 *** julia mode
 #+BEGIN_SRC emacs-lisp
 (use-package julia-mode)
 #+END_SRC
+
 *** llvm mode
 #+BEGIN_SRC emacs-lisp
 (use-package llvm-mode)
 #+END_SRC
+
 *** lua mode
 #+BEGIN_SRC emacs-lisp
 (use-package lua-mode)
 #+END_SRC
+
 *** paradox
 #+BEGIN_SRC emacs-lisp
 (use-package paradox
   :config
   (setq paradox-github-token t))
 #+END_SRC
+
 *** multiple cursors
 #+BEGIN_SRC emacs-lisp
 (use-package multiple-cursors)
 #+END_SRC
+
 *** projectile ripgrep
 #+BEGIN_SRC emacs-lisp
 (use-package projectile-ripgrep)
 #+END_SRC
+
 *** rainbow mode
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-mode)
 #+END_SRC
+
 *** ace window
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window)
 #+END_SRC
+
 *** rust mode
 #+BEGIN_SRC emacs-lisp
 (use-package rust-mode)
 #+END_SRC
+
 *** SLIME
 #+BEGIN_SRC emacs-lisp
 (use-package slime)
 #+END_SRC
+
 *** pyvenv
 #+BEGIN_SRC emacs-lisp
 (use-package pyvenv)
 #+END_SRC
+
 *** autopep8
 #+BEGIN_SRC emacs-lisp
 (use-package py-autopep8)
 #+END_SRC
+
 *** Pylint
 #+BEGIN_SRC emacs-lisp
 (use-package pylint)
 #+END_SRC
+
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (setq exec-path (append exec-path '(":/usr/local/bin")))
