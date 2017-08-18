@@ -1147,8 +1147,8 @@ LaTeX entities).
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
   :config
-  (smartparens-global-mode t)
   (require 'smartparens-config)
+  (smartparens-global-mode t)
   ;; There's several modes in which I usually prefer strings to be treated
   ;; similar to s-expressions. In others its less relevant/string literals are
   ;; less common.
@@ -1560,12 +1560,13 @@ experience. As I use Haskell more, more preferences will accumulate.
   (setq org-log-into-drawer t)
   (with-eval-after-load 'latex
     (bind-key "H-C-j" #'LaTeX-insert-inline-math
-                org-mode-map)
+              org-mode-map)
     (bind-key "H-C-k" #'LaTeX-insert-display-math
               org-mode-map))
   (with-eval-after-load 'ox-beamer
     (add-to-list 'org-beamer-environments-extra
                  '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}")))
+
   :bind (("C-c a" . org-agenda)
          ("C-c l" . org-store-link)
          ("C-c o c" . org-capture)
@@ -1980,3 +1981,4 @@ through =noweb= near the top of this file.
        current-location (cadr word) (caddr word)
        current-location))))
 #+END_SRC
+
