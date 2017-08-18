@@ -1726,7 +1726,8 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 ** Package Heap
 *** ebnf
 #+BEGIN_SRC emacs-lisp
-(use-package ebnf-mode)
+(use-package ebnf-mode
+  :ensure nil)
 #+END_SRC
 *** rtags
 #+BEGIN_SRC emacs-lisp
