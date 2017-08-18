@@ -635,7 +635,7 @@ which I extracted as a separate ~.el~ because of the number of changes I needed 
 make.
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'custom-theme-load-path (concat spruce/org-config-dirpath "/blue-spruce/"))
+(add-to-list 'custom-theme-load-path (concat spruce/org-config-dirpath "blue-spruce/"))
 (load-theme 'blue-spruce t)
 #+END_SRC
 
