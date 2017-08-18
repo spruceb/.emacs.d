@@ -601,13 +601,6 @@ sequence of pseudo-dots looks a good bit better in my eyes.
    #b00000000])
 #+END_SRC
 
-*** Font Lock
-I want syntax highlighting everywhere, and as much as possible.
-#+BEGIN_SRC emacs-lisp
-(setq font-lock-maximum-decoration t)
-(global-font-lock-mode t)
-#+END_SRC
-
 *** Prettify Symbols
 Similarly, I like to have nice many text representations of symbols replaced
 with those symbols. i.e. in =emacs-lisp= mode I see "lambda" as λ. This is
