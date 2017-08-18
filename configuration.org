@@ -1019,6 +1019,7 @@ utility is pretty obvious, and I keep this on at all times.
 (use-package recentf
   :config
   (setq recentf-max-menu-items 1000)
+  (setq recentf-max-saved-items 200)
   (recentf-mode t)
   :bind ("C-x C-r" . helm-recentf))
 #+END_SRC
