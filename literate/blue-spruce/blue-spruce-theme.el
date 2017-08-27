@@ -477,7 +477,7 @@
      `(org-block-begin-line      ((,c (:background ,current-line :foreground
                                                    ,dark-grey-2 :height 0.8))))
      `(org-block-end-line        ((,c (:inherit org-block-begin-line))))
-     `(org-block-background      ((,c (:background ,current-line))))
+     `(org-block      ((,c (:inherit default :background ,current-line))))
      `(org-archived              ((,c (:foreground ,grey))))
      `(org-document-title        ((,c (:foreground ,cyan :height 1.2))))
      `(org-level-1               ((,c (:inherit outline-1

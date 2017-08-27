@@ -47,7 +47,7 @@ can be used to add a number of spaces to the front and back of the string."
   (buffer-file-name))
 
 (defun buffer-is-org-src-edit-p ()
-  (and org-edit-src-from-org-mode
+  (and org-src-mode
        (buffer-file-name (marker-buffer org-edit-src-beg-marker))))
 
 (defun buffer-associated-with-file-p ()
