@@ -951,6 +951,7 @@ everywhere (yet).
 (use-package magit
   :config
   (setq magit-auto-revert-mode t)
+  (setq magit-diff-refine-hunk 'all)
   :bind ("C-c g" . magit-status))
 #+END_SRC
 
