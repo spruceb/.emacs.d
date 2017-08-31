@@ -1578,9 +1578,9 @@ experience. As I use Haskell more, more preferences will accumulate.
 
   (setq org-log-into-drawer t)
   (with-eval-after-load 'latex
-    (bind-key "H-C-j" #'LaTeX-insert-inline-math
+    (bind-key "H-C-j" #'spruce/LaTeX-insert-inline-math
               org-mode-map)
-    (bind-key "H-C-k" #'LaTeX-insert-display-math
+    (bind-key "H-C-k" #'spruce/LaTeX-insert-display-math
               org-mode-map))
   (with-eval-after-load 'ox-beamer
     (add-to-list 'org-beamer-environments-extra
@@ -1678,10 +1678,10 @@ experience. As I use Haskell more, more preferences will accumulate.
               (lambda () (set-fill-column 90)))
     (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
     (add-hook 'LaTeX-mode-hook (lambda () (prettify-symbols-mode)))
-    (defun LaTeX-insert-inline-math (arg)
+    (defun spruce/LaTeX-insert-inline-math (arg)
       (interactive "P")
       (TeX-insert-pair arg "\\( " " \\)"))
-    (defun LaTeX-insert-display-math (arg)
+    (defun spruce/LaTeX-insert-display-math (arg)
       (interactive "P")
       (TeX-insert-pair arg "\\[ " " \\]"))
 
@@ -1702,9 +1702,9 @@ experience. As I use Haskell more, more preferences will accumulate.
           (spruce/LaTeX-insert-problem (car (last data)) t))))
 
     (defun spruce/LaTeX-mode-keybindings ()
-      (bind-key "H-C-j" #'LaTeX-insert-inline-math
+      (bind-key "H-C-j" #'spruce/LaTeX-insert-inline-math
                 (current-local-map))
-      (bind-key "H-C-k" #'LaTeX-insert-display-math
+      (bind-key "H-C-k" #'spruce/LaTeX-insert-display-math
                 (current-local-map))
       (bind-key "C-c x p" #'spruce/LaTeX-make-problem-list
                 (current-local-map))
