@@ -1062,6 +1062,14 @@ that fact, I use Flyspell, the built in spell-checking framework, along with the
   (add-hook 'text-mode-hook #'spruce/enable-text-flyspell))
 #+END_SRC
 
+*** Ediff
+#+BEGIN_SRC emacs-lisp
+(use-package ediff
+  :init (setq-default ediff-highlight-all-diffs t)
+  :config
+  (customize-set-variable 'ediff-window-setup-function #'ediff-setup-windows-plain)
+  (customize-set-variable 'ediff-split-window-function #'split-window-horizontally))
+#+END_SRC
 ** Misc Packages
 This section is for a variety of packages that are pretty small or otherwise
 don't seem like they need their own section in General.
