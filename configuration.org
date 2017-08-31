@@ -1577,6 +1577,10 @@ experience. As I use Haskell more, more preferences will accumulate.
     (add-to-list 'org-beamer-environments-extra
                  '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}")))
   (customize-set-variable 'org-tags-column -60)
+  ;; Set the Org ellipsis
+  (set-display-table-slot standard-display-table 
+                        'selective-display (string-to-vector " ➢"))
+  ;; ➤ ▼ ➢ ⤵ ↴ ⬎ ⤷ ͢
 
   :bind (("C-c a" . org-agenda)
          ("C-c l" . org-store-link)

@@ -467,7 +467,7 @@
      ;; org-mode
      `(org-tag                   ((,c (:foreground ,yellow :bold nil))))
      `(org-priority              ((,c (:foreground ,red))))
-     ;;`(org-ellipsis            ((,c (:inherit hs-face))))
+     `(org-ellipsis            ((,c (:height 1))))
      `(org-hide                  ((,c (:foreground ,bg))))
      `(org-table                 ((,c (:foreground ,cyan))))
      `(org-quote                 ((,c (:slant italic :foreground ,grey :background ,current-line))))
