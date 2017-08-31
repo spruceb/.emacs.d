@@ -1110,7 +1110,7 @@ Once I got used to this package I ended up using it far more than I expected.
   :config
   (setq undo-tree-auto-save-history t)
   (add-to-list 'undo-tree-history-directory-alist
-               `("." . ,(with-user-d "cache" "undo")))
+               `("." . ,(with-user-d "filedata" "undo")))
   (global-undo-tree-mode))
 #+END_SRC
 
