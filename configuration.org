@@ -1503,7 +1503,9 @@ Intero includes Flycheck support and a REPL buffer, etc. More of a complete IDE
 experience. As I use Haskell more, more preferences will accumulate.
 #+BEGIN_SRC emacs-lisp
 (use-package haskell-mode)
-(use-package intero)
+(use-package intero
+  :config
+  (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
 
 * Org
