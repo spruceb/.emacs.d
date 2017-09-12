@@ -183,6 +183,14 @@ evaluation otherwise. Currently disabled for speed.
                   (lambda (retrieved) t))))
 #+END_SRC
 
+This fixes a bug in the rich text parsing.
+#+BEGIN_SRC emacs-lisp
+;; Mitigate Bug#28350 (security) in Emacs 25.2 and earlier.
+(eval-after-load "enriched"
+  '(defun enriched-decode-display-prop (start end &optional param)
+     (list start end)))
+#+END_SRC
+
 ** Utility Functions
 I have a number of functions not particularly tied to a specific mode or
 feature-set. Many of them were defined exclusively to be accessible through a
