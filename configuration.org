@@ -1561,20 +1561,22 @@ experience. As I use Haskell more, more preferences will accumulate.
                '("la" "#+BEGIN_SRC LaTeX\n?\n#+END_SRC" ""))
   (add-to-list 'org-structure-template-alist
                '("ha" "#+BEGIN_SRC haskell\n?\n#+END_SRC" ""))
+  (add-to-list 'org-structure-template-alist
+               '("py" "#+BEGIN_SRC python\n?\n#+END_SRC" ""))
   (setq spruce/org-css-file
         (concat (concat-directories spruce/org-config-dirpath "css")
                 "org-export.css"))
   (setq org-html-head-extra
         (concat "<style type=\"text/css\">"
                 (with-temp-buffer
-                   (insert-file-contents spruce/org-css-file)
-                   (end-of-buffer)
-                   (insert ".src {\n    background-color: "
-                           (face-attribute 'default :background)
-                           ";\n   color: "
-                           (face-attribute 'default :foreground)
-                           ";\n}")
-                   (buffer-string))
+                  (insert-file-contents spruce/org-css-file)
+                  (end-of-buffer)
+                  (insert ".src {\n    background-color: "
+                          (face-attribute 'default :background)
+                          ";\n   color: "
+                          (face-attribute 'default :foreground)
+                          ";\n}")
+                  (buffer-string))
                 "</style>"))
   (defun spruce/org-cycle-current-subtree ()
     (interactive)
