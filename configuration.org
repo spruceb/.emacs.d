@@ -1528,7 +1528,8 @@ experience. As I use Haskell more, more preferences will accumulate.
      (emacs-lisp . t)
      (python . t)
      (sh . t)
-     (latex . t)))
+     (latex . t)
+     (haskell . t)))
   (setq org-hide-leading-stars t)
   (set-face-attribute 'org-hide nil :foreground (face-attribute 'default :background))
   (setq org-src-preserve-indentation nil
@@ -1558,6 +1559,8 @@ experience. As I use Haskell more, more preferences will accumulate.
                '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" ""))
   (add-to-list 'org-structure-template-alist
                '("la" "#+BEGIN_SRC LaTeX\n?\n#+END_SRC" ""))
+  (add-to-list 'org-structure-template-alist
+               '("ha" "#+BEGIN_SRC haskell\n?\n#+END_SRC" ""))
   (setq spruce/org-css-file
         (concat (concat-directories spruce/org-config-dirpath "css")
                 "org-export.css"))
