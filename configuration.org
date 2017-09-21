@@ -1028,7 +1028,8 @@ But when it does work well, it's massively convenient.
   (setq tramp-ssh-controlmaster-options
         "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=yes")
   ;; SSH is generally the best remote connection method
-  (setq tramp-default-method "ssh"))
+  (setq tramp-default-method "ssh")
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 #+END_SRC
 
 *** Recentf
