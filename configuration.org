@@ -1520,7 +1520,7 @@ experience. As I use Haskell more, more preferences will accumulate.
   (setq org-startup-indented t)
   (let ((file-list (list (with-user-d-s "emacs-todo.org"))))
     (when (string-equal system-name "spruce-machine")
-      (add-to-list 'file-list "~/Documents/Classes/school-schedule.org"))
+      (add-to-list 'file-list "~/documents/Classes/school-schedule.org"))
     (setq org-agenda-files file-list))
   (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○"))
   (setq org-export-backends '(ascii html icalendar latex md))
