@@ -1630,6 +1630,8 @@ experience. As I use Haskell more, more preferences will accumulate.
 #+END_SRC
 
 * LaTeX
+Notes:
+- You need Ghostscript for pdf support in docview
 #+BEGIN_SRC emacs-lisp
 (use-package tex
   :ensure auctex
