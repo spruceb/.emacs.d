@@ -1427,8 +1427,8 @@ testing. I'm a Python 3 guy, so I use that. The "-i", interactive flag, tries to
 ensure the interpreter uses prompts even if it thinks it's being called
 non-interactively.
 #+BEGIN_SRC emacs-lisp :noweb-ref python-shell-config :tangle no
-(setq python-shell-interpreter "python3"
-      python-shell-interpreter-args "-i")
+(setq python-shell-interpreter "ipython3"
+      python-shell-interpreter-args "-i --simple-prompt")
 #+END_SRC
 
 *** Python Utility Functions
