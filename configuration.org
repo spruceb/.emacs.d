@@ -706,8 +706,11 @@ This is my Helm =use-package=. I use noweb to tangle source blocks below inside
 the use-package.
 #+BEGIN_SRC emacs-lisp :noweb tangle
 (use-package helm
-  :diminish helm-mode
-  :init (require 'helm-config)
+  :demand
+  :init
+  (require 'helm-mode)
+  (require 'helm-config)
+  (require 'helm-for-files)
   :config
   ;; Enable Helm globally
   (helm-mode t)
