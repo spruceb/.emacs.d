@@ -2031,7 +2031,9 @@ through =noweb= near the top of this file.
 (defun delete-frame-or-window ()
   (interactive)
   (if (one-window-p)
-      (delete-frame)
+      (if (equal (length (frame-list)) 1)
+          (save-buffers-kill-terminal)
+        (delete-frame))
     (delete-window)))
 ;; go back a window in the same frame
 (defun back-window ()
