@@ -1026,7 +1026,7 @@ But when it does work well, it's massively convenient.
   ;; possible. This gets rid of a lot of time spent reconnecting and
   ;; re-inputting credentials
   (setq tramp-ssh-controlmaster-options
-        "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=yes")
+        "-o ControlMaster=auto -o ControlPersist=yes")
   ;; SSH is generally the best remote connection method
   (setq tramp-default-method "ssh")
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
