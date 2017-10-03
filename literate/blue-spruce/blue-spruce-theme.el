@@ -297,7 +297,7 @@
      `(flycheck-error     ((,c (:underline (:style wave :color ,red)))))
      `(flycheck-warning   ((,c (:underline (:style wave :color ,yellow)))))
      `(flycheck-info      ((,c (:underline (:style wave :color ,green)))))
-     `(flyspell-incorrect ((,c (:underline (:style wave :color ,red) :inherit unspecified))))
+     `(flyspell-incorrect ((,c (:underline (:style wave :color ,grey) :inherit unspecified))))
      
      ;; git-gutter
      `(git-gutter:modified         ((,c (:foreground ,vc-modified))))
