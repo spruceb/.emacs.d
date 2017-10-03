@@ -1513,6 +1513,8 @@ experience. As I use Haskell more, more preferences will accumulate.
 #+END_SRC
 
 * Org
+
+** Org Heap
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :diminish org-indent-mode
@@ -1606,8 +1608,8 @@ experience. As I use Haskell more, more preferences will accumulate.
                  '("onlyenv" "O" "\\begin{onlyenv}%a" "\\end{onlyenv}")))
   (customize-set-variable 'org-tags-column -60)
   ;; Set the Org ellipsis
-  (set-display-table-slot standard-display-table 
-                        'selective-display (string-to-vector " ➢"))
+  (set-display-table-slot standard-display-table
+                        'selective-display (string-to-vector " ➤"))
   ;; ➤ ▼ ➢ ⤵ ↴ ⬎ ⤷ ͢
 
   :bind (("C-c a" . org-agenda)
