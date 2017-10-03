@@ -1882,6 +1882,10 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (use-package pylint)
 #+END_SRC
 
+*** coin-ticker
+#+BEGIN_SRC emacs-lisp
+(use-package coin-ticker)
+#+END_SRC
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (setq exec-path (append exec-path '(":/usr/local/bin")))
@@ -2049,7 +2053,11 @@ through =noweb= near the top of this file.
          (word (flyspell-get-word)))
     (when (consp word)
       (flyspell-do-correct 'save nil (car word)
-       current-location (cadr word) (caddr word)
-       current-location))))
-#+END_SRC
+       current-location (cadr word) (caddr word)))))
 
+(defun spruce/bitcoin-price ()
+  (interactive)
+  (coin-ticker-mode t)
+  (message coin-ticker-mode-line)
+  (coin-ticker-mode nil))
+#+END_SRC
