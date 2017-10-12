@@ -1769,7 +1769,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 #+BEGIN_SRC emacs-lisp
 (bind-key "C-x C-3" #'spruce/split-right-select-new)
 (bind-key "C-x C-2" #'spruce/split-below-select-new)
-(bind-key "C-H-q" #'ace-window)
 #+END_SRC
 
 ** Package Heap
@@ -1852,9 +1851,18 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 (use-package rainbow-mode)
 #+END_SRC
 
-*** ace window
+*** Ace Window
+Ace window is a replacement for ~other-window~ with extra power. Instead of
+swapping to the chosen other window, it's more like a buffer picker for windows,
+even across frames. When pressed it shows overlayed numbers in each visible
+window (i.e. 1, 2, 3). Then the window corresponding to whichever digit is
+pressed next is made active. The numbers increment as new windows are added, and
+if you know a certain number is for a window in another frame, you can swich
+frames as well.
+
 #+BEGIN_SRC emacs-lisp
-(use-package ace-window)
+(use-package ace-window
+  :bind (("H-1" . ace-window)))
 #+END_SRC
 
 *** rust mode
