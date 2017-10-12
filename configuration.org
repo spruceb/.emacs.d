@@ -1270,6 +1270,15 @@ bad, some are mutually exclusive. I hope to get a good number of them over time.
   :config (achievements-mode t))
 #+END_SRC
 
+*** Fireplace
+This is a little toy package that just shows an animated ASCII fireplace buffer.
+
+#+BEGIN_SRC emacs-lisp
+(use-package fireplace)
+#+END_SRC
+
+
+
 * Programming
 This is the section for heavily or exclusively programming-focused config. It
 includes my config for each programming major mode (effectively language).
@@ -1792,11 +1801,6 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 *** csv-mode
 #+BEGIN_SRC emacs-lisp
 (use-package csv-mode)
-#+END_SRC
-
-*** fireplace
-#+BEGIN_SRC emacs-lisp
-(use-package fireplace)
 #+END_SRC
 
 *** fish-mode
