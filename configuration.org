@@ -1521,10 +1521,45 @@ experience. As I use Haskell more, more preferences will accumulate.
   (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
 
-* Org
-
-** Org Heap
+** C Sharp
 #+BEGIN_SRC emacs-lisp
+(use-package csharp-mode
+  :config
+  ;; Unity config
+  (defun unity-api-lookup (string)
+    "Opens up a browser to Google's first hit for the search
+string 'unity api reference ' plus your search term.
+Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
+    (interactive (list 
+                  (read-string "Look up Unity API reference for: " 
+                               (thing-at-point 'word) 'unity-api-lookup-history)))
+    (browse-url (concat "http://www.google.com/search?btnI&q="
+                        (url-hexify-string 
+                         (concat "unity api reference " string)))))
+
+  ;; TODO: make this better at detecting when the thing at point isn't Unity specific
+  (defun spruce/unity-lookup-at-point ()
+    (interactive)
+    (let ((thing (thing-at-point 'symbol)))
+      (if thing
+          (unity-api-lookup thing)
+        (spruce/unity-lookup-input))))
+
+  (defun spruce/unity-lookup-input ()
+    (interactive)
+    (unity-api-lookup (read-string "Unity search: ")))
+  :bind (("H-/" . spruce/unity-lookup-at-point)
+         ("C-H-/" . spruce/unity-lookup-input)))
+
+(use-package omnisharp
+  :config
+  (add-to-list 'company-backends 'company-omnisharp)
+  :hook (csharp-mode . omnisharp-mode)
+  :bind (("H-." . omnisharp-go-to-definition)
+         ("H->" . omnisharp-go-to-definition-other-window)))
+#+END_SRC
+* Org
+** Org Proper
 (use-package org
   :diminish org-indent-mode
   :config
