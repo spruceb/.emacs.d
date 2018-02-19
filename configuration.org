@@ -1931,6 +1931,21 @@ frames as well.
 (use-package pylint)
 #+END_SRC
 
+*** unfill
+#+BEGIN_SRC emacs-lisp
+(use-package unfill)
+#+END_SRC
+
+*** centered-window
+#+BEGIN_SRC emacs-lisp
+(use-package centered-window-mode)
+#+END_SRC
+
+*** osx-plist
+#+BEGIN_SRC emacs-lisp
+(use-package osx-plist)
+#+END_SRC
+
 *** coin-ticker
 #+BEGIN_SRC emacs-lisp
 (use-package coin-ticker)
