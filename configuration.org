@@ -1816,6 +1816,8 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 #+END_SRC
 
 ** Package Heap
+These are the pacakges I've installed but haven't gotten around to describing
+(or really customizing) yet.
 *** ebnf
 #+BEGIN_SRC emacs-lisp
 (use-package ebnf-mode
