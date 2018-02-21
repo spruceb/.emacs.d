@@ -1560,18 +1560,16 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
 #+END_SRC
 * Org
 ** Org Proper
+#+BEGIN_SRC emacs-lisp :noweb tangle
 (use-package org
   :diminish org-indent-mode
   :config
-  (setq org-startup-indented t)
+  <<org-apperance>>
   (let ((file-list (list (with-user-d-s "emacs-todo.org"))))
     (when (string-equal system-name "spruce-machine")
-      (add-to-list 'file-list "~/documents/Classes/school-schedule.org"))
+      (add-to-list 'file-list "~/classes/school-schedule.org"))
     (setq org-agenda-files file-list))
-  (setq org-bullets-bullet-list (list "●" "●" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○"))
   (setq org-export-backends '(ascii html icalendar latex md))
-  (setq org-fontify-whole-heading-line t)
-  (setq org-pretty-entities t)
   (setq org-list-allow-alphabetical t)
   (setq org-highlight-latex-and-related '(latex script entities))
   (org-babel-do-load-languages
@@ -1604,7 +1602,7 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
   (setq org-export-headline-levels 5)
   (setq org-export-with-section-numbers nil)
   (setq org-export-with-tags nil)
-
+  (setq org-columns-default-format "%25ITEM %TODO  %TAGS")
   (setq org-src-ask-before-returning-to-edit-buffer nil)
   (setq org-src-window-setup 'current-window)
   (add-to-list 'org-structure-template-alist
@@ -1642,6 +1640,7 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
     (org-clock-in '(4)))
 
   (setq org-log-into-drawer t)
+  (setq org-log-done 'time)
   (with-eval-after-load 'latex
     (bind-key "H-C-j" #'spruce/LaTeX-insert-inline-math
               org-mode-map)
@@ -1655,7 +1654,7 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
   (set-display-table-slot standard-display-table
                         'selective-display (string-to-vector " ➤"))
   ;; ➤ ▼ ➢ ⤵ ↴ ⬎ ⤷ ͢
-
+  (require 'org-habit)
   :bind (("C-c a" . org-agenda)
          ("C-c l" . org-store-link)
          ("C-c o c" . org-capture)
@@ -1667,6 +1666,34 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
          ("H-M-<return>" . org-insert-subheading)
          :map org-mode-map
          ("C-<tab>" . spruce/org-cycle-current-subtree)))
+#+END_SRC
+** Org Appearance
+#+BEGIN_SRC emacs-lisp :noweb-ref org-apperance :tangle no
+(setq org-startup-indented t)
+(setq org-bullets-bullet-list
+      (list "●" "●" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○" "○"))
+(setq org-fontify-whole-heading-line t)
+(setq org-pretty-entities t)
+#+END_SRC
+** Misc Configuration
+#+BEGIN_SRC emacs-lisp :noweb-ref org-misc-config :tangle no
+
+#+END_SRC
+** Editing
+#+BEGIN_SRC emacs-lisp :noweb-ref org-editing :tangle no
+
+#+END_SRC
+** Babel
+#+BEGIN_SRC emacs-lisp :noweb-ref org-babel :tangle no
+
+#+END_SRC
+** Exporting
+#+BEGIN_SRC emacs-lisp :noweb-ref org-exporting :tangle no
+
+#+END_SRC
+** Org Heap
+#+BEGIN_SRC emacs-lisp
+
 
 (use-package org-bullets
   :config
