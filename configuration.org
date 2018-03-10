@@ -1425,16 +1425,21 @@ it's totally separate from Emacs, and can be used "plug-n-play" in a variety of
 situations. But here, I use it as a Company backend for Python, and as a way to
 do a few "IDE-like" tasks.
 #+BEGIN_SRC emacs-lisp :noweb-ref jedi-config :tangle no
-(use-package jedi
+(use-package company-jedi
+  :demand
   :config
   ;; Automatically start completion on property access
   (setq jedi:complete-on-dot t)
+  (setq jedi:environment-root "jedi")
+  (setq jedi:environment-virtualenv
+      (append python-environment-virtualenv
+              '("--python" "/usr/local/bin/python3")))
   (defun jedi-python-mode-hook-add-company ()
-    (add-to-list 'company-backends 'company-jedi))
+    (add-to-list 'company-backends 'company-jedi)
+    (jedi:setup))
   (add-hook 'python-mode-hook #'jedi-python-mode-hook-add-company)
   :bind (:map python-mode-map
-         ("C-c /" . jedi:show-doc)
-         ("C-c ." . jedi:goto-definition)))
+              ("C-c ." . jedi:goto-definition)))
 #+END_SRC
 
 *** Python Shell Config
