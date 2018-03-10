@@ -914,6 +914,8 @@ more involved search.
   :config
   ;; Should be enabled in every programming mode
   (add-hook 'prog-mode-hook 'global-company-mode)
+  (setq completion-ignore-case t)
+  (setq company-async-timeout 4)
   ;; C-tab is a good compromise between tab completion and indenting
   :bind ("C-<tab>" . company-complete))
 #+END_SRC
