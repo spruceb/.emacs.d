@@ -1404,7 +1404,9 @@ encroaching), but nevertheless it's an important major mode.
 
 #+BEGIN_SRC emacs-lisp :noweb tangle
 (use-package python
+  :demand
   :config
+  <<python-style>>
   <<python-utility-functions>>
   <<jedi-config>>
   <<python-shell-config>>
@@ -1413,6 +1415,10 @@ encroaching), but nevertheless it's an important major mode.
          ("C-c C-d" . toggle-pdb)))
 #+END_SRC
 
+*** Python Style
+#+BEGIN_SRC emacs-lisp :noweb-ref python-style :tangle no
+(setq python-fill-docstring-style "pep-257-nn")
+#+END_SRC
 *** Jedi Config
 Jedi is an autocompletion and semantic analysis framework for Python. In fact,
 it's totally separate from Emacs, and can be used "plug-n-play" in a variety of
