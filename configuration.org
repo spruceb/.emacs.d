@@ -1409,6 +1409,7 @@ encroaching), but nevertheless it's an important major mode.
   <<python-style>>
   <<python-utility-functions>>
   <<jedi-config>>
+  <<python-elpy>>
   <<python-shell-config>>
   :bind (:map python-mode-map
          ;; I use this keybinding to toggle "breakpoints" in Python code
@@ -1476,6 +1477,28 @@ handling the case where there's code at the point"
                     (insert debug)))))))
 #+END_SRC
 
+*** ELPY
+This is an alternate Python framework I don't actually use. Doesn't tangle at
+the moment.
+#+BEGIN_SRC emacs-lisp :noweb-ref python-elpy :tangle no
+(add-to-list 'package-archives
+             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+(use-package elpy
+  :config
+  (setq elpy-modules '(elpy-module-sane-defaults
+                          elpy-module-company
+                          elpy-module-eldoc
+                          ;; elpy-module-flymake
+                          elpy-module-highlight-indentation
+                          elpy-module-pyvenv
+                          elpy-module-yasnippet
+                          elpy-module-django))
+  (elpy-enable)
+  (setq elpy-rpc-python-command "python3")
+  (setq elpy-rpc-backend "jedi")
+  :bind (:map python-mode-map
+              ("C-c /" . elpy-doc)))
+#+END_SRC
 ** Emacs Lisp
 The config for Emacs Lisp mode. I'm largely fine with the defaults (augmented by
 Smartparens of course). However, since Emacs is an elisp-machine, it is nice to
