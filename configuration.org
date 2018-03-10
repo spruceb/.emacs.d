@@ -1254,7 +1254,7 @@ adjust Emacs' settings to match. This allows for much easier collaborative
 editing, or dealing with multiple projects with different conventions. It can
 become problematic when trying to /fix/ poor style choices however.
 #+BEGIN_SRC emacs-lisp
-(use-package dtrt-indent)
+;; (use-package dtrt-indent)
 #+END_SRC
 
 ** Fun
@@ -1348,9 +1348,11 @@ This is the base package location in which config is nowebbed into.
     <<cc-style-config>>
     ;; Usually want dtrt-indent in CC-mode files, due to the massive number of
     ;; different styles you can come across
-    (with-eval-after-load 'dtrt-indent
-      (add-hook 'c-mode-common-hook
-              (lambda () (dtrt-indent-mode t))))
+
+    ;; (with-eval-after-load 'dtrt-indent
+    ;;   (add-hook 'c-mode-common-hook
+    ;;           (lambda () (dtrt-indent-mode t))))
+
     :bind (:map c-mode-base-map
            ;; Compiling within Emacs is pretty critical, and a massive
            ;; productivity boost over using a separate terminal
@@ -1368,6 +1370,8 @@ C, with some variants.
                (fill-column . 80)))     ; and start filling a few characters later
 ;; Sets this as the default style for all cc-mode buffers
 (setq c-default-style "spruce-style")
+(defun spruce/set-c-style-to-spruce () 
+  (c-set-style "spruce-style"))
 #+END_SRC
 
 *** CC Mode utility functions
@@ -1582,6 +1586,7 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
   (defun spruce/unity-lookup-input ()
     (interactive)
     (unity-api-lookup (read-string "Unity search: ")))
+  :hook (csharp-mode . spruce/set-c-style-to-spruce)
   :bind (("H-/" . spruce/unity-lookup-at-point)
          ("C-H-/" . spruce/unity-lookup-input)))
 
