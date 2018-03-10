@@ -1736,6 +1736,18 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
   (setcdr org-bullets-bullet-map nil))
 #+END_SRC
 
+** Org Brain
+This is a mind-mapping package built with Org. Similar to a personal wiki with
+nice graph representations. It's early on, but still in active development. I'd
+be very happy if this worked out, but I currently haven't made great use of it
+(or put enough time in).
+#+BEGIN_SRC emacs-lisp
+(use-package org-brain
+  :init
+  (when (string-equal system-name "spruce-machine")
+    (setq org-brain-path (expand-file-name "~/documents/knowledge/brain/"))))
+#+END_SRC
+
 * LaTeX
 Notes:
 - You need Ghostscript for pdf support in docview
