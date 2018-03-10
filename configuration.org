@@ -857,28 +857,11 @@ re-activate it after swooping if it was active before-hand"
 #+END_SRC
 
 **** Search Keybindings
-I replace the default isearch binding with swoop. I also tend to type new
-searches more often than I use the symbol at the point, so I use the
-no-pre-input version. However, isearch is an important tool for navigation, so I
-rebind it to an easy-to-reach key, C-i. Unfortunately this is viewed by Emacs as
-the same character as <tab> due to deficiencies of old keyboards. So I have to
-instead have it translate a literal C-i (but not <tab>) to H-i first, and then
-bind H-i to isearch.
-
-So this block must go in :config and does the translation:
-#+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-ci-translation :tangle no
-(keyboard-translate ?\C-i ?\H-i)
-#+END_SRC
-and this one does the actual keybinding.
+These are my keybindings for Swoop.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-swoop-search-rebinds :tangle no
 :map global-map
-("C-c s" . isearch-forward)
-("H-i" . isearch-forward)
-("C-s" . helm-swoop-without-pre-input)
+("C-H-s" . helm-swoop-without-pre-input)
 ("C-M-s" . helm-swoop) ; with input of thing-at-point
-("C-H-s" . helm-multi-swoop-projectile)
-:map isearch-mode-map
-("C-i" . isearch-repeat-forward)
 #+END_SRC
 
 **** Multi-Swoop
