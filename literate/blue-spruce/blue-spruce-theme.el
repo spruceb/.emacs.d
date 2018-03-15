@@ -231,7 +231,8 @@
      `(powerline-inactive2         ((,c (:inherit mode-line-inactive))))
 
      ;; Dired/dired-k
-     `(dired-directory             ((,c (:foreground ,orange))))
+     `(dired-header                ((,c (:foreground ,magenta :height 1.25))))
+     `(dired-directory             ((,c (:foreground ,violet))))
      `(dired-ignored               ((,c (:foreground ,comments))))
      `(dired-k-directory           ((,c (:foreground ,blue))))
 

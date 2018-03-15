@@ -56,7 +56,8 @@ helm fuzzy matching doesn't work so well with it...
         (concat "mdfind -name %s %s | grep -v '.*.emlx' | grep -v Caches/Metadata | grep -v LocalStorage"))
   (setq helm-locate-fuzzy-match nil))
 #+END_SRC
-
-
-
-
+** Dired
+~ls~ on macOS doesn't support the ~--dired~ option.
+#+BEGIN_SRC emacs-lisp
+(setq dired-use-ls-dired nil)
+#+END_SRC

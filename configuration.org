@@ -994,6 +994,15 @@ Emacs has a large number of "packages" that are built in. This modularizes the
 massive amount of available functionality. I tend to still use ~use-package~
 blocks for tweaks to these default packages. It's more consistent and visually
 pleasing.
+*** Dired
+#+BEGIN_SRC emacs-lisp
+(use-package dired
+  :ensure nil
+  :config
+  (setq dired-recursive-copies 'always)
+  :hook (dired-mode . dired-hide-details-mode))
+
+#+END_SRC
 *** TRAMP
 TRAMP, "Transparent Remote Access, Multiple Protocols", is Emacs' method for
 communicating with and editing files on remote servers. Its beauty and utility
@@ -1243,6 +1252,14 @@ become problematic when trying to /fix/ poor style choices however.
 ;; (use-package dtrt-indent)
 #+END_SRC
 
+*** dired-subtree
+#+BEGIN_SRC emacs-lisp
+(use-package dired-subtree
+  :after dired
+  :bind (:map dired-mode-map
+         ("<tab>" . dired-subtree-toggle)
+         ("<backtab>" . dired-subtree-cycle)))
+#+END_SRC
 ** Fun
 This section is for various fun or ridiculous packages/games.
 *** Achievements Mode
