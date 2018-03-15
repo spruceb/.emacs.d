@@ -738,7 +738,7 @@ I know exactly what I want.
 Default Helm can open buffers in weird and disorienting positions. I prefer it
 always attempting to pop up as if from the mode line.
 #+BEGIN_SRC emacs-lisp :noweb-ref helm-window-split :tangle no
-(setq helm-split-window-in-side-p t)
+(setq helm-split-window-inside-p t)
 (setq helm-window-prefer-horizontal-split t)
 #+END_SRC
 
