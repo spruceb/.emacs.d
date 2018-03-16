@@ -1740,6 +1740,8 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
          ("H-M-<return>" . org-insert-subheading)
          :map org-mode-map
          ("C-<tab>" . spruce/org-cycle-current-subtree)
+         ("H-f" . org-metaright)
+         ("H-b" . org-metaleft)
          ("C-c C-j" . helm-org-in-buffer-headings)))
 #+END_SRC
 ** Org Appearance
