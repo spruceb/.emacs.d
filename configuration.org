@@ -1739,7 +1739,8 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
          ("C-c o C-o" . org-open-at-point-global)
          ("H-M-<return>" . org-insert-subheading)
          :map org-mode-map
-         ("C-<tab>" . spruce/org-cycle-current-subtree)))
+         ("C-<tab>" . spruce/org-cycle-current-subtree)
+         ("C-c C-j" . helm-org-in-buffer-headings)))
 #+END_SRC
 ** Org Appearance
 #+BEGIN_SRC emacs-lisp :noweb-ref org-apperance :tangle no
@@ -2069,6 +2070,12 @@ frames as well.
 *** coin-ticker
 #+BEGIN_SRC emacs-lisp
 (use-package coin-ticker)
+#+END_SRC
+*** org rifle
+#+BEGIN_SRC emacs-lisp
+(use-package helm-org-rifle
+  :bind (:map org-mode-map
+         ("C-c j" . helm-org-rifle)))
 #+END_SRC
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
