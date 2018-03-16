@@ -927,7 +927,11 @@ folders into projects, with a ~.projectile~ file.
     (interactive)
     (let ((projectile ".projectile"))
       (unless (file-exists-p projectile)
-        (write-region "" nil projectile)))))
+        (write-region "" nil projectile))))
+  (defun spruce/projectile-open-root ()
+    (interactive)
+    (dired (projectile-project-root)))
+  (setq projectile-switch-project-action 'spruce/projectile-open-root))
 #+END_SRC
 
 ** Company
