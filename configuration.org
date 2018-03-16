@@ -1991,9 +1991,16 @@ These are the pacakges I've installed but haven't gotten around to describing
 (use-package multiple-cursors)
 #+END_SRC
 
-*** projectile ripgrep
+*** RipGrep
 #+BEGIN_SRC emacs-lisp
-(use-package projectile-ripgrep)
+(use-package ripgrep)
+(use-package helm-rg
+  ;; Not the Melpa version.
+  ;; https://github.com/microamp/helm-rg
+  :ensure nil
+  :config
+  (setq helm-rg-smart-case t)
+  :bind ("H-d" . helm-projectile-rg))
 #+END_SRC
 
 *** rainbow mode

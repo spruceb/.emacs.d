@@ -519,7 +519,9 @@
      `(org-checkbox-statistics-done ((,c (:inherit org-done))))
      ;; Custom org-mode faces
      `(org-list-bullet           ((,c (:foreground ,cyan))))
-     `(message-header-name ((,c (:foreground ,green)))))
+     `(message-header-name ((,c (:foreground ,green))))
+     `(helm-grep-file ((,c (:foreground ,violet))))
+     `(helm-grep-match ((,c (:foreground ,cyan :underline nil :bold t)))))
 
     (custom-theme-set-variables
      'blue-spruce
