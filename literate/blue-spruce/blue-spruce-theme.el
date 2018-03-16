@@ -74,6 +74,7 @@
      (orange         "#DA8548")
      (red            "#FF6C6B")
      (magenta        "#C678DD")
+     (pink           "#f5d4fd")
      (violet         "#A9A1E1")
      (cyan           "#46D9FF")
      (teal           "#4DB5BD")
@@ -89,6 +90,8 @@
      (light-cyan        "#8ee5ff")
      (dark-blue         "#1F5582")
      (muted-green       "#98BE65")
+     (seafoam           "#85f9e3")
+     (angry-red         "#a91834")
 
      )
 
@@ -310,14 +313,21 @@
      
      ;; Helm
      `(helm-selection              ((,c (:background ,selection))))
-     `(helm-match                  ((,c (:foreground ,blue :underline t))))
+     `(helm-match                  ((,c (:foreground ,blue :bold t))))
      `(helm-source-header          ((,c (:background ,current-line :foreground ,grey))))
      `(helm-swoop-target-line-face ((,c (:foreground ,highlight :inverse-video t))))
      `(helm-ff-file                ((,c (:foreground ,fg))))
      `(helm-ff-prefix              ((,c (:foreground ,magenta))))
      `(helm-ff-dotted-directory    ((,c (:foreground ,dark-grey))))
-     `(helm-ff-directory           ((,c (:foreground ,orange))))
+     `(helm-ff-directory           ((,c (:foreground ,violet))))
      `(helm-ff-executable          ((,c (:foreground ,white :slant italic))))
+
+     `(helm-buffer-file                ((,c (:foreground ,fg))))
+     `(helm-buffer-directory           ((,c (:foreground ,violet))))
+     `(helm-non-file-buffer            ((,c (:foreground ,light-cyan))))
+     `(helm-buffer-saved-out           ((,c (:foreground ,angry-red))))
+     `(helm-buffer-process           ((,c (:foreground ,comments))))
+     
      
      ;; indent-guide, highlight-{quoted,numbers,indentation}-mode
      `(indent-guide-face                         ((,c (:foreground "#2F2F38"))))

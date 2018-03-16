@@ -714,6 +714,34 @@ the use-package.
   :config
   ;; Enable Helm globally
   (helm-mode t)
+  (setq helm-org-headings-fontify t)
+  (setq helm-buffer-max-length 30)
+  (define-advice helm-buffer-size (:around (&rest args) no-buffer-size)
+    "")
+
+  (define-advice helm-buffer--show-details
+      (:override (buf-name prefix help-echo
+                           size mode dir face1 face2
+                           proc details type)
+                 better-file-format)
+    (append
+     (list
+      (concat prefix
+              (propertize buf-name 'face face1
+                          'help-echo help-echo
+                          'type type)))
+     (and details
+          (list size mode
+                (propertize
+                 (if proc
+                     (format "%s %s in %s"
+                             (process-name proc)
+                             (process-status proc) dir)
+                   (if (not (or (equal type 'nofile-mod) (equal type 'nofile)))
+                       (format "in %s" dir)
+                     ""))
+                 'face face2)))))
+  
   <<helm-fuzzy-matching>>
   <<helm-window-split>>
   <<helm-company-projectile>>
