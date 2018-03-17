@@ -2253,4 +2253,15 @@ through =noweb= near the top of this file.
   (coin-ticker-mode t)
   (message coin-ticker-mode-line)
   (coin-ticker-mode nil))
+
+(defun spruce/edit-markdown-as-org ()
+  (interactive)
+  (save-buffer)
+  (let* ((filename (buffer-file-name))
+         (org-buffer-name (concat (file-name-base filename) ".org"))
+         (org-buffer (generate-new-buffer org-buffer-name)))
+    (shell-command (format "pandoc %s -f markdown -t org" filename)
+                   org-buffer)
+    (with-current-buffer org-buffer
+      (org-mode))))
 #+END_SRC
