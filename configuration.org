@@ -147,8 +147,9 @@ connections are not secure by default at all. This enables TLS checking.
 
 All of the above only applies to Emacs not built with an external TLS checker.
 However if it is built with one like GnuTLS, some extra config is necessary.
+This is currently disabled by default in my config.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (let ((trustfile
        (replace-regexp-in-string
         "\\\\" "/"
