@@ -1203,16 +1203,15 @@ treating many many kinds of "paired" objects as s-expressions (including many
 LaTeX entities).
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
+  :demand
   :config
   (require 'smartparens-config)
-  (smartparens-global-mode t)
-  ;; There's several modes in which I usually prefer strings to be treated
-  ;; similar to s-expressions. In others its less relevant/string literals are
-  ;; less common.
-  (setq sp-navigate-consider-stringlike-sexp
-        (append sp-navigate-consider-stringlike-sexp (list 'python-mode
-                                                           'org-mode
-                                                           'coffeescript-mode)))
+  (defun spruce/enable-smartparens ()
+    (smartparens-mode t))
+  (add-hook 'prog-mode-hook #'spruce/enable-smartparens)
+  (add-hook 'org-mode-hook #'spruce/enable-smartparens)
+  (add-hook 'TeX-mode-hook #'spruce/enable-smartparens)
+
   ;; This overlay ended up being on basically all the time and overriding my
   ;; syntax highlighting. More distracting than helpful.
   (setq sp-highlight-pair-overlay nil)
@@ -1228,7 +1227,7 @@ LaTeX entities).
          ("C-M-n" . sp-beginning-of-next-sexp)
          ("C-M-p" . sp-beginning-of-previous-sexp)
          ;; Unwrap, or remove the parens/outer pair from the current s-exp
-         ("C-M-<backspace>" . sp-unwrap-sexp))) 
+         ("C-M-<backspace>" . sp-unwrap-sexp)))
 #+END_SRC
 
 *** Aggressive Indent
