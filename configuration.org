@@ -115,8 +115,18 @@ has consistent interfaces for doing so.
   - [[#emacs-lisp][Emacs Lisp]]
   - [[#coffeescript][Coffeescript]]
   - [[#haskell][Haskell]]
+  - [[#c-sharp][C Sharp]]
 - [[#org][Org]]
+  - [[#org-proper][Org Proper]]
+  - [[#org-appearance][Org Appearance]]
+  - [[#misc-configuration][Misc Configuration]]
+  - [[#editing][Editing]]
+  - [[#babel][Babel]]
+  - [[#exporting][Exporting]]
+  - [[#org-heap][Org Heap]]
+  - [[#org-brain][Org Brain]]
 - [[#latex][LaTeX]]
+  - [[#latex-heap][LaTeX Heap]]
 - [[#the-heap][The Heap]]
   - [[#tweak-heap][Tweak Heap]]
   - [[#package-heap][Package Heap]]
@@ -1312,8 +1322,6 @@ This is a little toy package that just shows an animated ASCII fireplace buffer.
 (use-package fireplace)
 #+END_SRC
 
-
-
 * Programming
 This is the section for heavily or exclusively programming-focused config. It
 includes my config for each programming major mode (effectively language).
@@ -1820,6 +1828,7 @@ be very happy if this worked out, but I currently haven't made great use of it
 #+END_SRC
 
 * LaTeX
+** LaTeX Heap
 Notes:
 - You need Ghostscript for pdf support in docview
 #+BEGIN_SRC emacs-lisp
@@ -1922,8 +1931,10 @@ Notes:
       (local-unset-key "\""))
 
     (add-hook 'LaTeX-mode-hook #'spruce/LaTeX-mode-keybindings)
+    
     (with-eval-after-load 'smartparens
       (add-hook 'TeX-mode-hook #'smartparens-mode))
+    
     (use-package font-latex
       :ensure nil
       :config
@@ -2307,3 +2318,4 @@ through =noweb= near the top of this file.
     (with-current-buffer org-buffer
       (org-mode))))
 #+END_SRC
+
