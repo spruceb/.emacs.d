@@ -1641,16 +1641,25 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
     (interactive)
     (unity-api-lookup (read-string "Unity search: ")))
   :hook (csharp-mode . spruce/set-c-style-to-spruce)
-  :bind (("H-/" . spruce/unity-lookup-at-point)
-         ("C-H-/" . spruce/unity-lookup-input)))
+  :bind (:map csharp-mode-map
+              ("H-/" . spruce/unity-lookup-at-point)
+              ("C-H-/" . spruce/unity-lookup-input)))
 
 (use-package omnisharp
   :config
   (add-to-list 'company-backends 'company-omnisharp)
+  (setq omnisharp-company-sort-results nil)
+  (defun spruce/omnisharp-solution-errors-no-warnings ()
+    (interactive)
+    (omnisharp-reload-solution)
+    (omnisharp-solution-errors t))
   :hook (csharp-mode . omnisharp-mode)
-  :bind (("H-." . omnisharp-go-to-definition)
-         ("H->" . omnisharp-go-to-definition-other-window)))
+  :bind (:map omnisharp-mode-map
+              ("H-." . omnisharp-go-to-definition)
+              ("H->" . omnisharp-go-to-definition-other-window)
+              ("C-c b" . spruce/omnisharp-solution-errors-no-warnings)))
 #+END_SRC
+
 * Org
 ** Org Proper
 #+BEGIN_SRC emacs-lisp :noweb tangle
