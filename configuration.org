@@ -1957,6 +1957,7 @@ necessary. The Heap is where all of that temporarily unfiled code goes.
 #+BEGIN_SRC emacs-lisp
 (bind-key "C-x C-3" #'spruce/split-right-select-new)
 (bind-key "C-x C-2" #'spruce/split-below-select-new)
+(setq message-log-max t)
 #+END_SRC
 
 ** Package Heap
