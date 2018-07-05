@@ -2142,6 +2142,13 @@ frames as well.
 (add-hook 'prog-mode-hook #'whitespace-mode)
 ;; (setq auto-revert-use-notify nil)
 
+(defun untabify-buffer ()
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+(defun untabify-on-save-hook ()
+  (add-hook 'before-save-hook 'untabify-buffer nil 'local))
+
 (setq whitespace-line-column 86)
 (setq hl-line-sticky-flag nil)
 (setq mac-ignore-momentum-wheel-events t)
