@@ -494,17 +494,20 @@
      `(org-level-1               ((,c (:inherit outline-1
                                                 :background ,current-line
                                                 :foreground ,blue
-                                                :bold ,bold :height 1.25
-                                                :box (:line-width 4 :color ,current-line)))))
-     `(org-level-2               ((,c (:inherit outline-2 :foreground ,cyan
+                                                ;; :bold ,bold
+                                                :height 1.25
+                                                :box (:line-width 4 :color ,current-line)
+                                                ))))
+     `(org-level-2               ((,c (:foreground ,violet
                                                 :height 1.15))))
      `(org-level-3               ((,c (                          :foreground ,blue))))
-     `(org-level-4               ((,c (                          :foreground ,cyan))))
+     `(org-level-4               ((,c (                          :foreground ,violet))))
      `(org-level-5               ((,c (                          :foreground ,blue))))
-     `(org-level-6               ((,c (                          :foreground ,cyan))))
+     `(org-level-6               ((,c (                          :foreground ,violet))))
      `(org-level-7               ((,c (                          :foreground ,blue))))
-     `(org-code                  ((,c (:foreground ,orange))))
-     `(org-verbatim              ((,c (:foreground ,green))))
+     `(org-level-8               ((,c (                          :foreground ,violet))))
+     `(org-code                  ((,c (:foreground ,yellow))))
+     `(org-verbatim              ((,c (:foreground ,cyan))))
      `(org-formula               ((,c (:foreground ,cyan))))
      `(org-list-dt               ((,c (:foreground ,cyan))))
      `(org-footnote              ((,c (:foreground ,orange))))
