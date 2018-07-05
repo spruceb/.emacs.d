@@ -2136,6 +2136,7 @@ frames as well.
             nil 'local))
 
 (add-hook 'c-mode-common-hook #'whitespace-save-fn)
+(add-hook 'csharp-mode-hook #'whitespace-save-fn)
 (add-hook 'python-mode-hook #'whitespace-save-fn)
 (add-hook 'lisp-mode-hook #'whitespace-save-fn)
 (add-hook 'prog-mode-hook #'whitespace-mode)
