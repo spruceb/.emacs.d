@@ -1679,7 +1679,7 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
    '((R . t)
      (emacs-lisp . t)
      (python . t)
-     (sh . t)
+     (shell . t)
      (latex . t)
      (haskell . t)))
   (setq org-hide-leading-stars t)
