@@ -1588,7 +1588,26 @@ I've not got much config here at the moment. Just the major mode and Intero.
 Intero includes Flycheck support and a REPL buffer, etc. More of a complete IDE
 experience. As I use Haskell more, more preferences will accumulate.
 #+BEGIN_SRC emacs-lisp
-(use-package haskell-mode)
+(use-package haskell-mode
+  :config
+  (defun spruce/haskell-hoogle-lookup (string)
+    "Opens browser to first Hoogle result for the string"
+    (browse-url (concat "https://www.haskell.org/hoogle/?hoogle="
+                        (url-hexify-string string))))
+  (defun spruce/haskell-hoogle-at-point ()
+    (interactive)
+    (let ((thing (thing-at-point 'symbol)))
+      (if thing
+          (spruce/haskell-hoogle-lookup thing)
+        (spruce/haskell-hoogle-input))))
+  (defun spruce/haskell-hoogle-input ()
+    (interactive)
+    (spruce/haskell-hoogle-lookup (read-string "Hoogle search: "
+                                               'hoogle-search-history)))
+  :bind (:map haskell-mode-map
+              ("H-/" . spruce/haskell-hoogle-at-point)
+              ("C-H-/" . spruce/haskell-google-input)))
+
 (use-package intero
   :config
   (add-hook 'haskell-mode-hook 'intero-mode))
