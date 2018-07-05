@@ -2107,6 +2107,10 @@ frames as well.
   :bind (:map org-mode-map
          ("C-c j" . helm-org-rifle)))
 #+END_SRC
+*** yaml
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode)
+#+END_SRC
 ** Old Heap
 #+BEGIN_SRC emacs-lisp
 (setq exec-path (append exec-path '(":/usr/local/bin")))
