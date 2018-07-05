@@ -72,11 +72,11 @@ can be used to add a number of spaces to the front and back of the string."
       (cond ((and (buffer-modified-p) (not buffer-read-only))
              (spruce/modeline-colorize-text "◉" "orange red"))
             ((and (buffer-modified-p) buffer-read-only)
-             (spruce/modeline-colorize-text "M" "orange"))
+             (spruce/modeline-colorize-text "○" "orange"))
             ((and (not (buffer-modified-p)) (not buffer-read-only))
              (spruce/modeline-colorize-text "○" "green"))
             ((and (not (buffer-modified-p)) buffer-read-only)
-             (spruce/modeline-colorize-text "R" "yellow")))
+             (spruce/modeline-colorize-text "○" "yellow")))
     (propertize "" 'face '(:foreground "light grey"))))
 
 (defvar spruce/mode-line-modified '(:eval (spruce/get-mode-line-modified)))
