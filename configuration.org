@@ -2143,10 +2143,7 @@ frames as well.
 ;; don't do anything whitespace, use whitespace-fn instead
 (setq whitespace-action nil)
 
-(defun whitespace-save-fn ()
-  (add-hook 'before-save-hook
-            'delete-trailing-whitespace-except-current-line
-            nil 'local))
+
 
 (add-hook 'c-mode-common-hook #'whitespace-save-fn)
 (add-hook 'csharp-mode-hook #'whitespace-save-fn)
@@ -2155,12 +2152,6 @@ frames as well.
 (add-hook 'prog-mode-hook #'whitespace-mode)
 ;; (setq auto-revert-use-notify nil)
 
-(defun untabify-buffer ()
-  (interactive)
-  (untabify (point-min) (point-max)))
-
-(defun untabify-on-save-hook ()
-  (add-hook 'before-save-hook 'untabify-buffer nil 'local))
 
 (setq whitespace-line-column 86)
 (setq hl-line-sticky-flag nil)
@@ -2193,6 +2184,10 @@ through =noweb= near the top of this file.
   (s-trim-left (s-trim-right s)))
 
 (defun delete-trailing-whitespace-except-current-line ()
+  "Deletes all trailing whitespace in buffer, except for any on
+the current line. This is useful when habitually saving when in
+the middle of typing a line (and with auto-strip whitespace on
+save)"
   (interactive)
   (let ((begin (line-beginning-position))
         (end (line-end-position)))
@@ -2206,8 +2201,24 @@ through =noweb= near the top of this file.
           (narrow-to-region (1+ end) (point-max))
           (delete-trailing-whitespace))))))
 
+(defun whitespace-save-fn ()
+  "Sets up the current buffer to delete trailing whitespace on save"
+  (add-hook 'before-save-hook
+            'delete-trailing-whitespace-except-current-line
+            nil 'local))
+
+(defun untabify-buffer ()
+  "Converts all tabs to spaces based on the current tab width settings"
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+(defun untabify-on-save-hook ()
+  "Sets up the buffer to convert all tabs to spaces on save"
+  (add-hook 'before-save-hook 'untabify-buffer nil 'local))
+
 ;; from http://stackoverflow.com/questions/15580913/
 (defun toggle-quotes ()
+  "Toggles quotes from single to double"
   (interactive)
   (save-excursion
     (let ((start (nth 8 (syntax-ppss)))
@@ -2259,36 +2270,49 @@ through =noweb= near the top of this file.
   (kill-line (- 1 arg)))
 
 (defun spruce/split-right-select-new ()
+  "Splits the window vertically and places the cursor in the new
+frame"
   (interactive)
   (select-window (split-window-right)))
 (defun spruce/split-below-select-new ()
+  "Splits the window horizontally and places the cursor in the new
+frame"
   (interactive)
   (select-window (split-window-below)))
 
 (defun spruce/make-note ()
+  "Switches to a temporary org notes buffer (and creates it if
+it's not already there)"
   (interactive)
   (let ((buffer (generate-new-buffer "notes")))
     (switch-to-buffer buffer)
     (org-mode)))
 
 (defun concat-directories (&rest directories)
+  "Joins directory names into a single path"
   (apply 'concat (mapcar 'file-name-as-directory directories)))
 
 (defun with-user-d (&rest directories)
+  "Joins a list of (nested) subdirectories under the user
+directory into a single path"
   (apply 'concat-directories user-emacs-directory directories))
 (defun with-user-d-s (suffix &rest directories)
+  "Joins a list of (nested) subdirectories and a final
+suffix (filename or arbitrary string) under the user directory
+into a single path"
   (concat (apply 'with-user-d directories) suffix))
 
-;; delete current frame, or window if it's the last one
 (defun delete-frame-or-window ()
+  "Delete current frame, or window if it's the last one"
   (interactive)
   (if (one-window-p)
       (if (equal (length (frame-list)) 1)
           (save-buffers-kill-terminal)
         (delete-frame))
     (delete-window)))
-;; go back a window in the same frame
+
 (defun back-window ()
+  "Go back a window in the same frame"
   (interactive)
   (other-window -1))
 
@@ -2302,12 +2326,18 @@ through =noweb= near the top of this file.
        current-location (cadr word) (caddr word)))))
 
 (defun spruce/bitcoin-price ()
+  "Display the current price of BTC and ETH in the minibuffer"
   (interactive)
   (coin-ticker-mode t)
   (message coin-ticker-mode-line)
   (coin-ticker-mode nil))
 
 (defun spruce/edit-markdown-as-org ()
+  "Open a Markdown buffer as an Org doc (i.e. convert the
+Markdown to Org and place the result in a new buffer). This does
+not modify the original Markdown buffer, and you must convert any
+changes back to Markdown through the normal Org conversion
+process"
   (interactive)
   (save-buffer)
   (let* ((filename (buffer-file-name))
