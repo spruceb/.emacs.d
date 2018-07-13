@@ -1074,6 +1074,11 @@ massive amount of available functionality. I tend to still use ~use-package~
 blocks for tweaks to these default packages. It's more consistent and visually
 pleasing.
 *** Dired
+Dired is one of the oldest and most well known "default packages". It's Emacs'
+file browser. I haven't made enough effort to really get familiar with it,
+although I've tweaked it to look and function somewhat better. Some people swear
+by it over any other OS filesystem manipulation tool. I'm more lukewarm, but
+it's definitely usable and useful.
 #+BEGIN_SRC emacs-lisp
 (use-package dired
   :ensure nil
@@ -1150,6 +1155,10 @@ that fact, I use Flyspell, the built in spell-checking framework, along with the
 #+END_SRC
 
 *** Ediff
+Ediff is Emacs' built in diffing and diff viewing tool. It's /extraordinarily/
+powerful, but just as complex. I've used it for some important and difficult
+workflows (like incorporating edits to a document from two separate independent
+editors), but almost always forget how to use it as soon as I've finished.
 #+BEGIN_SRC emacs-lisp
 (use-package ediff
   :init (setq-default ediff-highlight-all-diffs t)
@@ -1345,6 +1354,8 @@ become problematic when trying to /fix/ poor style choices however.
 #+END_SRC
 
 *** dired-subtree
+Adds directory subtree viewing to ~dired~. This just makes ~dired~ more similar to
+Finder/more usable.
 #+BEGIN_SRC emacs-lisp
 (use-package dired-subtree
   :after dired
