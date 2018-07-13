@@ -128,7 +128,7 @@ has consistent interfaces for doing so.
 - [[#latex][LaTeX]]
   - [[#latex-heap][LaTeX Heap]]
 - [[#the-heap][The Heap]]
-  - [[#tweak-heap][Tweak Heap]]
+  - [[#quick-tweak-heap][Quick Tweak Heap]]
   - [[#package-heap][Package Heap]]
   - [[#old-heap][Old Heap]]
 - [[#utility-functions-1][Utility Functions]]
@@ -1480,7 +1480,6 @@ This is the base package location in which config is nowebbed into.
     ;; (with-eval-after-load 'dtrt-indent
     ;;   (add-hook 'c-mode-common-hook
     ;;           (lambda () (dtrt-indent-mode t))))
-
     :bind (:map c-mode-base-map
            ;; Compiling within Emacs is pretty critical, and a massive
            ;; productivity boost over using a separate terminal
