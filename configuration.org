@@ -400,6 +400,13 @@ about 500 MB as the first line in ~init.el~, to improve Emacs' startup speed.
             gc-cons-threshold)))
 #+END_SRC
 
+*** Message Log
+The message buffer is capped at 1000 lines by default. Similar to many of my
+settings tweaks, I have no reason to keep it this low, so I set it to unlimited.
+#+BEGIN_SRC emacs-lisp
+(setq message-log-max t)
+#+END_SRC
+
 *** =fill-column=
 I generally like to fill (i.e. redistribute line breaks to not go past a certain
 point) my text and code, to make it easier to browse in various situations and
@@ -541,6 +548,35 @@ did start using them I found defining slightly more memorable shortcuts to be he
 #+BEGIN_SRC emacs-lisp
 (bind-keys ("M-[" . kmacro-start-macro)
            ("M-]" . kmacro-end-macro))
+#+END_SRC
+
+*** Split-and-select
+My workflow for opening a new file/buffer is generally to split the current
+buffer and then do a buffer switch. While there are many other ways, and this is
+not really the most efficient, it's the one I'm used to. Generally I'd prefer to
+keep the older buffer in the original window, and use the new split window for
+the new buffer. These keybindings split and select the /new/ window for easy
+buffer switching.
+#+BEGIN_SRC emacs-lisp
+(defun spruce/split-right-select-new ()
+  "Splits the window vertically and places the cursor in the new
+frame"
+  (interactive)
+  (select-window (split-window-right)))
+(defun spruce/split-below-select-new ()
+  "Splits the window horizontally and places the cursor in the new
+frame"
+  (interactive)
+  (select-window (split-window-below)))
+(bind-key "C-x C-3" #'spruce/split-right-select-new)
+(bind-key "C-x C-2" #'spruce/split-below-select-new)
+#+END_SRC
+
+*** Pop definition stack
+After using various ~find-definition~ functions, frequently it's useful to pop
+back to the location the function was called.
+#+BEGIN_SRC emacs-lisp
+(bind-key "M-*" #'pop-tag-mark)
 #+END_SRC
 
 ** macOS
@@ -1121,6 +1157,20 @@ that fact, I use Flyspell, the built in spell-checking framework, along with the
   (customize-set-variable 'ediff-window-setup-function #'ediff-setup-windows-plain)
   (customize-set-variable 'ediff-split-window-function #'split-window-horizontally))
 #+END_SRC
+
+*** Doc View
+~doc-view~ is the package that allows viewing images and PDFs inside Emacs. PDF
+viewing is horribly finicky on macOS, so unfortunately better packages like
+~pdf-tools~ aren't usable. However ~doc-view~ isn't bad, and is particularly useful
+with AUCTeX for side-by-side viewing.
+
+#+BEGIN_SRC emacs-lisp
+(use-package doc-view
+  :config
+  (setq doc-view-continuous t)
+  (setq doc-view-ghostscript-program "/usr/local/bin/gs"))
+#+END_SRC
+
 ** Misc Packages
 This section is for a variety of packages that are pretty small or otherwise
 don't seem like they need their own section in General.
@@ -1379,6 +1429,15 @@ replace this with. Credit: [[https://lists.gnu.org/archive/html/emacs-devel/2008
 (bind-key "M-;" #'comment-dwim-line)
 #+END_SRC
 
+*** Trailing Whitespace
+There's generally no reason for trailing whitespace, and it triggers a variety
+of linters. I delete trailing whitespace on save, except for on the current line
+(because if I'm in the middle of typing a line and compulsively save, I don't
+want to get rid of whitespace I just typed).
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook #'whitespace-save-fn)
+#+END_SRC
+
 ** CC Mode
 In Emacs, ~cc-mode~ is the base mode for editing many C-like modes, including C
 and C++, but also Java, Objective-C, and AWK. There's some preferences I have
@@ -1438,6 +1497,11 @@ Currently the only such config I have is a lower number of spaces per
 indentation level. This is because C++ tends to get quite nested, quite fast.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'c++-mode-hook (lambda () (setq c-basic-offset 2)))
+#+END_SRC
+
+I also open header files as C++ by default.
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 #+END_SRC
 
 *** C
@@ -1964,16 +2028,16 @@ Sometimes I want to test out a tweak or fix an annoyance fast, without putting
 in the time to document how or why. This is a bad habit, but sometimes
 necessary. The Heap is where all of that temporarily unfiled code goes.
 
-** Tweak Heap
+** Quick Tweak Heap
+This is for oneliner variable tweaks or very short functions. Nothing here
+should stay long, almost everything can be properly categorized under
+[[Keybindings]], [[Default Settings]], or some package configuration.
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-x C-3" #'spruce/split-right-select-new)
-(bind-key "C-x C-2" #'spruce/split-below-select-new)
-(bind-key "M-*" #'pop-tag-mark)
-(setq message-log-max t)
+;; All clean at the moment! Woo!
 #+END_SRC
 
 ** Package Heap
-These are the pacakges I've installed but haven't gotten around to describing
+These are the packages I've installed but haven't gotten around to describing
 (or really customizing) yet.
 *** ebnf
 #+BEGIN_SRC emacs-lisp
@@ -2130,32 +2194,6 @@ frames as well.
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
 (setq exec-path (append exec-path '(":/usr/texbin")))
 (setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
-
-(setq doc-view-continuous t)
-(setq doc-view-ghostscript-program "/usr/local/bin/gs")
-
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-(add-hook 'coffeescript-mode-hook 'whitespace-mode)
-(add-hook 'python-mode-hook 'whitespace-mode)
-(setq whitespace-style
-      '(face trailing space-before-tab tabs
-             space-after-tab))
-;; don't do anything whitespace, use whitespace-fn instead
-(setq whitespace-action nil)
-
-
-
-(add-hook 'c-mode-common-hook #'whitespace-save-fn)
-(add-hook 'csharp-mode-hook #'whitespace-save-fn)
-(add-hook 'python-mode-hook #'whitespace-save-fn)
-(add-hook 'lisp-mode-hook #'whitespace-save-fn)
-(add-hook 'prog-mode-hook #'whitespace-mode)
-;; (setq auto-revert-use-notify nil)
-
-
-(setq whitespace-line-column 86)
-(setq hl-line-sticky-flag nil)
-(setq mac-ignore-momentum-wheel-events t)
 #+END_SRC
 
 * Utility Functions
@@ -2268,17 +2306,6 @@ save)"
   "Kill ARG lines backward."
   (interactive "p")
   (kill-line (- 1 arg)))
-
-(defun spruce/split-right-select-new ()
-  "Splits the window vertically and places the cursor in the new
-frame"
-  (interactive)
-  (select-window (split-window-right)))
-(defun spruce/split-below-select-new ()
-  "Splits the window horizontally and places the cursor in the new
-frame"
-  (interactive)
-  (select-window (split-window-below)))
 
 (defun spruce/make-note ()
   "Switches to a temporary org notes buffer (and creates it if
