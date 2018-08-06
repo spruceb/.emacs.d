@@ -2199,13 +2199,6 @@ These are the packages I've installed but haven't gotten around to describing
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode)
 #+END_SRC
-** Old Heap
-#+BEGIN_SRC emacs-lisp
-(setq exec-path (append exec-path '(":/usr/local/bin")))
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '(":/usr/texbin")))
-(setenv "PATH" (concat (getenv "PATH") ":/usr/texbin"))
-#+END_SRC
 
 * Utility Functions
 These functions are bound to keys and used in various places in my config.
