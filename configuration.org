@@ -1075,6 +1075,18 @@ because it implements a slightly different sort of "Extension" that I prefer.
 (use-package ebnf-mode
   :ensure nil)
 #+END_SRC
+*** csv-mode
+CSV is the "standard" format for tabular data. It stands for Comma Separated
+Values, and is just the simplest option of rows similar to "1,3,green,James"
+with each row separated by a newline. Variants which use null-character or tab
+separators instead of commas, and various other options instead of newlines, are
+generally also called CSV. These files can be edited in programs such as Excel,
+and they provide much more power than this relatively simple mode, but for quick
+edits to small files this mode is quite convenient.
+#+BEGIN_SRC emacs-lisp
+(use-package csv-mode)
+#+END_SRC
+
 
 ** Default Package Configuration
 Emacs has a large number of "packages" that are built in. This modularizes the
@@ -2081,11 +2093,6 @@ These are the packages I've installed but haven't gotten around to describing
 *** bison-mode
 #+BEGIN_SRC emacs-lisp
 (use-package bison-mode)
-#+END_SRC
-
-*** csv-mode
-#+BEGIN_SRC emacs-lisp
-(use-package csv-mode)
 #+END_SRC
 
 *** fish-mode
