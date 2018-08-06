@@ -1067,6 +1067,14 @@ I use Org).
   :config
   (add-hook 'markdown-mode-hook 'visual-line-mode))
 #+END_SRC
+*** EBNF
+This is a mode for editing a certain kind of Extended BNF (a formal grammar
+specification). I use a version different from the one on MELPA, [[http://github.com/jeramey/ebnf-mode][specifically this one]],
+because it implements a slightly different sort of "Extension" that I prefer.
+#+BEGIN_SRC emacs-lisp
+(use-package ebnf-mode
+  :ensure nil)
+#+END_SRC
 
 ** Default Package Configuration
 Emacs has a large number of "packages" that are built in. This modularizes the
@@ -2064,12 +2072,6 @@ should stay long, almost everything can be properly categorized under
 ** Package Heap
 These are the packages I've installed but haven't gotten around to describing
 (or really customizing) yet.
-*** ebnf
-#+BEGIN_SRC emacs-lisp
-(use-package ebnf-mode
-  :ensure nil)
-#+END_SRC
-
 *** rtags
 #+BEGIN_SRC emacs-lisp
 (use-package rtags
