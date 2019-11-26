@@ -80,59 +80,6 @@ has consistent interfaces for doing so.
 
 ** Literate Configuration
 
-* Contents                                        :TOC_2_gh:
-- [[#about][About]]
-  - [[#why-emacs][Why Emacs]]
-  - [[#literate-configuration][Literate Configuration]]
-- [[#bootstrap][Bootstrap]]
-  - [[#security][Security]]
-  - [[#utility-functions][Utility Functions]]
-  - [[#configuration-management][Configuration Management]]
-  - [[#personal-information][Personal Information]]
-  - [[#default-settings][Default Settings]]
-  - [[#keybindings][Keybindings]]
-  - [[#macos][macOS]]
-- [[#appearance][Appearance]]
-  - [[#basic-tweaks][Basic Tweaks]]
-  - [[#theme][Theme]]
-  - [[#mode-line][Mode Line]]
-  - [[#appearance-packages][Appearance Packages]]
-- [[#general][General]]
-  - [[#helm][Helm]]
-  - [[#projectile][Projectile]]
-  - [[#company][Company]]
-  - [[#magit][Magit]]
-  - [[#ess][ESS]]
-  - [[#irc][IRC]]
-  - [[#non-programming-modes][Non-Programming Modes]]
-  - [[#default-package-configuration][Default Package Configuration]]
-  - [[#misc-packages][Misc Packages]]
-  - [[#fun][Fun]]
-- [[#programming][Programming]]
-  - [[#prog-mode][Prog Mode]]
-  - [[#cc-mode][CC Mode]]
-  - [[#python][Python]]
-  - [[#emacs-lisp][Emacs Lisp]]
-  - [[#coffeescript][Coffeescript]]
-  - [[#haskell][Haskell]]
-  - [[#c-sharp][C Sharp]]
-- [[#org][Org]]
-  - [[#org-proper][Org Proper]]
-  - [[#org-appearance][Org Appearance]]
-  - [[#misc-configuration][Misc Configuration]]
-  - [[#editing][Editing]]
-  - [[#babel][Babel]]
-  - [[#exporting][Exporting]]
-  - [[#org-heap][Org Heap]]
-  - [[#org-brain][Org Brain]]
-- [[#latex][LaTeX]]
-  - [[#latex-heap][LaTeX Heap]]
-- [[#the-heap][The Heap]]
-  - [[#quick-tweak-heap][Quick Tweak Heap]]
-  - [[#package-heap][Package Heap]]
-  - [[#old-heap][Old Heap]]
-- [[#utility-functions-1][Utility Functions]]
-
 * Bootstrap
 ** Security
 There are several important security improvements to Emacs that should come as
@@ -227,6 +174,24 @@ number of other packages I use.
 #+END_SRC
 Additionally, I use the ~:diminish~ feature of =use-package= to hide various minor
 modes from my mode line.
+**** Custom Installation Directive
+Sometimes I want to use a package that isn't available on Melpa, but rather is
+just an Elisp file found somewhere on the internet.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'dash)
+(let ((ensure-index (cl-position ':ensure use-package-keywords)))
+  (setq use-package-keywords
+        (-insert-at ensure-index ':ensure-url use-package-keywords)))
+
+(defcustom use-package-ensure-url-location user-emacs-directory
+  :type 'string
+  :group 'use-package-ensure)
+
+;; (defun use-package-normalize/:ensure-url ()
+;;   )
+#+END_SRC
+
 *** TODO =validate=
 =validate= is a package that tries to minimize invalid variable values. Emacs and
 many packages have user-configurable variables that should only hold certain
@@ -1028,7 +993,9 @@ everywhere (yet).
   :config
   (setq magit-auto-revert-mode t)
   (setq magit-diff-refine-hunk 'all)
-  :bind ("C-c g" . magit-status))
+  :bind (("C-c g" . magit-status)
+         :map magit-mode-map
+         ("M-<return>" . magit-diff-visit-file-other-window)))
 #+END_SRC
 
 ** ESS
@@ -1397,7 +1364,6 @@ frames as well.
   :bind (("H-1" . ace-window)))
 #+END_SRC
 
-
 ** Fun
 This section is for various fun or ridiculous packages/games.
 *** Achievements Mode
@@ -1591,6 +1557,7 @@ do a few "IDE-like" tasks.
   (setq jedi:environment-virtualenv
       (append python-environment-virtualenv
               '("--python" "/usr/local/bin/python3")))
+  (setq jedi:server-command (list "python3" jedi:server-script))
   (defun jedi-python-mode-hook-add-company ()
     (add-to-list 'company-backends 'company-jedi)
     (jedi:setup))
@@ -1757,7 +1724,15 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
   (defun spruce/unity-lookup-input ()
     (interactive)
     (unity-api-lookup (read-string "Unity search: ")))
-  :hook (csharp-mode . spruce/set-c-style-to-spruce)
+  (c-add-style "spruce-csharp-style"      
+               '("bsd"                 
+                 (indent-tabs-mode . nil) 
+                 (c-basic-offset . 4)     
+                 (fill-column . 80)))     
+  ;; Sets this as the default style for all cc-mode buffers
+  (defun spruce/set-c-style-to-spruce-csharp () 
+    (c-set-style "spruce-csharp-style"))
+  :hook (csharp-mode . spruce/set-c-style-to-spruce-csharp)
   :bind (:map csharp-mode-map
               ("H-/" . spruce/unity-lookup-at-point)
               ("C-H-/" . spruce/unity-lookup-input)))
@@ -1777,6 +1752,40 @@ Credit: https://gist.github.com/shanecelis/1049d7f86a45ab10fafe"
               ("C-c b" . spruce/omnisharp-solution-errors-no-warnings)))
 #+END_SRC
 
+** Typescript
+#+BEGIN_SRC emacs-lisp
+(use-package typescript-mode)
+(use-package tide
+  :config
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    ;; company is an optional dependency. You have to
+    ;; install it separately via package-install
+    ;; `M-x package-install [ret] company`
+    (company-mode +1))
+
+  ;; aligns annotation to the right hand side
+  (setq company-tooltip-align-annotations t)
+
+  ;; formats the buffer before saving
+  (add-hook 'before-save-hook 'tide-format-before-save)
+
+  (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
+#+END_SRC
+
+** SCSS
+#+BEGIN_SRC emacs-lisp
+(use-package scss-mode)
+#+END_SRC
 * Org
 ** Org Proper
 #+BEGIN_SRC emacs-lisp :noweb tangle
@@ -2037,7 +2046,11 @@ Notes:
                 (current-local-map))
       (bind-key "C-c x p" #'spruce/LaTeX-make-problem-list
                 (current-local-map))
-      (local-unset-key "\""))
+      (local-unset-key "\"")
+      (require 'smartparens-latex)
+      ;; removes the double quote trigger binding. Now smartparens will 
+      ;; insert a regular double quote
+      (sp-local-pair 'LaTeX-mode "``" "''" :trigger "\"" :actions :rem))
 
     (add-hook 'LaTeX-mode-hook #'spruce/LaTeX-mode-keybindings)
     
